@@ -1,28 +1,23 @@
-package ProjetGOT;
+package OBJECTIF1;
 
 import lejos.robotics.Color;
 
 public class Carte {
 
-	private static int [][] Carte = new int [7][5]; // Il n'y a pas qu'une seule carte
+	private static int [][] CarteCouleur; //
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
-	
-	private int [] positonDynamique = new int [2]; 
-	//Comprise entre -1 et 1 pour chaque x et y  
-	
-	private int [] positionHistorique = new int [2]; 
-	// Placer sur la carte directement exemple [2, 3] 2 en x et 3 en y
-
+	private int [] positionDynamique = new int[2]; //entre -1 et 1 -> la rotation
+	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnées
 	private boolean isSauvageon = true; 
 	
-// ####################################### Initialisation #############################################	
+	
 	
 	public Carte(Boolean Camp){
 		this.isSauvageon = Camp;
-		/*	if (Camp == true){
+		if (Camp == true){
 			//Sauvageons
-			this.Carte[][] = {
+			this.CarteCouleur = new int[][]{
 			    {Color.RED, Color.BLUE, Color.GREEN, Color.GREEN, Color.WHITE},
 				{Color.GRAY, Color.BLUE, Color.GREEN, Color.GREEN, Color.GREEN},
 				{Color.GRAY, Color.BLUE, Color.BLUE, Color.GREEN, Color.ORANGE},
@@ -34,8 +29,8 @@ public class Carte {
 								
 		}else {
 			//Garde de nuit
-			this.Carte[][] = {
-				    {Color.RED, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
+			this.CarteCouleur = new int[][] {
+				 	{Color.RED, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
 					{Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
 					{Color.GRAY, Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY},
 					{Color.GRAY, Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY},
@@ -43,8 +38,7 @@ public class Carte {
 					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
 					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
 				};
-			}
-	*/	
+		}
 	}
 	
 	/*
@@ -55,7 +49,6 @@ public class Carte {
 			return false;
 		}
 	*/
-	
 	public int[] getGoal(){
 		/*
 		 * true = sauvageon
@@ -88,24 +81,6 @@ public class Carte {
 		return debut;
 	}
 	
-// ############################################ Position du robot #####################################
-	
-	public int[] getPositonDynamique() {
-		
-		return positonDynamique;
-	}
-
-	public void setPositonDynamique(int[] positonDynamique) {
-		this.positonDynamique = positonDynamique;
-	}
-
-	public int[] getPositionHistorique() {
-		return positionHistorique;
-	}
-
-	public void setPositionHistorique(int[] positionHistorique) {
-		this.positionHistorique = positionHistorique;
-	}
 
 }
 
