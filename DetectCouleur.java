@@ -1,4 +1,4 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
@@ -9,15 +9,17 @@ public class DetectCouleur implements Behavior{
 
 	private EV3ColorSensor cs;
 	private MovePilot pilot;
+	private Carte carte;
 	
-	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot) {
+	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte) {
 		this.cs = cs;
 		this.pilot = pilot;
+		this.carte=carte;
 	}
 	
 	public boolean takeControl() { 
 		return cs.getColorID() != Color.BLACK; //Couleur différente
-		}
+	}
 	
 	public void suppress() {
 	}

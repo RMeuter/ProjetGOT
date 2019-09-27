@@ -91,6 +91,7 @@ public class Carte {
 // ############################################ Position du robot #####################################
 	
 	public int[] getPositonDynamique() {
+		
 		return positonDynamique;
 	}
 
