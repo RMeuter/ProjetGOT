@@ -21,6 +21,8 @@ public class Carte {
 		}
 	}
 	
+
+	
 	public int[] getGoal() {
 		/*
 		 * Le but est une coordonnée matricielle du camp
