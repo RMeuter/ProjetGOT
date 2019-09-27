@@ -4,11 +4,11 @@ import lejos.robotics.Color;
 
 public class Carte {
 
-	private static int [][] CarteCouleur; //
+	private int [][] CarteCouleur; //
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
 	private int [] positionDynamique = new int[2]; //entre -1 et 1 -> la rotation
-	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnées
+	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnÃ©es
 	private boolean isSauvageon = true; 
 	
 	
