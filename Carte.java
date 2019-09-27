@@ -1,140 +1,114 @@
-<<<<<<< HEAD
 package ProjetGOT;
 
 import lejos.robotics.Color;
 
 public class Carte {
-	
-	private static int [][] Carte = new int[7][5];
+
+	private static int [][] Carte = new int [7][5]; // Il n'y a pas qu'une seule carte
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
-	private boolean isSauvageon;
 	
+	private int [] positonDynamique = new int [2]; 
+	//Comprise entre -1 et 1 pour chaque x et y  
 	
-	public Carte(boolean Camp) {
-		this.isSauvageon=Camp;
-		if (Camp==true) {
-			this.Carte[0][0]=Color.RED;
-			this.Carte[0][4]=Color.WHITE;
-		} else {
-			this.Carte[5][3]=Color.RED;
-			this.Carte[6][0]=Color.WHITE;
-		}
+	private int [] positionHistorique = new int [2]; 
+	// Placer sur la carte directement exemple [2, 3] 2 en x et 3 en y
+
+	private boolean isSauvageon = true; 
+	
+// ####################################### Initialisation #############################################	
+	
+	public Carte(Boolean Camp){
+		this.isSauvageon = Camp;
+		/*	if (Camp == true){
+			//Sauvageons
+			this.Carte[][] = {
+			    {Color.RED, Color.BLUE, Color.GREEN, Color.GREEN, Color.WHITE},
+				{Color.GRAY, Color.BLUE, Color.GREEN, Color.GREEN, Color.GREEN},
+				{Color.GRAY, Color.BLUE, Color.BLUE, Color.GREEN, Color.ORANGE},
+				{Color.GRAY, Color.GRAY, Color.BLUE, Color.GREEN, Color.GREEN},
+				{Color.GRAY, Color.GRAY, Color.GRAY, Color.ORANGE, Color.GREEN},
+				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
+				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
+			};
+								
+		}else {
+			//Garde de nuit
+			this.Carte[][] = {
+				    {Color.RED, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
+					{Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
+					{Color.GRAY, Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY},
+					{Color.GRAY, Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY},
+					{Color.GRAY, Color.GRAY, Color.GRAY, Color.ORANGE, Color.GRAY},
+					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
+					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
+				};
+			}
+	*/	
 	}
 	
-
+	/*
+	public boolean estBloque(int x, int y, Direction d) {
+		if (x == 0 && d == Direction.Ouest || y == 0 && d == Direction.Nord || x == tailleX-1 && d == Direction.Est || y == tailleY -1 && d == Direction.Sud) {	
+			return true;
+		}else {
+			return false;
+		}
+	*/
 	
-	public int[] getGoal() {
+	public int[] getGoal(){
 		/*
-		 * Le but est une coordonnée matricielle du camp
-		 * Si c'est true la fonction retourne le but d'un sauvageons
-		 * Sinon elle retourne le but de l'autre équipe
-		 * */
-		int [] goal= new int [2];
-		if (this.isSauvageon) {
-			goal[0]=5;
-			goal[1]=3;			
-		} else {
-			goal[0]=0;
-			goal[1]=4;
+		 * true = sauvageon
+		 * false = garde de nuit
+		 */
+		int[] goal = new int[2];
+		if (this.isSauvageon){
+			goal[0] = 0;
+			goal[1] = 0;
+		}else {
+			goal[0] = 5;
+			goal[1] = 3;
 		}
 		return goal;
 	}
-
-	public int[] getDebut() {
+	
+	public int[] getDebut(){
 		/*
-		 * Le but est une coordonnée matricielle du camp
-		 * Si c'est true la fonction retourne le but d'un sauvageons
-		 * Sinon elle retourne le but de l'autre équipe
-		 * */
-		int [] debut= new int [2];
-		if (this.isSauvageon) {
-			debut[0]=5;
-			debut[1]=3;			
-		} else {
-			debut[0]=0;
-			debut[1]=4;
+		 * true = sauvageon
+		 * false = garde de nuit
+		 */
+		int[] debut = new int[2];
+		if (this.isSauvageon){
+			debut[0] = 0;
+			debut[1] = 4;
+		}else {
+			debut[0] = 6;
+			debut[1] = 0;
 		}
 		return debut;
 	}
 	
-	public int getPosition(int[] position) {
-		return Carte[position[0]][position[1]];
+// ############################################ Position du robot #####################################
+	
+	public int[] getPositonDynamique() {
+		return positonDynamique;
 	}
 
-	public void setPosition(int[] position,int couleur) {
-		Carte[position[0]][position[1]] = couleur;
-	}
-	
-	
-	
-=======
-package ProjetGOT;
-
-import lejos.robotics.Color;
-
-public class Carte {
-	
-	private static int [][] Carte = new int[7][5];
-	private static float tailleCase = 12;
-	private static float ligneCase = (float) 1.5;
-	private boolean isSauvageon;
-	
-	
-	public Carte(boolean Camp) {
-		this.isSauvageon=Camp;
-		if (Camp==true) {
-			this.Carte[0][0]=Color.RED;
-			this.Carte[0][4]=Color.WHITE;
-		} else {
-			this.Carte[5][3]=Color.RED;
-			this.Carte[6][0]=Color.WHITE;
-		}
-	}
-	
-	public int[] getGoal() {
-		/*
-		 * Le but est une coordonnée matricielle du camp
-		 * Si c'est true la fonction retourne le but d'un sauvageons
-		 * Sinon elle retourne le but de l'autre équipe
-		 * */
-		int [] goal= new int [2];
-		if (this.isSauvageon) {
-			goal[0]=5;
-			goal[1]=3;			
-		} else {
-			goal[0]=0;
-			goal[1]=4;
-		}
-		return goal;
+	public void setPositonDynamique(int[] positonDynamique) {
+		this.positonDynamique = positonDynamique;
 	}
 
-	public int[] getDebut() {
-		/*
-		 * Le but est une coordonnée matricielle du camp
-		 * Si c'est true la fonction retourne le but d'un sauvageons
-		 * Sinon elle retourne le but de l'autre équipe
-		 * */
-		int [] debut= new int [2];
-		if (this.isSauvageon) {
-			debut[0]=5;
-			debut[1]=3;			
-		} else {
-			debut[0]=0;
-			debut[1]=4;
-		}
-		return debut;
-	}
-	
-	public int getPosition(int[] position) {
-		return Carte[position[0]][position[1]];
+	public int[] getPositionHistorique() {
+		return positionHistorique;
 	}
 
-	public void setPosition(int[] position,int couleur) {
-		Carte[position[0]][position[1]] = couleur;
+	public void setPositionHistorique(int[] positionHistorique) {
+		this.positionHistorique = positionHistorique;
 	}
-	
-	
-	
->>>>>>> f946cbc7caccebeacbadc49a96dc0ffee8ad48b7
-	}
+
+}
+
+/*
+ * public enum TypeCase {
+	Camp, Prairie, Mur, Marecage; }
+ */
