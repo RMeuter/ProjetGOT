@@ -25,9 +25,14 @@ public class LigneNoire implements Behavior{
 	}
 
 	public void action() {
-		carte.getPlusCourtChemin(); // Ici l'algo de plus court chemin
-		int [] position = carte.getPositionDynamque();
-		
-		pilot.forward();
-	}	
+		/*
+		 * Recupere la position dynamique proposer par la carte afin que le robot puisse 
+		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
+		 * */
+		//carte.getPlusCourtChemin(); // Ici l'algo de plus court chemin
+		int newPosition = carte.findNewPositionDynamique();
+		pilot.rotate(newPosition-carte.getPositionDynamique());
+		carte.setPositionDynamique(newPosition);
+		pilot.travel(carte.getTailleCase()+carte.getLigneCase());
+	}
 }
