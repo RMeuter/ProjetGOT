@@ -14,19 +14,22 @@ import lejos.robotics.subsumption.Behavior;
 public class Arbitre {
 	public static void main(String[] args) {
 		Button.RIGHT.waitForPressAndRelease();
-		
+		// Besoin en premier lieu
+		Arbitrator arby = null;
 		Carte carte = new Carte(true);
 		
+		
+		// Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
-		Arbitrator arby = null;
+		
 		
 		// definition du chassis
 		Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-60);
 		Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(60);
-		Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);
-		
+		Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);	
 		MovePilot pilot = new MovePilot(chassis);
-	
+		
+		//Alteration de la vitesse de base
 		pilot.setLinearSpeed(20.);
 		pilot.setAngularSpeed(20.);
 		
