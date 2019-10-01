@@ -18,6 +18,9 @@ public class ArretBouton implements Behavior{
 		this.pilot = pilot;
 	}
 
+	public void setArbitrator(Arbitrator arby) {
+		this.arby = arby;
+	}
 	
 	public boolean takeControl(){
 		return Button.RIGHT.isDown();
@@ -27,6 +30,8 @@ public class ArretBouton implements Behavior{
 		pilot.stop();
 		cs.close();
 		arby.stop();
+		System.out.println("C'est bon ta finit mamène ! ");
+		System.exit(0);
 	}
 	
 	public void suppress(){

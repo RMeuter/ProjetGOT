@@ -1,6 +1,7 @@
 package ProjetGOT;
 
 import lejos.hardware.Button;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -18,10 +19,13 @@ public class Arbitre {
 		Arbitrator arby = null;
 		Carte carte = null;
 		
+		Button.waitForAnyEvent();
 		if (Button.UP.isDown()) {
 			carte = new Carte(true);
-		} else if (Button.UP.isDown()) {
+			LCD.drawString("Tu es un sauvageon", 3, 4);
+		} else if (Button.DOWN.isDown()) {
 			carte = new Carte(false);
+			LCD.drawString("Tu n'es pas un sauvageon", 3, 4);
 		}
 		
 		
@@ -44,6 +48,11 @@ public class Arbitre {
 		Behavior b4 = new ArretBouton(arby, cs, pilot);
 		Behavior[] bArray = {b2,b3,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
+		
+		if(b4 instanceof ArretBouton) {
+			ArretBouton b = (ArretBouton)b4;
+			b.setArbitrator(arby);
+		}
 		arby.go();
 }
 }
