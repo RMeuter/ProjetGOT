@@ -22,6 +22,7 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public void suppress() {
+		pilot.stop();
 	}
 
 	public void action() {
