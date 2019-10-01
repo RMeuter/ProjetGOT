@@ -16,7 +16,13 @@ public class Arbitre {
 		Button.RIGHT.waitForPressAndRelease();
 		// Besoin en premier lieu
 		Arbitrator arby = null;
-		Carte carte = new Carte(true);
+		Carte carte = null;
+		
+		if (Button.UP.isDown()) {
+			carte = new Carte(true);
+		} else if (Button.UP.isDown()) {
+			carte = new Carte(false);
+		}
 		
 		
 		// Definition des senseurs
@@ -33,11 +39,10 @@ public class Arbitre {
 		pilot.setLinearSpeed(20.);
 		pilot.setAngularSpeed(20.);
 		
-		Behavior b1 = new Avancer(pilot); // Avancer
 		Behavior b2 = new DetectCouleur(cs, pilot, carte);
 		Behavior b3 = new LigneNoire(cs, pilot, carte);
-		Behavior b4 = new ArretBouton(arby, cs);
-		Behavior[] bArray = {b1, b2,b3,b4}; // du moins prioritaire au plus prioritaire
+		Behavior b4 = new ArretBouton(arby, cs, pilot);
+		Behavior[] bArray = {b2,b3,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
 		arby.go();
 }
