@@ -1,4 +1,4 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 import lejos.robotics.Color;
 
@@ -8,7 +8,7 @@ public class Carte {
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
 	private int positionDynamique; //entre -1 et 1 -> la rotation
-	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnées
+	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnï¿½es
 	private int [] goal = new int [2];
 	private boolean isSauvageon = true; 
 	
@@ -49,9 +49,9 @@ public class Carte {
 	
 	/*
 	 * Vaut mieux le voir avec les couleur si au bout de 12 cm d'avancement il n'y a pas de ligne noir donc on est sortie
-	 * Pourquoi les couleur car le robot ne tourne jamais 180 ou 90 degres reelement donc dure détablir des direction strict
-	 * mettre des limites pour les coordonnées (si il est en 0,0 il n'a pas le droite de revenir en arrière 
-	 * ni aller à gauche.
+	 * Pourquoi les couleur car le robot ne tourne jamais 180 ou 90 degres reelement donc dure dï¿½tablir des direction strict
+	 * mettre des limites pour les coordonnï¿½es (si il est en 0,0 il n'a pas le droite de revenir en arriï¿½re 
+	 * ni aller ï¿½ gauche.
 	public boolean estBloque(int x, int y, Direction d) {
 		if (x == 0 && d == Direction.Ouest || y == 0 && d == Direction.Nord || x == tailleX-1 && d == Direction.Est || y == tailleY -1 && d == Direction.Sud) {	
 			return true;
@@ -62,7 +62,7 @@ public class Carte {
 	
 	public void setGoal(){
 		/*
-		 * Le but change au fur et à mesure de la partie il faut donc le redéfinir à chaque fois
+		 * Le but change au fur et ï¿½ mesure de la partie il faut donc le redï¿½finir ï¿½ chaque fois
 		 * true = sauvageon
 		 * false = garde de nuit
 		 */
@@ -110,14 +110,18 @@ public class Carte {
 		if (this.goal[0]-this.positionHistorique[0]!=0) {
 			if (this.goal[0]-this.positionHistorique[0]>0) {
 				newPosition = 90;
+				this.positionHistorique[0]+=1;
 			} else {
 				newPosition = 270;
+				this.positionHistorique[0]-=1;
 			}
 		} else {
 			if (this.goal[1]-this.positionHistorique[1]>0) {
-				newPosition = 180;
-			} else {
 				newPosition = 0;
+				this.positionHistorique[1]+=1;
+			} else {
+				newPosition = 180;
+				this.positionHistorique[1]-=1;
 			}
 		}
 		return newPosition;
