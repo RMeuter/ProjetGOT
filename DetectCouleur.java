@@ -34,8 +34,8 @@ public class DetectCouleur implements Behavior{
 		 * On verify qu'il ne sort pas de la carte ainsi on ordonne au robot de parcourir la longueur d'une case 
 		 * au max.
 		 * A refaire par la suite
-		 * 
 		 * */
+		
 		if (needVerify==true) {
 			pilot.travel(12);	
 		} else {
