@@ -1,9 +1,11 @@
 package ProjetGOT;
 
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 public class DetectCouleur implements Behavior{
 
@@ -27,6 +29,7 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public void suppress() {
+		pilot.stop();
 	}
 
 	public void action() {
@@ -35,13 +38,32 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		 * */
-		
+		LCD.drawString(showColor(cs.getColorID()), 3, 4);
+		Delay.msDelay(300);
+		LCD.clear();
 		if (needVerify==true) {
 			pilot.travel(12);	
 		} else {
 			pilot.forward();
 		}
 		
+	}
+	
+	public String showColor(int color) {
+		switch (color) {
+		case Color.BLACK :
+			return "Noir";
+		case Color.BLUE :
+			return "Blue";
+		case Color.RED :
+			return "Rouge";
+		case Color.ORANGE:
+			return "Orange";
+		case Color.WHITE:
+			return "blanc";
+		default :
+			return "Pas de color !";
+		} 
 	}
 }
 
