@@ -18,6 +18,7 @@ public class Carte {
 
 	public Carte(Boolean Camp){
 		this.isSauvageon = Camp;
+		setGoal();
 		if (Camp == true){
 			//Sauvageons
 			this.CarteCouleur = new int[][]{
@@ -43,6 +44,7 @@ public class Carte {
 				};
 				this.positionDynamique = 0;
 		}
+		
 	}
 	
 	/*
@@ -120,16 +122,6 @@ public class Carte {
 		return newPosition;
 	}
 	
-	public int isSupByZero (int nombre) {
-		/*
-		 * fonction qui regarde si le nombre est supeur à 0 est retourne 1 si inferieur retourne -1
-		 * */
-		if (nombre > 0) {
-			return 90;
-		} else {
-			return -90;
-		}
-	}
 	
 	public void setPositionDynamique(int positionDynamique) {
 		this.positionDynamique = positionDynamique;
