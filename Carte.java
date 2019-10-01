@@ -1,4 +1,4 @@
-package ProjetGOT;
+package OBJECTIF1;
 
 import lejos.robotics.Color;
 
@@ -8,7 +8,7 @@ public class Carte {
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
 	private int positionDynamique; //entre -1 et 1 -> la rotation
-	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnÃ©es
+	private int [] positionHistorique = new int[2]; //sur la carte avec coordonnées
 	private int [] goal = new int [2];
 	private boolean isSauvageon = true; 
 	
@@ -35,12 +35,12 @@ public class Carte {
 			//Garde de nuit
 			this.CarteCouleur = new int[][] {
 				 	{Color.RED, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
-					{Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
-					{Color.GRAY, Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY},
-					{Color.GRAY, Color.GRAY, Color.BLUE, Color.GRAY, Color.GRAY},
-					{Color.GRAY, Color.GRAY, Color.GRAY, Color.ORANGE, Color.GRAY},
-					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
-					{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
+					{Color.GREEN, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
+					{Color.GREEN, Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY},
+					{Color.GREEN, Color.GREEN, Color.BLUE, Color.GRAY, Color.GRAY},
+					{Color.GREEN, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.GRAY},
+					{Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.BLUE},
+					{Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.BLUE}
 				};
 				this.positionDynamique = 0;
 		}
@@ -49,8 +49,9 @@ public class Carte {
 	
 	/*
 	 * Vaut mieux le voir avec les couleur si au bout de 12 cm d'avancement il n'y a pas de ligne noir donc on est sortie
-	 * Pourquoi les couleur car le robot ne tourne jamais 180 ou 90 degres reelement donc dure dÃ©tablir des direction strict
-	
+	 * Pourquoi les couleur car le robot ne tourne jamais 180 ou 90 degres reelement donc dure détablir des direction strict
+	 * mettre des limites pour les coordonnées (si il est en 0,0 il n'a pas le droite de revenir en arrière 
+	 * ni aller à gauche.
 	public boolean estBloque(int x, int y, Direction d) {
 		if (x == 0 && d == Direction.Ouest || y == 0 && d == Direction.Nord || x == tailleX-1 && d == Direction.Est || y == tailleY -1 && d == Direction.Sud) {	
 			return true;
@@ -61,7 +62,7 @@ public class Carte {
 	
 	public void setGoal(){
 		/*
-		 * Le but change au fur et Ã  mesure de la partie il faut donc le redÃ©finir Ã  chaque fois
+		 * Le but change au fur et à mesure de la partie il faut donc le redéfinir à chaque fois
 		 * true = sauvageon
 		 * false = garde de nuit
 		 */
@@ -148,6 +149,7 @@ public class Carte {
 
 	
 	
+
 }
 
 /*
