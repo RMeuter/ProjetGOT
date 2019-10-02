@@ -15,23 +15,34 @@ import lejos.robotics.subsumption.Behavior;
 public class Arbitre {
 	public static void main(String[] args) {
 		Button.RIGHT.waitForPressAndRelease();
-		// Besoin en premier lieu
+		
+		// Base
 		Arbitrator arby = null;
 		Carte carte = null;
-		
-		Button.waitForAnyEvent();
-		if (Button.UP.isDown()) {
-			carte = new Carte(true);
-			LCD.drawString("Tu es un sauvageon", 3, 4);
-		} else if (Button.DOWN.isDown()) {
-			carte = new Carte(false);
-			LCD.drawString("Tu n'es pas un sauvageon", 3, 4);
-		}
-		
 		
 		// Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
 		
+		
+		// Calibrage des couleurs
+		LCD.drawString("Calibrons", 0, 0);
+		Button.waitForAnyEvent();
+		LCD.clear();
+		CalibrageColor colorTab = new CalibrageColor();
+		colorTab.Calibrage(cs);
+		
+		
+		// Definition du camp
+		LCD.drawString("Choisis ton camp", 0, 0);
+		Button.waitForAnyEvent();
+		if (Button.UP.isDown()) {
+			carte = new Carte(true);
+			LCD.drawString("Sauvageon", 0, 0);
+		} else if (Button.DOWN.isDown()) {
+			carte = new Carte(false);
+			LCD.drawString("Garde de la nuit", 0, 0);
+		}
+		LCD.clear();
 		
 		// definition du chassis
 		Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-60);
@@ -43,12 +54,15 @@ public class Arbitre {
 		pilot.setLinearSpeed(20.);
 		pilot.setAngularSpeed(20.);
 		
-		Behavior b2 = new DetectCouleur(cs, pilot, carte);
-		Behavior b3 = new LigneNoire(cs, pilot, carte);
+		
+		// Definition des comportements
+		Behavior b2 = new DetectCouleur(cs, pilot, carte, colorTab);
+		Behavior b3 = new LigneNoire(cs, pilot, carte, colorTab);
 		Behavior b4 = new ArretBouton(arby, cs, pilot);
 		Behavior[] bArray = {b2,b3,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
 		
+		// Arret de l'arbitre
 		if(b4 instanceof ArretBouton) {
 			ArretBouton b = (ArretBouton)b4;
 			b.setArbitrator(arby);
