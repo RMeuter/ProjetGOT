@@ -8,24 +8,25 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
 public class DetectCouleur implements Behavior{
-
+	/* Googlize : reconnaissance couleur robotique lejos
+	 * Lien utile :
+	 * - https://lego.vilvert.fr/2017/12/08/calibrage-du-capteur-de-couleur-ev3-avec-lejos/
+	 * 
+	 * */
 	private EV3ColorSensor cs;
 	private MovePilot pilot;
 	private Carte carte;
-	private boolean needVerify = false;
+	private CalibrageColor colorTab;
 	
-	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte) {
+	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte, CalibrageColor colorTab) {
 		this.cs = cs;
 		this.pilot = pilot;
 		this.carte=carte;
+		this.colorTab = colorTab;
 	}
 	
 	public boolean takeControl() { 
-		int color = (int) cs.getColorID();
-		if (color == Color.WHITE) {
-			needVerify=true;
-		}
-		return cs.getColorID() != Color.BLACK; //Couleur différente
+		return colorTab.getCalibreColor(cs) != "noir"; //Couleur différente
 	}
 	
 	public void suppress() {
@@ -38,33 +39,16 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		 * */
-		LCD.drawString(showColor(cs.getColorID()), 3, 4);
+		LCD.drawString(colorTab.getCalibreColor(cs), 0, 0);
 		Delay.msDelay(300);
 		LCD.clear();
-		if (needVerify==true) {
-			pilot.travel(12);	
-		} else {
-			pilot.forward();
-		}
+		pilot.forward();
+		
 		
 	}
 	
-	public String showColor(int color) {
-		switch (color) {
-		case Color.BLACK :
-			return "Noir";
-		case Color.BLUE :
-			return "Blue";
-		case Color.RED :
-			return "Rouge";
-		case Color.ORANGE:
-			return "Orange";
-		case Color.WHITE:
-			return "blanc";
-		default :
-			return "Pas de color !";
-		} 
-	}
+	
 }
+
 
 
