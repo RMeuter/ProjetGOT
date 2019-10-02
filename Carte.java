@@ -30,7 +30,7 @@ public class Carte {
 				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
 				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
 			};
-			this.positionDynamique = 180;
+			this.positionDynamique = 0;
 		}else {
 			//Garde de nuit
 			this.CarteCouleur = new int[][] {
@@ -42,7 +42,7 @@ public class Carte {
 					{Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.BLUE},
 					{Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.BLUE}
 				};
-				this.positionDynamique = 0;
+				this.positionDynamique = 180;
 		}
 		
 	}
@@ -109,10 +109,10 @@ public class Carte {
 		int newPosition;
 		if (this.goal[0]-this.positionHistorique[0]!=0) {
 			if (this.goal[0]-this.positionHistorique[0]>0) {
-				newPosition = 90;
+				newPosition = 270;
 				this.positionHistorique[0]+=1;
 			} else {
-				newPosition = 270;
+				newPosition = 90;
 				this.positionHistorique[0]-=1;
 			}
 		} else {
