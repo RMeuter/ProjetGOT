@@ -32,7 +32,11 @@ public class LigneNoire implements Behavior{
 		 * */
 		//carte.getPlusCourtChemin(); // Ici l'algo de plus court chemin
 		int newPosition = carte.findNewPositionDynamique();
-		pilot.rotate(newPosition-carte.getPositionDynamique());
+		int rotate = newPosition-carte.getPositionDynamique();
+		if (rotate==270 || rotate ==-270) {
+			rotate = -rotate/3;
+		}
+		pilot.rotate(rotate);
 		carte.setPositionDynamique(newPosition);
 		pilot.travel(carte.getTailleCase()+carte.getLigneCase());
 	}
