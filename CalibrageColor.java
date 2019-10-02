@@ -8,16 +8,10 @@ import lejos.utility.Delay;
 
 public class CalibrageColor {
 	private float [][] calibreColor = new float [6][3];
-	private static String [] nom = new String [] {"Rouge", "Orange", "vert", "blanc", "noir", "bleu"};
-	private EV3ColorSensor color;
+	private static String [] nom = new String [] {"Rouge", "Orange", "vert", "blanc", "bleu", "noir"};
 	
-
-	public CalibrageColor (EV3ColorSensor color) {
-		this.color=color;
-		Calibrage(this.calibreColor, this.nom, color);
-	}
 	
-	public static void Calibrage (float [][] calibreColor, String[] nom, EV3ColorSensor color) {
+	public void Calibrage (EV3ColorSensor color) {
 		for (int i = 0;i<nom.length;i++ ) {
 			LCD.drawString(("Couleur : "+nom[i]), 0, 0);
 			Button.waitForAnyPress();
@@ -37,7 +31,7 @@ public class CalibrageColor {
 		return sample;
 	}
 	
-	public static int testColorRGB(EV3ColorSensor color, float[][] calibreColor) {
+	public String getCalibreColor(EV3ColorSensor color) {
 		float[] sample = new float[3];
 		color.getRGBMode().fetchSample(sample, 0);// 0 est le numero de la case
 		float base = (float) 0.02;
@@ -45,10 +39,10 @@ public class CalibrageColor {
 			if (sample[0]>-base+calibreColor[i][0] && sample[0]<base+calibreColor[i][0]
 					&& sample[1]>-base+calibreColor[i][1] && sample[1]<base+calibreColor[i][1]
 					&& sample[2]>-base+calibreColor[i][2] && sample[2]<base+calibreColor[i][2] ) {
-				return i;
+				return nom[i];
 			}
 		}
-		return -1;
+		return "Aucune couleur";
 	}
 
 }
