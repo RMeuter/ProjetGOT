@@ -11,6 +11,7 @@ import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 public class Arbitre {
 	public static void main(String[] args) {
@@ -31,17 +32,17 @@ public class Arbitre {
 		CalibrageColor colorTab = new CalibrageColor();
 		colorTab.Calibrage(cs);
 		
-		
 		// Definition du camp
 		LCD.drawString("Choisis ton camp", 0, 0);
-		Button.waitForAnyEvent();
+		Button.waitForAnyPress();
 		if (Button.UP.isDown()) {
 			carte = new Carte(true);
 			LCD.drawString("Sauvageon", 0, 0);
-		} else if (Button.DOWN.isDown()) {
+		} else {
 			carte = new Carte(false);
 			LCD.drawString("Garde de la nuit", 0, 0);
 		}
+		Delay.msDelay(300);
 		LCD.clear();
 		
 		// definition du chassis
