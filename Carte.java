@@ -4,7 +4,7 @@ import lejos.robotics.Color;
 
 public class Carte {
 
-	private int [][] CarteCouleur; //
+	private String [][] CarteCouleur; //
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
 	private int positionDynamique; //entre -1 et 1 -> la rotation
@@ -21,26 +21,26 @@ public class Carte {
 		setGoal();
 		if (Camp == true){
 			//Sauvageons
-			this.CarteCouleur = new int[][]{
-			    {Color.RED, Color.BLUE, Color.GREEN, Color.GREEN, Color.WHITE},
-				{Color.GRAY, Color.BLUE, Color.GREEN, Color.GREEN, Color.GREEN},
-				{Color.GRAY, Color.BLUE, Color.BLUE, Color.GREEN, Color.ORANGE},
-				{Color.GRAY, Color.GRAY, Color.BLUE, Color.GREEN, Color.GREEN},
-				{Color.GRAY, Color.GRAY, Color.GRAY, Color.ORANGE, Color.GREEN},
-				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE},
-				{Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY, Color.BLUE}
+			this.CarteCouleur = new String[][]{
+			    {"rouge", "bleu", "vert", "vert", "blanc"},
+				{"rien", "bleu", "vert", "vert", "vert"},
+				{"rien", "bleu", "bleu", "vert", "orange"},
+				{"rien", "rien", "bleu", "vert", "vert"},
+				{"rien", "rien", "rien", "orange", "vert"},
+				{"rien", "rien", "rien", "rien", "bleu"},
+				{"rien", "rien", "rien", "rien", "bleu"}
 			};
 			this.positionDynamique = 0;
 		}else {
 			//Garde de nuit
-			this.CarteCouleur = new int[][] {
-				 	{Color.RED, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
-					{Color.GREEN, Color.BLUE, Color.GRAY, Color.GRAY, Color.GRAY},
-					{Color.GREEN, Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY},
-					{Color.GREEN, Color.GREEN, Color.BLUE, Color.GRAY, Color.GRAY},
-					{Color.GREEN, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.GRAY},
-					{Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.BLUE},
-					{Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.BLUE}
+			this.CarteCouleur = new String[][] {
+				 	{"Rouge", "bleu", "rien", "rien", "rien"},
+					{"vert", "bleu", "rien", "rien", "rien"},
+					{"vert", "bleu", "bleu", "rien", "rien"},
+					{"vert", "vert", "bleu", "rien", "rien"},
+					{"vert", "orange", "orange", "orange", "rien"},
+					{"vert", "vert", "vert", "rouge", "bleu"},
+					{"blanc", "vert", "vert", "vert", "bleu"}
 				};
 				this.positionDynamique = 180;
 		}
