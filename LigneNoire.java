@@ -28,7 +28,6 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public void suppress() {
-		pilot.stop();
 	}
 
 	public void action() {
@@ -37,6 +36,11 @@ public class LigneNoire implements Behavior{
 		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
 		 * */
 		//carte.getPlusCourtChemin(); // Ici l'algo de plus court chemin
+		LCD.clear();
+		
+		LCD.drawString("Position :"+Arrays.toString(carte.getPositionHistorique()), 0, 3); 
+		Delay.msDelay(300);
+		LCD.clear();
 		
 		int newPosition = carte.findNewPositionDynamique();
 		int rotate = newPosition-carte.getPositionDynamique();
@@ -47,8 +51,6 @@ public class LigneNoire implements Behavior{
 		carte.setPositionDynamique(newPosition);
 		pilot.travel(carte.getTailleCase()+carte.getLigneCase());
 		
-		LCD.drawString("Position :"+Arrays.toString(carte.getPositionHistorique()), 0, 0); 
-		Delay.msDelay(300);
-		LCD.clear();
+		
 	}
 }
