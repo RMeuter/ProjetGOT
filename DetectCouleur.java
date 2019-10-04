@@ -30,7 +30,6 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public void suppress() {
-		pilot.stop();
 	}
 
 	public void action() {
@@ -38,10 +37,12 @@ public class DetectCouleur implements Behavior{
 		 * On verify qu'il ne sort pas de la carte ainsi on ordonne au robot de parcourir la longueur d'une case 
 		 * au max.
 		 * A refaire par la suite
-		 * */
-		LCD.drawString(colorTab.getCalibreColor(cs), 0, 0);
+		* */
+		
+		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);
 		Delay.msDelay(300);
 		LCD.clear();
+		 
 		pilot.forward();
 		
 		

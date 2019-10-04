@@ -8,7 +8,7 @@ import lejos.utility.Delay;
 
 public class CalibrageColor {
 	private float [][] calibreColor = new float [6][3];
-	private static String [] nom = new String [] {"Rouge", "Orange", "vert", "blanc", "bleu", "noir"};
+	private static String [] nom = new String [] {"rouge", "orange", "vert", "blanc", "bleu", "noir"};
 	
 	
 	public void Calibrage (EV3ColorSensor color) {
