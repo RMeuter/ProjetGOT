@@ -26,10 +26,11 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public boolean takeControl() { 
-		return colorTab.getCalibreColor(cs) != "noir"; //Couleur différente
+		return colorTab.getCalibreColor(cs) != "noir" ; //Couleur différente
 	}
 	
 	public void suppress() {
+		pilot.stop();
 	}
 
 	public void action() {
@@ -39,12 +40,11 @@ public class DetectCouleur implements Behavior{
 		 * A refaire par la suite
 		* */
 		
-		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);
-		Delay.msDelay(300);
-		LCD.clear();
-		 
+		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);				
 		pilot.forward();
-		
+		Delay.msDelay(3000);
+		LCD.clear();
+
 		
 	}
 	
