@@ -34,6 +34,8 @@ public class Arbitre {
 		
 		// Definition du camp
 		LCD.drawString("Choisis ton camp", 0, 0);
+		LCD.drawString("Haut pour Sauvageons", 0, 1);
+		LCD.drawString("Reste des bouttons garde de nuit", 0, 2);
 		Button.waitForAnyPress();
 		if (Button.UP.isDown()) {
 			carte = new Carte(true);
@@ -52,15 +54,16 @@ public class Arbitre {
 		MovePilot pilot = new MovePilot(chassis);
 		
 		//Alteration de la vitesse de base
-		pilot.setLinearSpeed(20.);
-		pilot.setAngularSpeed(20.);
+		pilot.setLinearSpeed(50.);
+		pilot.setAngularSpeed(50.);
 		
 		
 		// Definition des comportements
+		Behavior b1 = new ArriveGoal(cs, pilot, carte, colorTab);
 		Behavior b2 = new DetectCouleur(cs, pilot, carte, colorTab);
 		Behavior b3 = new LigneNoire(cs, pilot, carte, colorTab);
 		Behavior b4 = new ArretBouton(arby, cs, pilot);
-		Behavior[] bArray = {b2,b3,b4}; // du moins prioritaire au plus prioritaire
+		Behavior[] bArray = {b2,b3,b1,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
 		
 		// Arret de l'arbitre
