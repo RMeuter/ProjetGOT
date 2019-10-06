@@ -7,9 +7,9 @@ public class Carte {
 	private String [][] CarteCouleur; //
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
-	private int positionDynamique; //entre -1 et 1 -> la rotation
-	private int [] positionHistorique = new int[2]; //sur la carte avec coordonn�es
-	private int [] goal = new int [2];
+	private int positionDynamique; //entre -180 et 180 -> la rotation
+	private int [] positionHistorique = new int[2]; //sur la carte avec coordonn�es [x, y]
+	private int [] goal = new int [2]; // [x, y]
 	private boolean isSauvageon = true; 
 	
 	
@@ -18,7 +18,8 @@ public class Carte {
 
 	public Carte(Boolean Camp){
 		this.isSauvageon = Camp;
-		setGoal();
+		setGoal(1);
+		this.positionHistorique= getDebut();
 		if (Camp == true){
 			//Sauvageons
 			this.CarteCouleur = new String[][]{
@@ -44,7 +45,7 @@ public class Carte {
 				};
 				this.positionDynamique = 180;
 		}
-		
+		this.positionHistorique= getDebut();
 	}
 	
 	/*
@@ -60,21 +61,17 @@ public class Carte {
 		}
 	*/
 	
-	public void setGoal(){
-		/*
-		 * Le but change au fur et � mesure de la partie il faut donc le red�finir � chaque fois
-		 * true = sauvageon
-		 * false = garde de nuit
-		 */
-		this.goal = new int[2];
-		if (this.isSauvageon){
-			goal[0] = 0;
-			goal[1] = 0;
-		}else {
-			goal[0] = 5;
-			goal[1] = 3;
+	public boolean isArriveGoal() {
+		if (goal==positionHistorique) {
+			return true;
+		} else {
+			return false;
 		}
 	}
+
+
+	
+	// ################################ Trouver une position dans l'espace ##############################
 	
 	public int[] getDebut(){
 		/*
@@ -83,16 +80,30 @@ public class Carte {
 		 */
 		int[] debut = new int[2];
 		if (this.isSauvageon){
-			debut[0] = 0;
-			debut[1] = 4;
+			debut = new int [] {4, 0};
 		}else {
-			debut[0] = 6;
-			debut[1] = 0;
+			debut = new int [] {0, 6};
 		}
 		return debut;
 	}
 	
-	// ################################ Trouver une position dans l'espace ##############################
+	public void setGoal(int step){
+		/*
+		 * Le but change au fur et � mesure de la partie il faut donc le red�finir � chaque fois
+		 * true = sauvageon
+		 * false = garde de nuit
+		 */
+		this.goal = new int[2];
+		if (this.isSauvageon && step == 1){
+			goal = new int [] {0, 0};
+		}else if (!this.isSauvageon && step == 1) {
+			goal = new int [] {3, 5};
+		} else if (this.isSauvageon && step == 2) {
+			goal = new int [] {0, 6};
+		} else {
+			goal = new int [] {4, 0};
+		}
+	}
 	
 	public int getPositionDynamique() {
 		return positionDynamique;
@@ -138,6 +149,18 @@ public class Carte {
 
 	public void setPositionHistorique(int[] positionHistorique) {
 		this.positionHistorique = positionHistorique;
+	}
+	
+	public int getRotate() {
+		int newPosition = findNewPositionDynamique();
+		int rotate = -newPosition+ getPositionDynamique();
+		if (rotate==270 || rotate ==-270) {
+			rotate = -rotate/3;
+		} else if (rotate==360 || rotate ==-360){
+			rotate=0;
+		}
+		setPositionDynamique(newPosition);
+		return rotate;
 	}
 
 	//##################################### Getter quelconque ############################################
