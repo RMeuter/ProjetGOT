@@ -17,12 +17,12 @@ public class Carte {
 	// ################################ Definition de la carte et but ##############################
 
 	public Carte(Boolean Camp){
-		this.isSauvageon = Camp;
+		isSauvageon = Camp;
 		setGoal(1);
-		this.positionHistorique= getDebut();
+		positionHistorique= getDebut();
 		if (Camp == true){
 			//Sauvageons
-			this.CarteCouleur = new String[][]{
+			CarteCouleur = new String[][]{
 			    {"rouge", "bleu", "vert", "vert", "blanc"},
 				{"rien", "bleu", "vert", "vert", "vert"},
 				{"rien", "bleu", "bleu", "vert", "orange"},
@@ -31,10 +31,10 @@ public class Carte {
 				{"rien", "rien", "rien", "rien", "bleu"},
 				{"rien", "rien", "rien", "rien", "bleu"}
 			};
-			this.positionDynamique = 0;
+			positionDynamique = 0;
 		}else {
 			//Garde de nuit
-			this.CarteCouleur = new String[][] {
+			CarteCouleur = new String[][] {
 				 	{"Rouge", "bleu", "rien", "rien", "rien"},
 					{"vert", "bleu", "rien", "rien", "rien"},
 					{"vert", "bleu", "bleu", "rien", "rien"},
@@ -43,9 +43,9 @@ public class Carte {
 					{"vert", "vert", "vert", "rouge", "bleu"},
 					{"blanc", "vert", "vert", "vert", "bleu"}
 				};
-				this.positionDynamique = 180;
+				positionDynamique = 180;
 		}
-		this.positionHistorique= getDebut();
+		positionHistorique= getDebut();
 	}
 	
 	/*
@@ -61,17 +61,23 @@ public class Carte {
 		}
 	*/
 	
-	public boolean isArriveGoal() {
-		if (goal==positionHistorique) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 
+
+
+	// ################################ Getter& Setter :Trouver une position dans l'espace ##############################
 	
-	// ################################ Trouver une position dans l'espace ##############################
+	
+	public void setPositionHistorique(int[] positionHistorique) {
+		this.positionHistorique = positionHistorique;
+	}
+	
+	public int[] getPositionHistorique() {
+		return positionHistorique;
+	}
+	
+
+	// ################################ Trouver et tester une position dans l'espace ##############################
 	
 	public int[] getDebut(){
 		/*
@@ -85,6 +91,15 @@ public class Carte {
 			debut = new int [] {0, 6};
 		}
 		return debut;
+	}
+	
+	
+	public boolean isArriveGoal() {
+		if (goal == positionHistorique) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void setGoal(int step){
@@ -105,10 +120,6 @@ public class Carte {
 		}
 	}
 	
-	public int getPositionDynamique() {
-		return positionDynamique;
-	}
-
 	public int findNewPositionDynamique() {
 		/*
 		 * Return une nouvelle position dynamique en degre
@@ -118,50 +129,41 @@ public class Carte {
 		 * Pourquoi juste le x xor y ? car on ne traverse pas en diagonal !
 		 * */
 		int newPosition;
-		if (this.goal[0]-this.positionHistorique[0]!=0) {
-			if (this.goal[0]-this.positionHistorique[0]>0) {
+		if (goal[0]-positionHistorique[0]!=0) {
+			if (goal[0]-positionHistorique[0]>0) {
 				newPosition = 270;
-				this.positionHistorique[0]+=1;
+				positionHistorique[0]+=1;
 			} else {
 				newPosition = 90;
-				this.positionHistorique[0]-=1;
+				positionHistorique[0]-=1;
 			}
 		} else {
-			if (this.goal[1]-this.positionHistorique[1]>0) {
+			if (goal[1]-positionHistorique[1]>0) {
 				newPosition = 0;
-				this.positionHistorique[1]+=1;
+				positionHistorique[1]+=1;
 			} else {
 				newPosition = 180;
-				this.positionHistorique[1]-=1;
+				positionHistorique[1]-=1;
 			}
 		}
 		return newPosition;
 	}
 	
-	
-	public void setPositionDynamique(int positionDynamique) {
-		this.positionDynamique = positionDynamique;
-	}
-
-	public int[] getPositionHistorique() {
-		return positionHistorique;
-	}
-
-	public void setPositionHistorique(int[] positionHistorique) {
-		this.positionHistorique = positionHistorique;
-	}
-	
 	public int getRotate() {
 		int newPosition = findNewPositionDynamique();
-		int rotate = -newPosition+ getPositionDynamique();
+		int rotate = -newPosition + positionDynamique;
 		if (rotate==270 || rotate ==-270) {
 			rotate = -rotate/3;
 		} else if (rotate==360 || rotate ==-360){
 			rotate=0;
 		}
-		setPositionDynamique(newPosition);
+		positionDynamique = newPosition;
 		return rotate;
 	}
+	
+	// ##################################### Communication ############################################
+	
+	// Gestion de la reception et de l'envoie par bluetooth
 
 	//##################################### Getter quelconque ############################################
 	
