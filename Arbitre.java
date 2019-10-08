@@ -74,8 +74,9 @@ public class Arbitre {
 		Behavior b2 = new DetectCouleur(cs, pilot, carte, colorTab);
 		Behavior b3 = new LigneNoire(cs, pilot, carte, colorTab);
 		Behavior b4 = new ArretBouton(arby, cs, pilot);
+		Behavior b5 = new WhereIAm(carte);
 		
-		Behavior[] bArray = {b2,b3,b1,b4}; // du moins prioritaire au plus prioritaire
+		Behavior[] bArray = {b2,b3,b1,b5,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
 		
 		//######################## Arret de l'arbitre
