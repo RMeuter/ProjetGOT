@@ -18,9 +18,9 @@ public class Arbitre {
 		Button.RIGHT.waitForPressAndRelease();
 		
 		//######################## Base
-		Arbitrator arby = null;
-		Carte carte = null;
-		Bluetooth bl = null;
+		Arbitrator arby = 0;
+		Carte carte = 0;
+		Bluetooth bl = 0;
 		
 		//######################## Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
@@ -36,8 +36,8 @@ public class Arbitre {
 		//######################## Definition du camp avec choix d'utiliser le bluetooth
 		LCD.drawString("Choisis ton camp", 0, 0);
 		LCD.drawString("H/G pour Sauvageons", 0, 1);
-		LCD.drawString("B/D pour garde de nuit", 0, 2);
-		LCD.drawString("Les boutons D/G sont pour BT et autre sans BT ", 0, 3);
+		LCD.drawString("B/reste pour garde de nuit", 0, 2);
+		LCD.drawString("Les boutons de coté D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
 		Button.waitForAnyPress();
 		
 		if (Button.UP.isDown()) {
@@ -74,8 +74,9 @@ public class Arbitre {
 		Behavior b2 = new DetectCouleur(cs, pilot, carte, colorTab);
 		Behavior b3 = new LigneNoire(cs, pilot, carte, colorTab);
 		Behavior b4 = new ArretBouton(arby, cs, pilot);
+		Behavior b5 = new WhereIAm(carte);
 		
-		Behavior[] bArray = {b2,b3,b1,b4}; // du moins prioritaire au plus prioritaire
+		Behavior[] bArray = {b2,b3,b1,b5,b4}; // du moins prioritaire au plus prioritaire
 		arby = new Arbitrator(bArray);
 		
 		//######################## Arret de l'arbitre
