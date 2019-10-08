@@ -34,10 +34,14 @@ public class Arbitre {
 		colorTab.Calibrage(cs);
 		
 		//######################## Definition du camp avec choix d'utiliser le bluetooth
+		//J'ai bien peur que si tu ne mets pas de delay entre tes drawString, tu n'auras pas le temps de les voir
 		LCD.drawString("Choisis ton camp", 0, 0);
+		//Delay.msDelay(500)
 		LCD.drawString("H/G pour Sauvageons", 0, 1);
+		//Delay.msDelay(500)
 		LCD.drawString("B/reste pour garde de nuit", 0, 2);
-		LCD.drawString("Les boutons de coté D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
+		//Delay.msDelay(500)
+		LCD.drawString("Les boutons de cotÃ© D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
 		Button.waitForAnyPress();
 		
 		if (Button.UP.isDown()) {
