@@ -7,6 +7,8 @@ import lejos.hardware.lcd.LCD;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
+//Pourquoi faire ? Où veut tu l'utiliser ?
+
 public class WhereIAm implements Behavior {
 	Carte carte;
 	
