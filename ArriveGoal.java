@@ -32,7 +32,7 @@ public class ArriveGoal implements Behavior{
 	public void action() {
 		pilot.stop();
 		LCD.drawString("Tu es arrivée mamène", 0, 3);
-		LCD.drawString("Remet moi à la case de départ, poto", 0, 4);
+		LCD.drawString("Remet moi à la case départ, poto", 0, 4);
 		Button.waitForAnyPress();
 		LCD.clear();
 		// Redifinition du goal et de la position initial

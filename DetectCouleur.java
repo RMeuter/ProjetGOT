@@ -21,7 +21,7 @@ public class DetectCouleur implements Behavior{
 	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte, CalibrageColor colorTab) {
 		this.cs = cs;
 		this.pilot = pilot;
-		this.carte=carte;
+		this.carte = carte;
 		this.colorTab = colorTab;
 	}
 	
@@ -44,8 +44,6 @@ public class DetectCouleur implements Behavior{
 		pilot.forward();
 		Delay.msDelay(3000);
 		LCD.clear();
-
-		
 	}
 	
 	

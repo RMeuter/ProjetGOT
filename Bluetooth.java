@@ -21,6 +21,17 @@ public class Bluetooth {
 	BTConnector bt = new BTConnector();
 	NXTConnection btc;
 	
+	/*
+	 * 
+	 * // Question : Pourquoi on regarde le camp du robot ? Il y a un "envoyeur" et un "receveur", cela n'a pas de rapport avec le camp ?
+	// Ne faut-il pas plutôt regarder si l'utilisateur a appuyé sur bouton gauche ou droit?
+	 * 
+	 * Les camps sont binaire donc au lieux definir s'il faut appuyer sur un bouton, on peut utiliser 
+	 * le fait que un camps implique la reception d'un "raccordement" bluetooth l'autre la demande
+	 * 
+	 * Ca evite les erreurs lors des essais et ça permet une mise au point plus rapide du demarrage du robot
+	 * */
+	
 	public Bluetooth (boolean camp) {
 		if (camp){
 			try {
