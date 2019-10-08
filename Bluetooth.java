@@ -21,6 +21,8 @@ public class Bluetooth {
 	BTConnector bt = new BTConnector();
 	NXTConnection btc;
 	
+	// Question : Pourquoi on regarde le camp du robot ? Il y a un "envoyeur" et un "receveur", cela n'a pas de rapport avec le camp ?
+	// Ne faut-il pas plut√¥t regarder si l'utilisateur a appuy√© sur bouton gauche ou droit?
 	public Bluetooth (boolean camp) {
 		if (camp){
 			try {
@@ -44,7 +46,7 @@ public class Bluetooth {
 			try {
 				//droite = 00:16:53:43:4E:26
 				//gauche = 00:16:53:43:8E:49
-				btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramËtre est l'adresse du rÈcepteur affichÈ sur l'Ècra de l'Èmetteur aprËs association (pair) bluetooth
+				btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier param√®tre est l'adresse du r√©cepteur affich√© sur l'√©cra de l'√©metteur apr√®s association (pair) bluetooth
 				LCD.clear();
 				LCD.drawString(connected, 0, 0);
 				Delay.msDelay(1000);
@@ -58,9 +60,9 @@ public class Bluetooth {
 		OutputStream os = btc.openOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
 		System.out.println("\n\nEnvoi");
-		dos.write(position); // Ècrit une valeur dans le flux
-		dos.flush(); // force líenvoi
-		System.out.println("\nEnvoyÈ");
+		dos.write(position); // √©crit une valeur dans le flux
+		dos.flush(); // force l‚Äôenvoi
+		System.out.println("\nEnvoy√©");
 		dos.close();
 		btc.close();
 		LCD.clear();
