@@ -24,23 +24,27 @@ public class Bluetooth {
 	public Bluetooth (boolean camp) {
 		if (camp){
 			try {
+				LCD.drawString("Attente du pheriphérique", 0, 0);
 				btc = bt.waitForConnection(100000, NXTConnection.PACKET);
-				if (btc !=null) {
+				if (btc != null) {
 					LCD.clear();
 					LCD.drawString(connected, 0, 0);
 					Delay.msDelay(1000);
 					LCD.clear();
 				} else {
-					System.out.println("Pas de connexion");
+					LCD.clear();
+					LCD.drawString("Pas de connexion",0,0);
 					Button.RIGHT.waitForPressAndRelease();
+					LCD.clear();
 				}
 			} catch (Exception e) {
 				}
-		} else if(Button.UP.isDown()) {
-			
+		} else {
+			LCD.drawString("Recherche du pheriphérique", 0, 0);
 			EV3 ev = LocalEV3.get();
-			System.out.println("--"+ev.getName()+"--");
-			Button.RIGHT.waitForPressAndRelease();
+			LCD.drawString("--"+ev.getName()+"--", 0, 1);
+			Button.waitForAnyPress();
+			LCD.clear();
 			try {
 				//droite = 00:16:53:43:4E:26
 				//gauche = 00:16:53:43:8E:49
@@ -53,26 +57,129 @@ public class Bluetooth {
 			}
 		}	
 	}
-	
-	public void send (int position) throws IOException {
+	// ######################### Envoie de la position
+	public void sendPosition (int[] position) throws IOException {
+		/*
+		 * Envoie des coordonnées codé sous forme 
+		 * d'un tableau de deux elements soit [x, y]
+		 * */
 		OutputStream os = btc.openOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
-		System.out.println("\n\nEnvoi");
-		dos.write(position); // écrit une valeur dans le flux
-		dos.flush(); // force l’envoi
-		System.out.println("\nEnvoyé");
-		dos.close();
-		btc.close();
 		LCD.clear();
+		try {
+			LCD.drawString("\n\nEnvoi", 0, 0);
+			Delay.msDelay(1000);
+			LCD.clear();
+			for (int x=0; x<7;x++) {
+				dos.write(position[x]);
+			}
+			dos.flush(); // force l’envoi
+			LCD.drawString("\n\nEnvoyé", 0, 0);
+			Delay.msDelay(1000);
+			LCD.clear();
+			dos.close();
+			LCD.clear();
+		} catch(Exception e) {
+	         // if any I/O error occurs
+	         e.printStackTrace();
+	    } finally {
+	         // releases any associated system files with this stream
+	         if(dos!=null)
+	            dos.close();
+	    }  
 	}
 	
-	public int receve() throws IOException {
+	public int[] recevePosition () throws IOException {
+		/* 
+		 * Retourne des coordonnées codé sous forme 
+		 * d'un tableau de deux elements soit [x, y]
+		 * La liste est la position de l'autre robot;
+		 * */
 		InputStream is = btc.openInputStream();
 		DataInputStream dis = new DataInputStream(is);
-		int position = dis.read();
-		dis.close();
-		btc.close();
+		int [] position = new int [2];
+		try {
+			for (int x=0; x<7;x++) {
+				position[x]= (int)dis.readInt();
+			}
+			dis.close();
+		} catch(Exception e) {
+	         // if any I/O error occurs
+	         e.printStackTrace();
+	    } finally {
+	         // releases any associated system files with this stream
+	         if(dis!=null)
+	            dis.close();
+	    } 
 		return position;
 	}
+	// ############################# Envoie de la carte #################################
+	public void sendCarte (int[][] carte) throws IOException {
+		// Trouver le moyen d'envoyer une array (la carte)
+		OutputStream os = btc.openOutputStream();
+		DataOutputStream dos = new DataOutputStream(os);
+		LCD.clear();
+		try {
+			LCD.drawString("\n\nEnvoi", 0, 0);
+			Delay.msDelay(1000);
+			LCD.clear();
+			for (int y=0; y<7;y++) {
+				for (int x = 0; x<5; x++) {
+					dos.write(carte[y][x]);
+				}
+			}
+			dos.flush(); // force l’envoi
+			LCD.drawString("\n\nEnvoyer", 0, 0);
+			Delay.msDelay(1000);
+			LCD.clear();
+			dos.close();
+			LCD.clear();
+		} catch(Exception e) {
+	         // if any I/O error occurs
+	         e.printStackTrace();
+	    } finally {
+	         // releases any associated system files with this stream
+	         if(dos!=null)
+	            dos.close();
+	    }  
+	}
+	
+
+	public int[][] receveCarte() throws IOException {
+		/*
+		 * Retourne un tableau de int
+		 * 
+		 * */
+		InputStream is = btc.openInputStream();
+		DataInputStream dis = new DataInputStream(is);
+		int [][] carte = new int [7][5];
+		try {
+			for (int y=0; y<7;y++) {
+				for (int x = 0; x<5; x++) {
+					carte[y][x]= (int)dis.readInt();
+				}
+			}
+		} catch(Exception e) {
+	         // if any I/O error occurs
+	         e.printStackTrace();
+	    } finally {
+	         // releases any associated system files with this stream
+	         if(dis!=null)
+	            dis.close();
+	    } 
+		return carte;
+	}
+	
+	public void exit() throws IOException {
+		/*
+		 * Ferme la connexion avec l'autre robot
+		 * */
+		try {
+			btc.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	}
 	
