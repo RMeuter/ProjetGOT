@@ -1,5 +1,7 @@
 package ProjetGOT;
 
+import java.util.Arrays;
+
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -33,11 +35,17 @@ public class ArriveGoal implements Behavior{
 		pilot.stop();
 		LCD.drawString("Tu es arrivée mamène", 0, 3);
 		LCD.drawString("Remet moi à la case départ, poto", 0, 4);
+		Delay.msDelay(10000);
 		Button.waitForAnyPress();
 		LCD.clear();
 		// Redifinition du goal et de la position initial
 		carte.setGoal(2);
 		carte.setPositionHistorique(carte.getDebut());
+		LCD.drawString("Position :"+Arrays.toString(carte.getPositionHistorique()), 0, 3); 
+		pilot.rotate(carte.getRotate());
+		pilot.travel(Carte.getTailleCase()+Carte.getLigneCase());
+		//Delay.msDelay(3000);
+		LCD.clear();
 	}
 
 	@Override

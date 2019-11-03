@@ -23,7 +23,7 @@ public class ArretBouton implements Behavior{
 	}
 	
 	public boolean takeControl(){
-		return Button.RIGHT.isDown();
+		return Button.LEFT.isDown();
 	}
 	
 	public void action(){

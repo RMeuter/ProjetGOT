@@ -1,16 +1,14 @@
 package ProjetGOT;
 
-import lejos.robotics.Color;
-
 public class Carte {
 
-	private String [][] CarteCouleur; //
+	private int [][] CarteCouleur; // -2: Camps, 10: Mur, 1: Champs, -1: Ville, 0: Inconnu, 5: Marais
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
 	private int positionDynamique; //entre -180 et 180 -> la rotation
 	private int [] positionHistorique = new int[2]; //sur la carte avec coordonn�es [x, y]
 	private int [] goal = new int [2]; // [x, y]
-	private boolean isSauvageon = true; 
+	private boolean isSauvageon; 
 	
 	
 	
@@ -22,48 +20,31 @@ public class Carte {
 		positionHistorique= getDebut();
 		if (Camp == true){
 			//Sauvageons
-			CarteCouleur = new String[][]{
-			    {"rouge", "bleu", "vert", "vert", "blanc"},
-				{"rien", "bleu", "vert", "vert", "vert"},
-				{"rien", "bleu", "bleu", "vert", "orange"},
-				{"rien", "rien", "bleu", "vert", "vert"},
-				{"rien", "rien", "rien", "orange", "vert"},
-				{"rien", "rien", "rien", "rien", "bleu"},
-				{"rien", "rien", "rien", "rien", "bleu"}
+			CarteCouleur = new int[][]{
+			    {-2, 10, 1, 1, -1},
+				{0, 10, 1, 1, 1},
+				{0, 10, 10, 1, 5},
+				{0, 0, 10, 1, 1},
+				{0, 0, 0, 5, 1},
+				{0, 0, 0, 0, 10},
+				{0, 0, 0, 0, 10}
 			};
 			positionDynamique = 0;
 		}else {
 			//Garde de nuit
-			CarteCouleur = new String[][] {
-				 	{"Rouge", "bleu", "rien", "rien", "rien"},
-					{"vert", "bleu", "rien", "rien", "rien"},
-					{"vert", "bleu", "bleu", "rien", "rien"},
-					{"vert", "vert", "bleu", "rien", "rien"},
-					{"vert", "orange", "orange", "orange", "rien"},
-					{"vert", "vert", "vert", "rouge", "bleu"},
-					{"blanc", "vert", "vert", "vert", "bleu"}
-				};
-				positionDynamique = 180;
+			CarteCouleur = new int[][] {
+			 	{-2, 10, 0, 0, 0},
+				{1, 10, 0, 0, 0},
+				{1, 10, 10, 0, 0},
+				{1, 1, 10, 0, 0},
+				{1, 5, 5, 5, 0},
+				{1, 1, 1, -2, 10},
+				{-1, 1, 1, 1, 10}
+			};
+			positionDynamique = 180;
 		}
 		positionHistorique= getDebut();
 	}
-	
-	/*
-	 * Vaut mieux le voir avec les couleur si au bout de 12 cm d'avancement il n'y a pas de ligne noir donc on est sortie
-	 * Pourquoi les couleur car le robot ne tourne jamais 180 ou 90 degres reelement donc dure d�tablir des direction strict
-	 * mettre des limites pour les coordonn�es (si il est en 0,0 il n'a pas le droite de revenir en arri�re 
-	 * ni aller � gauche.
-	public boolean estBloque(int x, int y, Direction d) {
-		if (x == 0 && d == Direction.Ouest || y == 0 && d == Direction.Nord || x == tailleX-1 && d == Direction.Est || y == tailleY -1 && d == Direction.Sud) {	
-			return true;
-		}else {
-			return false;
-		}
-	*/
-	
-
-
-
 
 	// ################################ Getter& Setter :Trouver une position dans l'espace ##############################
 	
@@ -130,20 +111,20 @@ public class Carte {
 		 * */
 		int newPosition;
 		if (goal[0]-positionHistorique[0]!=0) {
-			if (goal[0]-positionHistorique[0]>0) {
-				newPosition = 270;
-				positionHistorique[0]+=1;
-			} else {
-				newPosition = 90;
+			if (goal[0]-positionHistorique[0]<0 && positionHistorique[0]-1>=0) {
+				newPosition = 80;
 				positionHistorique[0]-=1;
+			} else {
+				newPosition = 240;
+				positionHistorique[0]+=1;
 			}
 		} else {
-			if (goal[1]-positionHistorique[1]>0) {
+			if (goal[1]-positionHistorique[1]<0 && positionHistorique[0]-1>=0) {
+				newPosition = 160;
+				positionHistorique[1]-=1;
+			} else {
 				newPosition = 0;
 				positionHistorique[1]+=1;
-			} else {
-				newPosition = 180;
-				positionHistorique[1]-=1;
 			}
 		}
 		return newPosition;
@@ -151,7 +132,7 @@ public class Carte {
 	
 	public int getRotate() {
 		int newPosition = findNewPositionDynamique();
-		int rotate = -newPosition + positionDynamique;
+		int rotate = newPosition - positionDynamique;
 		if (rotate==270 || rotate ==-270) {
 			rotate = -rotate/3;
 		} else if (rotate==360 || rotate ==-360){
@@ -176,12 +157,24 @@ public class Carte {
 		return ligneCase;
 	}
 
+	public int [][] getCarteCouleur() {
+		return CarteCouleur;
+	}
+
+	public void setCarteCouleur(int [][] carteCouleur) {
+		CarteCouleur = carteCouleur;
+	}
+
+	//##################################### fonction quelconque ############################################
+	
+	public boolean estBloque(int [] position) {
+		if (position [0] == 0 || position [1]==0 || position [0] > 5 || position[1] > 7 ) {	
+			return true;
+		}else {
+			return false;
+		}
+		}
 	
 	
 
 }
-
-/*
- * public enum TypeCase {
-	Camp, Prairie, Mur, Marecage; }
- */
