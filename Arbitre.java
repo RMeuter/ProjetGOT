@@ -14,13 +14,15 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
 public class Arbitre {
+	// Site pour optimisation ::
+	// https://florat.net/tutorial-java/chapitre08-opti.html
 	public static void main(String[] args) {
 		Button.RIGHT.waitForPressAndRelease();
 		
 		//######################## Base
-		Arbitrator arby = 0;
-		Carte carte = 0;
-		Bluetooth bl = 0;
+		Arbitrator arby = null;
+		Carte carte = null;
+		//Bluetooth bl = null;
 		
 		//######################## Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
@@ -38,22 +40,25 @@ public class Arbitre {
 		LCD.drawString("H/G pour Sauvageons", 0, 1);
 		LCD.drawString("B/reste pour garde de nuit", 0, 2);
 		LCD.drawString("Les boutons de coté D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
-		Button.waitForAnyPress();
-		
-		if (Button.UP.isDown()) {
-			carte = new Carte(true);
-			LCD.drawString("Sauvageon", 0, 0);
-		} else if (Button.DOWN.isDown()) {
-			carte = new Carte(false);
-			LCD.drawString("Garde de la nuit", 0, 0);
-		} else if (Button.LEFT.isDown()) {
-			carte = new Carte(true);
-			LCD.drawString("Sauvageon", 0, 0);
-			bl = new Bluetooth(true);
-		} else {
-			carte = new Carte(false);
-			LCD.drawString("Garde de la nuit", 0, 0);
-			bl = new Bluetooth(false);
+		switch (Button.waitForAnyPress()) {
+			case Button.ID_RIGHT:  
+				carte = new Carte(false);
+				LCD.drawString("Garde de la nuit", 0, 0);
+				//bl = new Bluetooth(false);
+				break;
+			case Button.ID_DOWN:
+				carte = new Carte(false);
+				LCD.drawString("Garde de la nuit", 0, 0);
+				break;
+			case Button.ID_LEFT:
+				carte = new Carte(true);
+				LCD.drawString("Sauvageon", 0, 0);
+				//bl = new Bluetooth(true);
+				break;
+			default:
+				carte = new Carte(true);
+				LCD.drawString("Sauvageon", 0, 0);
+				break;
 		}
 		Delay.msDelay(300);
 		LCD.clear();
@@ -65,8 +70,8 @@ public class Arbitre {
 		MovePilot pilot = new MovePilot(chassis);
 		
 		//######################## Alteration de la vitesse de base
-		pilot.setLinearSpeed(50.);
-		pilot.setAngularSpeed(50.);
+		pilot.setLinearSpeed(40.);
+		pilot.setAngularSpeed(40.);
 		
 		
 		//######################## Definition des comportements
