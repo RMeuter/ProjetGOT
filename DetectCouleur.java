@@ -2,7 +2,6 @@ package ProjetGOT;
 
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.Color;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
@@ -17,6 +16,7 @@ public class DetectCouleur implements Behavior{
 	private MovePilot pilot;
 	private Carte carte;
 	private CalibrageColor colorTab;
+	private boolean suppressed = false;
 	
 	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte, CalibrageColor colorTab) {
 		this.cs = cs;
@@ -25,11 +25,12 @@ public class DetectCouleur implements Behavior{
 		this.colorTab = colorTab;
 	}
 	
-	public boolean takeControl() { 
-		return colorTab.getCalibreColor(cs) != "noir" ; //Couleur différente
+	public boolean takeControl() {
+			return colorTab.getCalibreColor(cs) != "noir"; //Couleur différente
 	}
 	
 	public void suppress() {
+		suppressed = true;
 		pilot.stop();
 	}
 
@@ -39,12 +40,14 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		* */
-		
+		suppressed = false;		
 		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);				
 		pilot.forward();
-		Delay.msDelay(3000);
+		while( pilot.isMoving() && !suppressed )
+	         Thread.yield();
 		LCD.clear();
 	}
+	
 	
 	
 }
