@@ -76,11 +76,7 @@ public class Carte {
 	
 	
 	public boolean isArriveGoal() {
-		if (goal == positionHistorique) {
-			return true;
-		} else {
-			return false;
-		}
+		return goal[0] == positionHistorique[0] && goal[1] == positionHistorique[1];
 	}
 	
 	public void setGoal(int step){
