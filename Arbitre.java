@@ -20,9 +20,14 @@ public class Arbitre {
 		Button.RIGHT.waitForPressAndRelease();
 		
 		//######################## Base
+		// définition de l'arbitre, et de la carte
+		// mise en place du contexte avec démarrage par l'étape du choix
+		// et paramettrage du biais du à la rotation du robot
 		Arbitrator arby = null;
 		Carte carte = null;
-		//Bluetooth bl = null;
+		int etape = 1;
+		int biaisAngle = -10;
+		//---------------->le biais doit etre superieur ou égale à 0 !
 		
 		//######################## Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
@@ -40,23 +45,24 @@ public class Arbitre {
 		LCD.drawString("H/G pour Sauvageons", 0, 1);
 		LCD.drawString("B/reste pour garde de nuit", 0, 2);
 		LCD.drawString("Les boutons de coté D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
+		
 		switch (Button.waitForAnyPress()) {
 			case Button.ID_RIGHT:  
-				carte = new Carte(false);
+				carte = new Carte(false, biaisAngle, etape);
 				LCD.drawString("Garde de la nuit", 0, 0);
 				//bl = new Bluetooth(false);
 				break;
 			case Button.ID_DOWN:
-				carte = new Carte(false);
+				carte = new Carte(false, biaisAngle, etape);
 				LCD.drawString("Garde de la nuit", 0, 0);
 				break;
 			case Button.ID_LEFT:
-				carte = new Carte(true);
+				carte = new Carte(true, biaisAngle, etape);
 				LCD.drawString("Sauvageon", 0, 0);
 				//bl = new Bluetooth(true);
 				break;
 			default:
-				carte = new Carte(true);
+				carte = new Carte(true, biaisAngle, etape);
 				LCD.drawString("Sauvageon", 0, 0);
 				break;
 		}
