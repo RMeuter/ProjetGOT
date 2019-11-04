@@ -5,19 +5,30 @@ public class Carte {
 	private int [][] CarteCouleur; // -2: Camps, 10: Mur, 1: Champs, -1: Ville, 0: Inconnu, 5: Marais
 	private static float tailleCase = 12;
 	private static float ligneCase = (float) 1.5;
-	private int positionDynamique; //entre -180 et 180 -> la rotation
+	
+	private int Cap; //entre -180 et 180 -> la rotation
+	
 	private int [] positionHistorique = new int[2]; //sur la carte avec coordonn�es [x, y]
 	private int [] goal = new int [2]; // [x, y]
-	private boolean isSauvageon; 
 	
+	private boolean isSauvageon; 
+	private int biaisAngle = 0; // definit un angle pour lequel le robot semble tourner correctement;
+	//---------------->le biais doit etre superieur à 0 !
 	
 	
 	// ################################ Definition de la carte et but ##############################
 
-	public Carte(Boolean Camp){
+	public Carte(Boolean Camp, int newBiaisAngle, int etape){
+		// Definition de la carte au robot, 
+		// du biais d'angle dont il fait face
+		// du but qui est une coordonnée dont il doit se diriger
+		// de la position à laquel il est affecter sur le plateau
+		
+		this.biaisAngle = newBiaisAngle;
 		isSauvageon = Camp;
-		setGoal(1);
+		setGoal(etape);
 		positionHistorique= getDebut();
+		
 		if (Camp == true){
 			//Sauvageons
 			CarteCouleur = new int[][]{
@@ -29,7 +40,7 @@ public class Carte {
 				{0, 0, 0, 0, 10},
 				{0, 0, 0, 0, 10}
 			};
-			positionDynamique = 0;
+			Cap = 0;
 		}else {
 			//Garde de nuit
 			CarteCouleur = new int[][] {
@@ -41,22 +52,10 @@ public class Carte {
 				{1, 1, 1, -2, 10},
 				{-1, 1, 1, 1, 10}
 			};
-			positionDynamique = 180;
+			Cap = 180;
 		}
-		positionHistorique= getDebut();
+		
 	}
-
-	// ################################ Getter& Setter :Trouver une position dans l'espace ##############################
-	
-	
-	public void setPositionHistorique(int[] positionHistorique) {
-		this.positionHistorique = positionHistorique;
-	}
-	
-	public int[] getPositionHistorique() {
-		return positionHistorique;
-	}
-	
 
 	// ################################ Trouver et tester une position dans l'espace ##############################
 	
@@ -65,7 +64,7 @@ public class Carte {
 		 * true = sauvageon
 		 * false = garde de nuit
 		 */
-		int[] debut = new int[2];
+		int[] debut;
 		if (this.isSauvageon){
 			debut = new int [] {4, 0};
 		}else {
@@ -76,6 +75,7 @@ public class Carte {
 	
 	
 	public boolean isArriveGoal() {
+		// verification du robot qui est arriver au but donnée
 		return goal[0] == positionHistorique[0] && goal[1] == positionHistorique[1];
 	}
 	
@@ -97,6 +97,8 @@ public class Carte {
 		}
 	}
 	
+	// ################################################# Definition des rotations #######################
+	
 	public int findNewPositionDynamique() {
 		/*
 		 * Return une nouvelle position dynamique en degre
@@ -108,15 +110,15 @@ public class Carte {
 		int newPosition;
 		if (goal[0]-positionHistorique[0]!=0) {
 			if (goal[0]-positionHistorique[0]<0 && positionHistorique[0]-1>=0) {
-				newPosition = 80;
+				newPosition = 90;
 				positionHistorique[0]-=1;
 			} else {
-				newPosition = 240;
+				newPosition = 270;
 				positionHistorique[0]+=1;
 			}
 		} else {
 			if (goal[1]-positionHistorique[1]<0 && positionHistorique[0]-1>=0) {
-				newPosition = 160;
+				newPosition = 180;
 				positionHistorique[1]-=1;
 			} else {
 				newPosition = 0;
@@ -127,20 +129,19 @@ public class Carte {
 	}
 	
 	public int getRotate() {
+		// Définit la rotation entre -180 et 180 degres
+		// Redefinit le cap à l'angle calculer
+		// Donne une rotation en fonction du biais angulaire du robot
 		int newPosition = findNewPositionDynamique();
-		int rotate = newPosition - positionDynamique;
-		if (rotate==270 || rotate ==-270) {
-			rotate = -rotate/3;
-		} else if (rotate==360 || rotate ==-360){
-			rotate=0;
-		}
-		positionDynamique = newPosition;
-		return rotate;
+		int rotate = newPosition - Cap;
+		Cap = newPosition;
+		
+		while (rotate>=180) rotate -= 360;
+		while (rotate<=-180) rotate += 360;
+		int newBiais = (rotate < 0 ? -biaisAngle: (rotate == 0 ? 0 : biaisAngle));
+		return rotate + newBiais;
 	}
 	
-	// ##################################### Communication ############################################
-	
-	// Gestion de la reception et de l'envoie par bluetooth
 
 	//##################################### Getter quelconque ############################################
 	
@@ -161,6 +162,14 @@ public class Carte {
 		CarteCouleur = carteCouleur;
 	}
 
+	public void setPositionHistorique(int[] positionHistorique) {
+		this.positionHistorique = positionHistorique;
+	}
+	
+	public int[] getPositionHistorique() {
+		return positionHistorique;
+	}
+	
 	//##################################### fonction quelconque ############################################
 	
 	public boolean estBloque(int [] position) {
