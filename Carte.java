@@ -107,38 +107,40 @@ public class Carte {
 		 * 
 		 * Pourquoi juste le x xor y ? car on ne traverse pas en diagonal !
 		 * */
-		int newPosition;
+		int newCap;
 		if (goal[0]-positionHistorique[0]!=0) {
 			if (goal[0]-positionHistorique[0]<0 && positionHistorique[0]-1>=0) {
-				newPosition = 90;
+				newCap = 90;
 				positionHistorique[0]-=1;
 			} else {
-				newPosition = 270;
+				newCap = 270;
 				positionHistorique[0]+=1;
 			}
 		} else {
 			if (goal[1]-positionHistorique[1]<0 && positionHistorique[0]-1>=0) {
-				newPosition = 180;
+				newCap = 180;
 				positionHistorique[1]-=1;
 			} else {
-				newPosition = 0;
+				newCap = 0;
 				positionHistorique[1]+=1;
 			}
 		}
-		return newPosition;
+		return newCap;
 	}
+
 	
 	public int getRotate() {
 		// Définit la rotation entre -180 et 180 degres
 		// Redefinit le cap à l'angle calculer
 		// Donne une rotation en fonction du biais angulaire du robot
-		int newPosition = findNewPositionDynamique();
-		int rotate = newPosition - Cap;
-		Cap = newPosition;
+		int newCap = findNewPositionDynamique();
+		int rotate = newCap - Cap;
+		Cap = newCap;
 		
 		while (rotate>=180) rotate -= 360;
 		while (rotate<=-180) rotate += 360;
 		int newBiais = (rotate < 0 ? -biaisAngle: (rotate == 0 ? 0 : biaisAngle));
+		newBiais = (rotate == 180 || rotate == -180? newBiais*2: newBiais);
 		return rotate + newBiais;
 	}
 	
