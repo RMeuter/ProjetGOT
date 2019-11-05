@@ -40,6 +40,7 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		* */
+		
 		suppressed = false;		
 		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);				
 		pilot.forward();

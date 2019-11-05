@@ -27,7 +27,7 @@ public class Arbitre {
 		Carte carte = null;
 		int etape = 1;
 		int biaisAngle = -10;
-		//---------------->le biais doit etre superieur ou égale à 0 !
+		//---------------->le biais doit etre superieur ou égale à 0 et établit pour un angle de 90 (multiplication prevu tkt)
 		
 		//######################## Definition des senseurs
 		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
