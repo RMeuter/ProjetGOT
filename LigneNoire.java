@@ -6,6 +6,7 @@ import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 public class LigneNoire implements Behavior{
 
@@ -26,6 +27,7 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public void suppress() {
+		pilot.stop();
 	}
 
 	public void action() {
@@ -34,9 +36,10 @@ public class LigneNoire implements Behavior{
 		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
 		 * */
 			LCD.drawString("Position :"+Arrays.toString(carte.getPositionHistorique()), 0, 3);
-			pilot.rotate(carte.getRotate());
-			pilot.travel(Carte.getTailleCase()+Carte.getLigneCase(), false);
-			//Delay.msDelay(3000);
+			pilot.rotate(carte.getRotate(), true);
+			pilot.travel(Carte.getTailleCase()+Carte.getLigneCase(), true);
+			// verifier s'il est toujour sur la ligne noir sinon reculer
+			Delay.msDelay(3000);
 			LCD.clear();
 	}
 }
