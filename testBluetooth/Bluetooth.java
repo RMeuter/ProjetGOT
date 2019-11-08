@@ -18,8 +18,11 @@ import lejos.utility.Delay;
 public class Bluetooth {
 	String connected = "Connected";
 	String waiting = "Waiting";
-	BTConnector bt = new BTConnector();
+	BTConnector bt;
 	NXTConnection btc;
+	
+	//https://github.com/Blukain/LejosEv3/blob/master/src/BluetoothThread.java
+	
 	
 	public Bluetooth (boolean camp) throws IOException {
 		/*
@@ -30,18 +33,20 @@ public class Bluetooth {
 		 * Il faut activer l'attente de connection avant la recherche
 		 * 
 		 * */
+		this.bt = new BTConnector();
+		
 		if (camp){
 			try {
 				LCD.drawString("Attente", 0, 1);
 				btc = bt.waitForConnection(100000, NXTConnection.PACKET);
+				
 				if (btc != null) {
-					LCD.clear();
 					LCD.drawString(connected, 0, 2);
 					Delay.msDelay(1000);
 					LCD.clear();
 				} else {
-					LCD.clear();
-					LCD.drawString("Pas de connexion",0,1);
+					LCD.drawString("Pas de connexion",0,2);
+					LCD.drawString("Retentez ?",0,3);
 					Button.RIGHT.waitForPressAndRelease();
 					LCD.clear();
 				}
@@ -59,6 +64,7 @@ public class Bluetooth {
 				//droite = 00:16:53:43:4E:26
 				//gauche = 00:16:53:43:8E:49
 				btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
+				
 				LCD.clear();
 				LCD.drawString(connected, 0, 1);
 				Delay.msDelay(1000);
@@ -81,7 +87,6 @@ public class Bluetooth {
 		// Ouverture des sortie de flux
 		OutputStream os = btc.openOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
-		LCD.clear();
 		try {
 			LCD.drawString("\n\nEnvoi", 0, 0);
 			Delay.msDelay(1000);
@@ -145,63 +150,63 @@ public class Bluetooth {
 		return position;
 	}
 	// ############################# Envoie de la carte #################################
-	public void sendCarte (int[][] carte) throws IOException {
-		// Trouver le moyen d'envoyer une array (la carte)
-		OutputStream os = btc.openOutputStream();
-		DataOutputStream dos = new DataOutputStream(os);
-		LCD.clear();
-		try {
-			LCD.drawString("\n\nEnvoi", 0, 0);
-			Delay.msDelay(1000);
-			LCD.clear();
-			for (int y=0; y<carte.length;y++) {
-				for (int x = 0; x<carte[0].length; x++) {
-					dos.write(carte[y][x]);
-				}
-			}
-			dos.flush(); // force l’envoi
-			LCD.drawString("\n\nEnvoyer", 0, 0);
-			Delay.msDelay(1000);
-			LCD.clear();
-			dos.close();
-			LCD.clear();
-		} catch(Exception e) {
-	         // if any I/O error occurs
-	         e.printStackTrace();
-	         exit();
-	    } finally {
-	         // releases any associated system files with this stream
-	         if(dos!=null)
-	            dos.close();
-	    }  
-	}
-	
-
-	public int[][] receveCarte() throws IOException {
-		/*
-		 * Retourne un tableau de int
-		 * 
-		 * */
-		InputStream is = btc.openInputStream();
-		DataInputStream dis = new DataInputStream(is);
-		int [][] carte = new int [7][5];
-		try {
-			for (int y=0; y<carte.length;y++) {
-				for (int x = 0; x<carte[0].length; x++) {
-					carte[y][x]= (int)dis.readInt();
-				}
-			}
-		} catch(Exception e) {
-	         // if any I/O error occurs
-	         e.printStackTrace();
-	         exit();
-	    } finally {
-	         // releases any associated system files with this stream
-	         if(dis!=null)
-	            dis.close();
-	    } 
-		return carte;
-	}
+//	public void sendCarte (int[][] carte) throws IOException {
+//		// Trouver le moyen d'envoyer une array (la carte)
+//		OutputStream os = btc.openOutputStream();
+//		DataOutputStream dos = new DataOutputStream(os);
+//		LCD.clear();
+//		try {
+//			LCD.drawString("\n\nEnvoi", 0, 0);
+//			Delay.msDelay(1000);
+//			LCD.clear();
+//			for (int y=0; y<carte.length;y++) {
+//				for (int x = 0; x<carte[0].length; x++) {
+//					dos.write(carte[y][x]);
+//				}
+//			}
+//			dos.flush(); // force l’envoi
+//			LCD.drawString("\n\nEnvoyer", 0, 0);
+//			Delay.msDelay(1000);
+//			LCD.clear();
+//			dos.close();
+//			LCD.clear();
+//		} catch(Exception e) {
+//	         // if any I/O error occurs
+//	         e.printStackTrace();
+//	         exit();
+//	    } finally {
+//	         // releases any associated system files with this stream
+//	         if(dos!=null)
+//	            dos.close();
+//	    }  
+//	}
+//	
+//
+//	public int[][] receveCarte() throws IOException {
+//		/*
+//		 * Retourne un tableau de int
+//		 * 
+//		 * */
+//		InputStream is = btc.openInputStream();
+//		DataInputStream dis = new DataInputStream(is);
+//		int [][] carte = new int [7][5];
+//		try {
+//			for (int y=0; y<carte.length;y++) {
+//				for (int x = 0; x<carte[0].length; x++) {
+//					carte[y][x]= (int)dis.readInt();
+//				}
+//			}
+//		} catch(Exception e) {
+//	         // if any I/O error occurs
+//	         e.printStackTrace();
+//	         exit();
+//	    } finally {
+//	         // releases any associated system files with this stream
+//	         if(dis!=null)
+//	            dis.close();
+//	    } 
+//		return carte;
+//	}
 	
 	public void exit() throws IOException {
 		/*
