@@ -12,26 +12,21 @@ public class DetectCouleur implements Behavior{
 	 * - https://lego.vilvert.fr/2017/12/08/calibrage-du-capteur-de-couleur-ev3-avec-lejos/
 	 * 
 	 * */
-	private EV3ColorSensor cs;
-	private MovePilot pilot;
-	private Carte carte;
-	private CalibrageColor colorTab;
+	private RobotNavigator robotNav;
+	private int [] etape;
 	private boolean suppressed = false;
 	
-	public DetectCouleur(EV3ColorSensor cs, MovePilot pilot, Carte carte, CalibrageColor colorTab) {
-		this.cs = cs;
-		this.pilot = pilot;
-		this.carte = carte;
-		this.colorTab = colorTab;
+	public DetectCouleur(RobotNavigator robotNav) {
+		this.robotNav= robotNav;
 	}
 	
 	public boolean takeControl() {
-			return colorTab.getCalibreColor(cs) != "noir"; //Couleur différente
+			return true;
 	}
 	
 	public void suppress() {
 		suppressed = true;
-		pilot.stop();
+		robotNav.pilot.stop();
 	}
 
 	public void action() {
@@ -42,9 +37,9 @@ public class DetectCouleur implements Behavior{
 		* */
 		
 		suppressed = false;		
-		LCD.drawString(colorTab.getCalibreColor(cs), 0, 3);				
-		pilot.forward();
-		while( pilot.isMoving() && !suppressed )
+		LCD.drawString("Comportement DC", 0, 3);
+		robotNav.pilot.forward();
+		while( robotNav.pilot.isMoving() && !suppressed )
 	         Thread.yield();
 		LCD.clear();
 	}

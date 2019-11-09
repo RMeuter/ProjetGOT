@@ -10,10 +10,10 @@ import lejos.utility.Delay;
 //Pourquoi faire ? Où veut tu l'utiliser ?
 
 public class WhereIAm implements Behavior {
-	Carte carte;
+	RobotNavigator robotNav;
 	
-	public WhereIAm (Carte carte) {
-		this.carte = carte;
+	public WhereIAm (RobotNavigator robotNav) {
+		this.robotNav= robotNav;
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class WhereIAm implements Behavior {
 
 	@Override
 	public void action() {
-		LCD.drawString(Arrays.toString(carte.getPositionHistorique()), 0, 0);
+		LCD.drawString(Arrays.toString(robotNav.getPositionHistorique()), 0, 0);
 		Delay.msDelay(1000);
 		LCD.clear();
 	}
