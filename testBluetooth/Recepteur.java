@@ -1,51 +1,50 @@
 package ProjetGOT.testBluetooth;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.remote.nxt.BTConnector;
 import lejos.remote.nxt.NXTConnection;
+import lejos.utility.Delay;
 
 public class Recepteur {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String connected = "Connected";
-		String waiting = "Waiting";
-		
-		try {
-			//LCD.drawString(waiting, 0, 0);
-			//LCD.refresh();
 
-			BTConnector bt = new BTConnector();
-			NXTConnection btc = bt.waitForConnection(100000, NXTConnection.PACKET);
+	public static void main(String [] args) throws Exception {
+		LCD.drawString("Se connecter Appuyer", 0, 0);
+		Button.waitForAnyPress();
+		LCD.clear();
+	    String connected = "Connected";
+	    String waiting = "Waiting...";
+	    String closing = "Closing...";
+	      BTConnector bt = new BTConnector();
+	    while (true && !Button.LEFT.isDown()) {
+	      LCD.drawString(waiting,0,0);
 
-			if (btc !=null) {
-			LCD.clear();
-			LCD.drawString(connected, 0, 0);
-			LCD.refresh();
+	      NXTConnection connection = bt.waitForConnection(100000, NXTConnection.PACKET); 
+	      Delay.msDelay(100000);
+	      LCD.clear();
+	      LCD.drawString(connected,0,0);
 
-			InputStream is = btc.openInputStream();
-			//OutputStream os = btc.openOutputStream();
-			DataInputStream dis = new DataInputStream(is);
-			//DataOutputStream dos = new DataOutputStream(os);
+	      DataInputStream dis = connection.openDataInputStream();
+	      DataOutputStream dos = connection.openDataOutputStream();
 
-			int valeur = dis.readInt();
-			
+	      for(int i=0;i<100;i++) {
+	        int n = dis.readInt();
+	        LCD.drawInt(n,7,0,1);
+	        dos.writeInt(-n);
+	        dos.flush();
+	      }
+	      dis.close();
+	      dos.close();
 
-			dis.close();
-			//dos.close();
-			btc.close();
-			System.out.println(valeur);
-			Button.RIGHT.waitForPressAndRelease();
-			LCD.clear();
-			} else {
-				System.out.println("Pas de connexion");
-				Button.RIGHT.waitForPressAndRelease();
-			}
-		} catch (Exception e) {
-		}
-	}
+	      LCD.clear();
+	      LCD.drawString(closing,0,0);
 
+	      connection.close();
+	      LCD.clear();
+	    }
+	  } 
 }

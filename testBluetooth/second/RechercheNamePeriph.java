@@ -3,10 +3,12 @@ package ProjetGOT.testBluetooth.second;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import javax.bluetooth.*;
+import java.util.Collection;
 
 import lejos.hardware.Bluetooth;
 import lejos.hardware.Button;
+import lejos.hardware.LocalBTDevice;
+import lejos.hardware.RemoteBTDevice;
 import lejos.hardware.lcd.LCD;
 import lejos.remote.nxt.BTConnection;
 
@@ -14,8 +16,9 @@ public class RechercheNamePeriph {
 	public static void main(String []arg) {
 		String name = "NXT";
 	    LCD.drawString("Connecting...", 0, 0);
-	    RemoteDevice btrd = Bluetooth.getKnownDevice(name);
+	    LocalBTDevice btrd = new LocalBTDevice();
 
+	    
 	    if (btrd == null) {
 	      LCD.clear();
 	      LCD.drawString("No such device", 0, 0);
@@ -65,6 +68,28 @@ public class RechercheNamePeriph {
 	  
 	    LCD.drawString("Finished",3, 4);
 	    Button.waitForAnyPress();
+	}
+	
+	protected RemoteDevice getKnownDevice( String identifier ) {
+		boolean inquire_address = Bluetooth.isAddress(identifier);
+
+		ArrayList<RemoteDevice> knownDevices = Bluetooth.getKnownDevicesList();
+		for( int i = 0; i < knownDevices.size(); i++ ) {
+			RemoteDevice btrd = knownDevices.get(i);
+
+			if( inquire_address ) {
+				if( btrd.getBluetoothAddress().equals(identifier) ) {
+					return btrd;
+				}
+			} else {
+				if( btrd.getFriendlyName(false).equals(identifier) ) {
+					return btrd;
+				}
+			}
+		}
+
+		// Kein passendes Gerät gefunden
+		return null;
 	}
 
 }

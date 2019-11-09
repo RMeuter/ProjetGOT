@@ -1,7 +1,9 @@
 package ProjetGOT.testBluetooth;
 
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import lejos.hardware.Button;
@@ -16,43 +18,54 @@ import lejos.remote.nxt.NXTConnection;
 
 
 public class Emetteur {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String connected = "Connected";
-		String waiting = "Waiting";
-		EV3 ev = LocalEV3.get();
-		System.out.println("--"+ev.getName()+"--");
-		Button.RIGHT.waitForPressAndRelease();
-		try {
-			
-			//LCD.drawString(waiting, 0, 0);
-			//LCD.refresh();
-			//droite = 00:16:53:43:4E:26
-			//gauche = 00:16:53:43:8E:49
-			BTConnector bt = new BTConnector();
-			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
+	public static void main(String[] args) throws Exception {
+	    LCD.drawString("Connecting...", 0, 0);
 
 
-			LCD.clear();
-			LCD.drawString(connected, 0, 0);
-			LCD.refresh();
+	    BTConnector bt = new BTConnector();
+		BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
 
-			//InputStream is = btc.openInputStream();
-			OutputStream os = btc.openOutputStream();
-			//DataInputStream dis = new DataInputStream(is);
-			DataOutputStream dos = new DataOutputStream(os);
-			System.out.println("\n\nEnvoi");
-			dos.write(12); // écrit une valeur dans le flux
-			dos.flush(); // force l’envoi
-			System.out.println("\nEnvoyé");
-			//dis.close();
-			dos.close();
-			btc.close();
-			LCD.clear();
-			
-		} catch (Exception e) {
-		}
-	}
+
+	    if (btc == null) {
+	      LCD.clear();
+	      LCD.drawString("Connect fail", 0, 0);
+	      Button.waitForAnyPress();
+	      System.exit(1);
+	    }
+	  
+	    LCD.clear();
+	    LCD.drawString("Connected", 0, 0);
+
+	    DataInputStream dis = btc.openDataInputStream();
+	    DataOutputStream dos = btc.openDataOutputStream();
+
+	    for(int i=0;i<100;i++) {
+	      try { 
+	        LCD.drawInt(i*30000, 8, 0, 2);
+	        dos.writeInt(i*30000);
+	        dos.flush(); 
+	      } catch (IOException ioe) {
+	        LCD.drawString("Write Exception", 0, 0);
+	      }
+	    
+	      try {
+	        LCD.drawInt(dis.readInt(),8, 0,3);
+	      } catch (IOException ioe) {
+	        LCD.drawString("Read Exception ", 0, 0);
+	      }
+	    }
+	  
+	    try {
+	      LCD.drawString("Closing... ", 0, 0);
+	      dis.close();
+	      dos.close();
+	      btc.close();
+	    } catch (IOException ioe) {
+	      LCD.drawString("Close Exception", 0, 0);
+	    }
+	  
+	    LCD.drawString("Finished",3, 4);
+	    Button.waitForAnyPress();
+	  }
 
 }
