@@ -12,7 +12,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class BluetoothThread extends Thread
+public class CommunicationThread extends Thread
 {
     /** Bluetooth connection variable */
     private int NOTCONNECTED = 0; // Il est égale à -1 s'il est emetteur
@@ -20,6 +20,9 @@ public class BluetoothThread extends Thread
     private int CONNECTED = 2;
     private int ERROR = 3;
     private int TERMINATE = 4;
+    private int RECEVEMESSAGE = 5;
+    private int SENDMESSAGE = 6;
+    
     private int state=NOTCONNECTED;
     private int timeout = 100000;
     private BTConnector btConnector = null;
@@ -43,14 +46,16 @@ public class BluetoothThread extends Thread
     /** Robot */
     private boolean go = true;
 
-    public BluetoothThread(boolean Camp) {
+    public CommunicationThread(boolean Camp) {
     	if (Camp) this.NOTCONNECTED = -1;
 	}
+    
+    // https://github.com/Blukain/LejosEv3/blob/master/src/BluetoothThread.java
 
     @Override
     public void run()
     {
-        setup();
+        setup(); // ######################### Revoir le setup !
         while(go && state!=TERMINATE)
         {
             if(state==NOTCONNECTED)
@@ -60,8 +65,7 @@ public class BluetoothThread extends Thread
             		EV3 ev = LocalEV3.get();
             		System.out.println("--"+ev.getName()+"--");
             		Button.RIGHT.waitForPressAndRelease();
-        			BTConnector bt = new BTConnector();
-        			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);
+        			btConnection = btConnector.connect("00:16:53:43:EB:88", NXTConnection.PACKET);
             	}
             	System.out.println(waiting);
                 if(btConnection != null)
@@ -77,6 +81,12 @@ public class BluetoothThread extends Thread
                 System.out.println("Waiting message");
                 WaitMessage();
             }
+            else if (state==SENDMESSAGE) {
+            	sendOneData(1, 1);
+            } else if(state == RECEVEMESSAGE) {
+            	
+            }
+            
             else if(state == CONNECTED)
             {
                 System.out.println("waiting command");
@@ -92,7 +102,8 @@ public class BluetoothThread extends Thread
                        
                     }
                 }
-                else{
+                else
+                {
                     state = ERROR;
                 }
                 inBuffer = null;
@@ -110,31 +121,41 @@ public class BluetoothThread extends Thread
         System.out.println("Bluetooth Thread ENDED");
     }
 
-    private void cancelConnection()
-    {
-        btConnector.cancel();
-    }
 
 
-    private void sendSingleData(byte type, int variable)
+    // ################################################## Envoie de données#########################################
+    /**
+     * Prépare les données qui sont à envoyer à l'autre phériphérique
+     * @param type (1 : carte, 2 : position)
+     * @param array, une liste ou un unique element peuvent etre diposer
+     * */
+    private void sendAllData(int type, int[] array)
     {
-        outBuffer = new byte[2];
-        outBuffer[0] = type;
-        outBuffer[1] = (byte) variable;
-        sendData();
-    }
-
-    private void sendMultipleData(byte type, int[] array,int length)
-    {
-        outBuffer = new byte[length + 1];
-        outBuffer[0] = type;
-        for (int i = 0; i < length; i++)
+        outBuffer = new byte[array.length + 1];
+        outBuffer[0] = (byte) type;
+        for (int i = 0; i < array.length; i++)
         {
             outBuffer[i + 1] = (byte) array[i];
         }
         sendData();
     }
-
+    
+    /**
+     * Prépare les données qui sont à envoyer à l'autre phériphérique
+     * @param type (1 : carte, 2 : position)
+     * @param array, une liste ou un unique element peuvent etre diposer
+     * */
+    private void sendOneData(int type, int data)
+    {
+        outBuffer = new byte[2];
+        outBuffer[0] = (byte) type;
+        outBuffer[1] = (byte) data;
+        sendData();
+    }
+    
+    /**
+     * Envoyer des données à l'autre périphérique bluetooth
+     * */
     private void sendData()
     {
         System.out.println("Sending data");
@@ -144,8 +165,8 @@ public class BluetoothThread extends Thread
             writer.write(outBuffer);
             writer.flush();
             System.out.println("Sent:");
-            System.out.println("length: "+outBuffer.length);
-            System.out.println("data: "+outBuffer);
+            System.out.println("length: "+ outBuffer.length);
+            System.out.println("data: "+ outBuffer);
         }
         catch (IOException e)
         {
@@ -154,6 +175,32 @@ public class BluetoothThread extends Thread
         outBuffer = null;
     }
 
+    private void WaitMessage()
+    {
+        try
+        {
+            while ((message = getMessage()) != null)
+            {
+                System.out.println("Received: " + message);
+                if (message.equals("hello"))
+                {
+                    System.out.println("Sent: welcome");
+                    writer.writeUTF("welcome");
+                    writer.flush();
+                    System.out.println("Activating App...");
+                    state = CONNECTED;
+                    System.out.println(connected);
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR: BT Socket crashed!");
+            closeStream();
+        }
+    }
+    // ###################################### Reception de données ################################
     private int ReadMessage()
     {
         int bytes = -1;
@@ -183,33 +230,27 @@ public class BluetoothThread extends Thread
         }
         return length;
     }
-
-    private void WaitMessage()
-    {
+    
+    public String getMessage(){
+    	/*
+    	 * Attente d'un message 
+    	 * 
+    	 * 
+    	 * */
         try
         {
-            while ((message = getMessage()) != null)
-            {
-                System.out.println("Received: " + message);
-                if (message.equals("hello"))
-                {
-                    System.out.println("Sent: welcome");
-                    writer.writeUTF("welcome");
-                    writer.flush();
-                    System.out.println("Activating App...");
-                    state = CONNECTED;
-                    System.out.println(connected);
-                    break;
-                }
-            }
+        	// Revoir la fonction  car le readUTF ne nous interesse pas 
+            message = reader.readUTF();
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            System.out.println("ERROR: BT Socket crashed!");
-            closeStream();
+            System.out.println("Error getting message is socket still opened?");
+            state = ERROR;
         }
+        return message;
     }
 
+    // ########################################### Ouverture/ Fermeture ###################################
     private void closeConnection()
     {
         if (btConnection != null)
@@ -255,25 +296,6 @@ public class BluetoothThread extends Thread
         }
     }
 
-    public String getMessage(){
-    	/*
-    	 * Attente d'un message 
-    	 * 
-    	 * 
-    	 * */
-        try
-        {
-        	// Revoir la fonction  car le readUTF ne nous interesse pas 
-            message = reader.readUTF();
-        }
-        catch (IOException e)
-        {
-            System.out.println("Error getting message is socket still opened?");
-            state = ERROR;
-        }
-        return message;
-    }
-
     public void closeStream() {
         System.out.println("Closing stream");
         try
@@ -296,6 +318,11 @@ public class BluetoothThread extends Thread
         }
     }
 
+    private void cancelConnection()
+    {
+        btConnector.cancel();
+    }
+    
     public void terminate()
     {
         go=false;
