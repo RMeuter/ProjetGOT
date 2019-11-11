@@ -12,7 +12,7 @@ import lejos.remote.nxt.NXTConnection;
 import lejos.utility.Delay;
 
 public class TestConnection {
-	private static int timeout = 100000;
+	private static int timeout = 10000;
     
 	public static void main (String [] args) {
 		/**
@@ -21,7 +21,9 @@ public class TestConnection {
 		 * - Lancer le receveur en premier (Bouton gauche)
 		 * - T'as 10 seconds negue !
 		 * - BOOOMMM ! Allez, fais toi une crepe !
-		 * - 
+		 * - Lancer le second périphérique (en appuyant sur n'importe quel touche sauf gauche)
+		 *  avant que les dix seconds ne s'écoulent !
+		 * - Regarder si ça marche (ça marche quand tu dois attendre 10 seconde) 
 		 *  
 		 */
 		
@@ -32,14 +34,14 @@ public class TestConnection {
 			btConnector = new BTConnector();
 			if (Button.LEFT.isDown()) {
 				btConnection = btConnector.waitForConnection(timeout, BTConnection.RAW);
-				new BluetoothWorker(false, btConnector ,btConnection);
+				//new BluetoothWorker(false, btConnector ,btConnection);
 			}
 	    	else {
 	    		EV3 ev = LocalEV3.get();
 	    		System.out.println("--"+ev.getName()+"--");
 	    		Button.RIGHT.waitForPressAndRelease();
 	    		btConnection = btConnector.connect("00:16:53:43:EB:88", NXTConnection.PACKET);
-	    		new BluetoothWorker(true, btConnector, btConnection);
+	    		//new BluetoothWorker(true, btConnector, btConnection);
 	    	}
 			LCD.drawString("Attends 10 secondes", 0, 0);
 			LCD.drawString("Mais psarteck", 0, 1);
