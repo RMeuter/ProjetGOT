@@ -212,11 +212,11 @@ public class RobotNavigator extends Robot {
 		for (int y =coordPetitPoids[1]; y <tableauPoids.length; y++){
 			for (int x = coordPetitPoids[0]; x < tableauPoids[x].length; x++){
 				// si la coordonnée n'a pas déjà été faite, que le poids est différent de l'infini et qu'il est inférieur au plus petit poids
-				if (tableauPoids[y][x] < plusPetitPoids && dejaFait[y][x] == false && tableauPoids[y][x] != -1){
-					plusPetitPoids = tableauPoids[y][x];
-					coordPetitPoids[0] = x;
-					coordPetitPoids[1] = y;
-				}
+				if (!dejaFait[y][x] && ((plusPetitPoids < 0 && tableauPoids[y][x] >= 0) || (tableauPoids[y][x] > 0 && tableauPoids[y][x] < plusPetitPoids))) {
+                    plusPetitPoids = tableauPoids[y][x];
+                    coordPetitPoids[0] = x;
+                    coordPetitPoids[1] = y;
+                }
 			}
 		}
 		return coordPetitPoids;
