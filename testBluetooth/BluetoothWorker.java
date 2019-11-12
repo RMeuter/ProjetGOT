@@ -10,12 +10,14 @@ import java.util.Arrays;
 
 import lejos.remote.nxt.BTConnection;
 import lejos.remote.nxt.BTConnector;
+import lejos.remote.nxt.NXTConnection;
 
 public class BluetoothWorker extends Thread {
 	static Socket socket;
     private BTConnector btConnector = null;
     private BTConnection btConnection = null;
-    private boolean isSocketConnexion;
+    private NXTConnection ntxConnection = null;
+    private boolean isNTXConnexion;
     // IO stream
     static DataInputStream input;
     static DataOutputStream output;
@@ -23,72 +25,75 @@ public class BluetoothWorker extends Thread {
     static int[][] carte; 
     static boolean isSauvageon;
     
-    public static void main (String args[])  {
-    	int TCP_SERVER_PORT = 9701;
-    	boolean test = false;
-    	/*
-    	 * Pour tester il faut :
-    	 * -> activer une permiere fois le main avec test = true
-    	 * -> activer une seconde fois avec test = false
-    	 * */
-    	
-    	if (test) {
-    		ServerSocket serversocket = null;
-            try {
-    			serversocket = new ServerSocket(TCP_SERVER_PORT);
-    		} catch (IOException e1) {
-    			e1.printStackTrace();
-    		}
-            while (true) {
-                Socket clientsocket;
-    			try {
-    				clientsocket = serversocket.accept();
-    				new BluetoothWorker(false, clientsocket).start();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-            } 
-    	} else {
-    		Socket socket;
-    		try {
-    			socket = new Socket("localhost", 9701);
-    	    	BluetoothWorker tc = new BluetoothWorker(true, socket);
-    	    	tc.start();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}   
-    	}
-    }
+//    public static void main (String args[])  {
+//    	int TCP_SERVER_PORT = 9701;
+//    	boolean test = false;
+//    	/*
+//    	 * Pour tester il faut :
+//    	 * -> activer une permiere fois le main avec test = true
+//    	 * -> activer une seconde fois avec test = false
+//    	 * */
+//    	
+//    	if (test) {
+//    		ServerSocket serversocket = null;
+//            try {
+//    			serversocket = new ServerSocket(TCP_SERVER_PORT);
+//    		} catch (IOException e1) {
+//    			e1.printStackTrace();
+//    		}
+//            while (true) {
+//                Socket clientsocket;
+//    			try {
+//    				clientsocket = serversocket.accept();
+//    				new BluetoothWorker(false, clientsocket).start();
+//    			} catch (IOException e) {
+//    				e.printStackTrace();
+//    			}
+//            } 
+//    	} else {
+//    		Socket socket;
+//    		try {
+//    			socket = new Socket("localhost", 9701);
+//    	    	BluetoothWorker tc = new BluetoothWorker(true, socket);
+//    	    	tc.start();
+//    		} catch (IOException e) {
+//    			e.printStackTrace();
+//    		}   
+//    	}
+//    }
     
     // ################################## Constructeur ############################################ 
-    public BluetoothWorker(boolean Camps, Socket socket) {
+    public BluetoothWorker(boolean Camps, BTConnector btc, BTConnection btconnection) throws IOException {
         // TODO Auto-generated constructor stub
     	this.isSauvageon = Camps;
-    	this.socket = socket;
-    	isSocketConnexion = true;
-		try {
-			input = new DataInputStream(socket.getInputStream());
-	    	output = new DataOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+    	try {
+    		this.btConnector = btc;
+        	this.btConnection = btconnection;
+        	isNTXConnexion = false;
+    		input = new DataInputStream(btConnection.openInputStream());
+    		output = new DataOutputStream(btConnection.openOutputStream());
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    }
+    
+    public BluetoothWorker(boolean Camps, BTConnector btc, NXTConnection ntxConnection) throws IOException {
+        // TODO Auto-generated constructor stub
+    	this.isSauvageon = Camps;
+    	try {
+	    	this.btConnector = btc;
+	    	this.ntxConnection = ntxConnection;
+	    	isNTXConnexion = true;
+			input = new DataInputStream(this.ntxConnection.openInputStream());
+			output = new DataOutputStream(this.ntxConnection.openOutputStream());
+	    } catch (Exception e) {
 			e.printStackTrace();
 		}
     }
     
-    public BluetoothWorker(boolean Camps, BTConnector btc, BTConnection btconnection) {
-        // TODO Auto-generated constructor stub
-    	this.isSauvageon = Camps;
-    	this.btConnector = btc;
-    	this.btConnection = btconnection;
-    	isSocketConnexion = false;
-		try {
-			input = new DataInputStream(socket.getInputStream());
-	    	output = new DataOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    // ################################## run de la thread ############################################ 
+    
     public void run() {
     	try {
     		carte = doCarte();
@@ -147,9 +152,9 @@ public class BluetoothWorker extends Thread {
     // ######################################### Open/Close Stream ##########################################
     
     public void closeCanaux () {
-    	if(isSocketConnexion) {
+    	if(isNTXConnexion) {
     		try {
-				socket.close();
+    			ntxConnection.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -159,8 +164,8 @@ public class BluetoothWorker extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-    		btConnector.cancel();
     	}
+    	btConnector.cancel();
     }
     
     // ######################################### Carte ######################################################
