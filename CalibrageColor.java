@@ -13,7 +13,10 @@ public class CalibrageColor {
 	private static String [] nom = new String [] {"noir", "rouge"};//, "orange", "vert", "blanc", "bleu"};
 	private static EV3ColorSensor color;
 	
-	
+	/*
+	 * Faire un dictionnaire ou la clé est la couleur
+	 *  et le nombre est l'identification de celle-ci dans la carte
+	 * */
 	
 	public CalibrageColor (EV3ColorSensor color) {
 		this.color = color;

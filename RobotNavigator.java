@@ -46,6 +46,7 @@ public class RobotNavigator extends Robot {
 			while (verifyBlack(true))
 				pilot.backward();
 		}
+		verifTravelRight();
 	}
 	
 	/*
@@ -61,8 +62,11 @@ public class RobotNavigator extends Robot {
 			pilot.rotate(biaisAngle*step[1]);
 			step[1]=-step[1]/2;
 		}
-		
 	}
+	
+	
+	
+	
 	
 	// ################################################# Verify color ###################################
 	
