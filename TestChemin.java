@@ -85,11 +85,6 @@ public class TestChemin {
 					// on actualise les coordonées du point actuel comme prédécesseur de son voisin
 					chemin [x[1]][x[0]][0]= plusPetit[0];
 					chemin [x[1]][x[0]][1]= plusPetit[1];
-				}else {
-					// sinon, on actualise le poids minimum parmi le poids du voisin ou le poids du point actuel + le poids de son voisin
-					poids[x[1]][x[0]] = Math.min(poids[x[1]][x[0]],poids[plusPetit[1]][plusPetit[0]]+carte.getPoids(x));
-					chemin [x[1]][x[0]][0]= plusPetit[0];
-					chemin [x[1]][x[0]][1]= plusPetit[1];
 				}
 			}
 		}
@@ -106,6 +101,14 @@ public class TestChemin {
 		
 		//on définit le sud en haut de la carte et le nord en bas de la carte
 		// L'est est à droite de la carte et l'ouest à gauche
+		
+		for (int y = 0; y < dejaFait.length; ++y) {
+            for (int x = 0; x < dejaFait[y].length; ++x) {
+                System.out.print("(" + chemin[y][x][0]  + ", " + chemin[y][x][1] + ")  ");
+            }
+            System.out.print("\n");
+        }
+		
 		while (!(predecesseur[0] == -1 && predecesseur[1] == -1)){
 			
 			if (sucesseur[0]-predecesseur[0] == 1){
@@ -204,7 +207,7 @@ public class TestChemin {
 	/**********   TEST de la mÃ©thode dijkstra   ***********/
 	/******************************************************/
 	public static void main(String[] args) {
-		TestChemin t = new TestChemin(new int[] {4, 0}, new int[] {0, 0});
+		TestChemin t = new TestChemin(new int[] {0, 6}, new int[] {4, 4});
 		System.out.println("Le but est d'aller en (" + t.goal[0] + ", " + t.goal[1] + ")");
 		
 	
