@@ -1,43 +1,42 @@
-package ProjetGOT;
+package OBJECTIF1;
 
 public class Carte {
+	
+// #### Attributs ####
+	private int [][] CarteCouleur; 
+	
+	public static final float tailleCase = 12;
+	public static final float ligneCase = (float) 1.5;
+	
+	
+// ##### Constructeur #####
 
-	private int [][] CarteCouleur; // -2: Camps, 10: Mur, 1: Champs, -1: Ville, 0: Inconnu, 5: Marais
-	private static float tailleCase = 12;
-	private static float ligneCase = (float) 1.5;
-	// Kind of carte
-	private boolean isSauvageon; 
+	//Definition de la carte grâce au camp
 	
+	// La carte est codé selon la valeur de ses couleurs :
+	// -2: Camps, -1: Ville, 100: Inconnu, 1: Champs, 5: Marais, 10: Mur
 	
-	//---------------->le biais doit etre superieur Ã  0 !
+	// le (0,0) est en haut à gauche
 	
-	
-	// ################################ Definition de la carte et but ##############################
-
+	// true = sauvageon, false = garde de nuit
 	public Carte(boolean Camp){
-		// Definition de la carte au robot, 
-		// du biais d'angle dont il fait face
-		// du but qui est une coordonnÃ©e dont il doit se diriger
-		// de la position Ã  laquel il est affecter sur le plateau
 		if (Camp == true){
-			//Sauvageons
 			CarteCouleur = new int[][]{
 			    {-2, 10, 1, 1, -1},
-				{0, 10, 1, 1, 1},
-				{0, 10, 10, 1, 5},
-				{0, 0, 10, 1, 1},
-				{0, 0, 0, 5, 1},
-				{0, 0, 0, 0, 10},
-				{0, 0, 0, 0, 10}
+				{100, 10, 1, 1, 1},
+				{100, 10, 10, 1, 5},
+				{100, 100, 10, 1, 1},
+				{100, 100, 100, 5, 1},
+				{100, 100, 100, 100, 10},
+				{100, 100, 100, 100, 10}
 			};
 		}else {
-			//Garde de nuit
 			CarteCouleur = new int[][] {
-			 	{-2, 10, 0, 0, 0},
-				{1, 10, 0, 0, 0},
-				{1, 10, 10, 0, 0},
-				{1, 1, 10, 0, 0},
-				{1, 5, 5, 5, 0},
+			 	{-2, 10, 100, 100, 100},
+				{1, 10, 100, 100, 100},
+				{1, 10, 10, 100, 100},
+				{1, 1, 10, 100, 100},
+				{1, 5, 5, 5, 100},
 				{1, 1, 1, -2, 10},
 				{-1, 1, 1, 1, 10}
 			};
@@ -45,29 +44,27 @@ public class Carte {
 		
 	}
 
-	
+//#### Méthodes ####
 
-	//##################################### Getter quelconque ############################################
-	
-	
-	public static float getTailleCase() {
-		return tailleCase;
-	}
-
-	public static float getLigneCase() {
-		return ligneCase;
-	}
-
+	// #### Requêtes ####
 	public int [][] getCarteCouleur() {
 		return CarteCouleur;
 	}
 
+	// Grâce aux cordonnées données, on peut obtenir le poids de la case
+	public int getPoids(int[] coordonnees){
+		if (CarteCouleur[coordonnees[1]][coordonnees[0]] < 2){
+			return 1;
+		}else {
+			return CarteCouleur[coordonnees[1]][coordonnees[0]];
+		}
+	}
+	
+	// #### Commande ####
 	public void setCarteCouleur(int [][] carteCouleur) {
 		CarteCouleur = carteCouleur;
 	}
-
-
 	
-	
+
 
 }

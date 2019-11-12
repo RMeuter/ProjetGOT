@@ -1,52 +1,50 @@
-package ProjetGOT;
+package OBJECTIF1;
 
-import java.util.Arrays;
 
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
-import lejos.utility.Delay;
 
 public class ArriveGoal implements Behavior{
-
+	
+// #### Attributs ####
 	private RobotNavigator robotNav;
-	private int[] etape;
 
+	
+// #### Constructeur ####	
 	public ArriveGoal (RobotNavigator robotNav) {
 		this.robotNav= robotNav;
 	}
 	
+	
+// #### M√©thodes ####
+	
+	// Raison pour laquelle le comportement prend le dessus
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
-		// Le but est une case soit rouge (camp) soit blanc (ville)
+		// Le but est une case soit un camp soit une ville
 		return  robotNav.isArriveGoal();
 	}
 
+	// Action r√©alis√© par le comportement
 	@Override
 	public void action() {
 		robotNav.pilot.stop();
-		LCD.drawString("Tu es arrivÈe mamËne", 0, 3);
-		LCD.drawString("Remet moi ‡ la ", 0, 4);
-		LCD.drawString("case dÈpart, poto", 0, 5);
+		LCD.drawString("Arriv√© !", 0, 3);
+		LCD.drawString("Retour √† la case d√©part", 0, 4);
 		Button.waitForAnyPress();
 		LCD.clear();
 		
-		// Redifinition du goal et de la position initial
-		robotNav.addOneMoreMission();
-		
-		robotNav.setDebut();
-		LCD.drawString("Position :"+Arrays.toString(robotNav.getPositionHistorique()), 0, 3); 
-		robotNav.doRot();
-		robotNav.getPilot().travel(14);
-		LCD.clear();
+		//Quand il a finit l'objectif 1, on commence le prochain objectif
+		if (robotNav.getEtape() == 1){
+			robotNav.addOneMoreMission();
+			
+		}
 	}
 
+	// Comportement ou action supprim√© par le comportement actuel
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
 		
 	}
 
