@@ -9,6 +9,7 @@ public class seDeplace implements Behavior{
 	
 // #### Attributs ####	
 	private RobotNavigator robotNav;
+	private Dijkstra cheminDijkstra;
 
 // #### Constructeur ####
 	public seDeplace(RobotNavigator robotNav) {
@@ -30,7 +31,7 @@ public class seDeplace implements Behavior{
 	public void action() {
 		
 		// Plus court chemin de directions (NORD, SUD, EST, OUEST) vers le but
-		LinkedList <Integer> chemin = robotNav.dijkstra();
+		LinkedList <Integer> chemin = cheminDijkstra.dijkstra();
 		
 		// Pour chaque direction, si le robot doit tourner, il tourne, sinon il avance
 		// Dans l'objectif 4, le robot s'arrête pour rendre compte des poids de chaque case
