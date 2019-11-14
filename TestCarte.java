@@ -11,10 +11,12 @@ public class TestCarte {
      *    0 : Inconnu
      *    5 : Marais
 	 */
-	private int [][] CarteCouleur;
+	private short [][] CarteCouleur;
+	public static final byte xCarte = 5;
+	public static final byte yCarte = 7;
 	
 	public TestCarte(){
-		CarteCouleur = new int[][]{
+		CarteCouleur = new short[][]{
 			{-2, 10, 1, 1, -1},
 			{1, 10, 1, 1, 1},
 			{1, 10, 10, 1, 5},
@@ -25,15 +27,17 @@ public class TestCarte {
 		};
 	}
 	
-	public TestCarte(int[][] couleurs){
+	public TestCarte(short[][] couleurs){
 		CarteCouleur = couleurs;
 	}
 
-	public int getPoids(int[] coordonnees){
-        if (CarteCouleur[coordonnees[1]][coordonnees[0]] < 2){
+	public short getPoids(byte coordonnees){
+		byte xCoordonnee =(byte) (coordonnees %5);
+		byte yCoordonnee =(byte) (coordonnees /5);
+        if (CarteCouleur[yCoordonnee][xCoordonnee] < 2){
             return 1;
         }else {
-            return CarteCouleur[coordonnees[1]][coordonnees[0]];
+            return CarteCouleur[yCoordonnee][xCoordonnee];
         }
     }
 }

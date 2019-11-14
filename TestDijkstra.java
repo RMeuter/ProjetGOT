@@ -3,7 +3,7 @@ package OBJECTIF1;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Dijkstra {
+public class TestDijkstra {
 	
 	public static final short SUD = 0; 
 	public static final short EST = 90;
@@ -15,6 +15,18 @@ public class Dijkstra {
 	private byte goal;
 	
 	private TestCarte carte;
+	
+	public TestDijkstra(byte posD, byte posA) {
+		position = posD;
+		goal = posA;
+		carte = new TestCarte();
+	}
+	
+	public TestDijkstra(byte posD, byte posA, short[][] carteCouleurs) {
+		position = posD;
+		goal = posA;
+		carte = new TestCarte(carteCouleurs);
+	}
 	
 
 	public LinkedList <Short> dijkstra(){
@@ -168,5 +180,52 @@ public class Dijkstra {
                 }
 			}
 		return coordPetitPoids;
+	}
+	
+	
+	
+	
+	
+	
+	public static void main(String[] args) {
+		TestDijkstra t = new TestDijkstra((byte) 30, (byte) 24);
+		byte xgoal = (byte) (t.goal % 5);
+		byte ygoal = (byte) (t.goal / 5);
+		System.out.println("Le but est d'aller en (" + xgoal + ", " + ygoal + ")");
+		
+	
+		LinkedList<Short> path = t.dijkstra();
+		
+		System.out.println("chemin" +path);
+		
+		byte xposition = (byte) (t.position % 5);
+		byte yposition = (byte) (t.position / 5);
+		
+		for (int direction : path) {
+			xposition = (byte) (t.position % 5);
+			yposition = (byte) (t.position / 5);
+			String s = "Nous sommes en (" + xposition + ", " + yposition + ")\n  nous allons ";
+			switch (direction) {
+			case SUD:
+				s += "au SUD\n";
+				yposition++;
+				break;
+			case NORD:
+				s += "au NORD\n";
+				yposition--;
+				break;
+			case EST:
+				s += "à l'EST\n";
+				xposition++;
+				break;
+			case OUEST:
+				s += "à l'OUEST\n";
+				xposition--;
+				break;
+			}
+			System.out.println(s);
+		}
+		System.out.println("Nous sommes arrivés en (" + xposition + ", " + yposition + ")");
+		
 	}
 }
