@@ -1,9 +1,9 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 public class Carte {
 	
 // #### Attributs ####
-	private int [][] CarteCouleur; 
+	private short[][] CarteCouleur; 
 	
 	public static final float tailleCase = 12;
 	public static final float ligneCase = (float) 1.5;
@@ -11,17 +11,17 @@ public class Carte {
 	
 // ##### Constructeur #####
 
-	//Definition de la carte grâce au camp
+	//Definition de la carte grï¿½ce au camp
 	
-	// La carte est codé selon la valeur de ses couleurs :
+	// La carte est codï¿½ selon la valeur de ses couleurs :
 	// -2: Camps, -1: Ville, 100: Inconnu, 1: Champs, 5: Marais, 10: Mur
 	
-	// le (0,0) est en haut à gauche
+	// le (0,0) est en haut ï¿½ gauche
 	
 	// true = sauvageon, false = garde de nuit
 	public Carte(boolean Camp){
 		if (Camp == true){
-			CarteCouleur = new int[][]{
+			CarteCouleur = new short[][]{
 			    {-2, 10, 1, 1, -1},
 				{100, 10, 1, 1, 1},
 				{100, 10, 10, 1, 5},
@@ -31,7 +31,7 @@ public class Carte {
 				{100, 100, 100, 100, 10}
 			};
 		}else {
-			CarteCouleur = new int[][] {
+			CarteCouleur = new short[][] {
 			 	{-2, 10, 100, 100, 100},
 				{1, 10, 100, 100, 100},
 				{1, 10, 10, 100, 100},
@@ -44,15 +44,15 @@ public class Carte {
 		
 	}
 
-//#### Méthodes ####
+//#### Mï¿½thodes ####
 
-	// #### Requêtes ####
-	public int [][] getCarteCouleur() {
+	// #### Requï¿½tes ####
+	public short[][] getCarteCouleur() {
 		return CarteCouleur;
 	}
 
-	// Grâce aux cordonnées données, on peut obtenir le poids de la case
-	public int getPoids(int[] coordonnees){
+	// Grï¿½ce aux cordonnï¿½es donnï¿½es, on peut obtenir le poids de la case
+	public short getPoids(short[] coordonnees){
 		if (CarteCouleur[coordonnees[1]][coordonnees[0]] < 2){
 			return 1;
 		}else {
@@ -61,7 +61,7 @@ public class Carte {
 	}
 	
 	// #### Commande ####
-	public void setCarteCouleur(int [][] carteCouleur) {
+	public void setCarteCouleur(short [][] carteCouleur) {
 		CarteCouleur = carteCouleur;
 	}
 	

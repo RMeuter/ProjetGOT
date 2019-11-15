@@ -1,4 +1,4 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 import lejos.hardware.Button;
 import lejos.robotics.subsumption.Arbitrator;
@@ -18,7 +18,7 @@ public class Arbitre {
 		RobotNavigator robotNav = new RobotNavigator (newBiaisAngle);
 		
 //##### Définition des comportements #####
-		Behavior b1 = new seDeplace(robotNav);
+		Behavior b1 = new LigneNoire(robotNav);
 		Behavior b2 = new ArriveGoal(robotNav);
 		Behavior b4 = new WhereIAm(robotNav);
 		Behavior b5 = new ArretBouton(arby, robotNav);

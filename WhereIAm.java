@@ -1,4 +1,4 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 import java.util.Arrays;
 

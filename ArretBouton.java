@@ -1,4 +1,4 @@
-package OBJECTIF1;
+package ProjetGOT;
 
 import lejos.hardware.Button;
 import lejos.robotics.subsumption.Arbitrator;

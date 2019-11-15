@@ -16,7 +16,7 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public boolean takeControl() { 
-		return robotNav.verifyBlack(true);
+		return robotNav.verifiePasseLigneNoire(true);
 	}
 	
 	public void suppress() {
@@ -31,7 +31,7 @@ public class LigneNoire implements Behavior{
 		 * 
 		 * */
 		suppressed = false;
-		LCD.drawString("Position :"+Arrays.toString(robotNav.getPositionHistorique()), 0, 3);
+		LCD.drawString("Position :"+Arrays.toString(robotNav.getPosition()), 0, 3);
 		LCD.drawString("Comportement LN", 0, 4);
 		robotNav.doRot();
 		Delay.msDelay(3000);

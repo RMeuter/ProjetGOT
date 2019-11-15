@@ -39,8 +39,7 @@ public class DetectCouleur implements Behavior{
 		suppressed = false;		
 		LCD.drawString("Comportement DC", 0, 3);
 		robotNav.pilot.forward();
-		while( robotNav.pilot.isMoving() && !suppressed )
-	         Thread.yield();
+		Delay.msDelay(1000);
 		LCD.clear();
 	}
 	

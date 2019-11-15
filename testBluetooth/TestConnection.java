@@ -1,6 +1,8 @@
 package ProjetGOT.testBluetooth;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.EV3;
@@ -28,35 +30,39 @@ public class TestConnection {
 		 */
 		
 		Button.waitForAnyPress();
-		BTConnector btConnector = null;
-		BTConnection btConnection = null;
-		try {
-			btConnector = new BTConnector();
-			if (Button.LEFT.isDown()) {
-				btConnection = btConnector.waitForConnection(timeout, BTConnection.RAW);
-				//new BluetoothWorker(false, btConnector ,btConnection);
-			}
-	    	else {
-	    		EV3 ev = LocalEV3.get();
-	    		System.out.println("--"+ev.getName()+"--");
-	    		Button.RIGHT.waitForPressAndRelease();
-	    		btConnection = btConnector.connect("00:16:53:43:EB:88", NXTConnection.PACKET);
-	    		//new BluetoothWorker(true, btConnector, btConnection);
-	    	}
-			LCD.drawString("Attends 10 secondes", 0, 0);
-			LCD.drawString("Mais psarteck", 0, 1);
-			LCD.drawString("T'es connecter negue", 0, 2);
-			Delay.msDelay(10000);
-			
-		} finally {
+		if (Button.LEFT.isDown()) {
 			try {
-				btConnection.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				BTConnector bt = new BTConnector();
+				NXTConnection btc = bt.waitForConnection(100000, NXTConnection.PACKET);
+
+				if (btc !=null) {
+					LCD.clear();
+					LCD.drawString("Connecter", 0, 0);
+					LCD.refresh();
+					new BluetoothWorker(true, bt, btc).start();
+				} else {
+					System.out.println("Pas de connexion");
+					Button.RIGHT.waitForPressAndRelease();
+				}
+			} catch (Exception e) {
 			}
-			btConnector.cancel();
 		}
-		
+    	else {
+    		EV3 ev = LocalEV3.get();
+    		System.out.println("--"+ev.getName()+"--");
+    		Button.RIGHT.waitForPressAndRelease();
+    		try {
+    			BTConnector bt = new BTConnector();
+    			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
+    			LCD.clear();
+    			LCD.drawString("connecter", 0, 0);
+    			LCD.refresh();
+    			new BluetoothWorker(false, bt, btc).start();
+    			LCD.clear();
+    			
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
 	}
 }
