@@ -9,10 +9,10 @@ public class RobotNavigator extends Robot {
 	
 // #### Attributs ####		
 	//Directions possibles pour le robot
-	public static final short SUD = 0; 
+	public static final short SUD = 180; 
 	public static final short EST = -90;
 	public static final short OUEST = 90;
-	public static final short NORD = 180;
+	public static final short NORD = 0;
 	
 	// #### Attributs du robot####
 	private boolean isSauvageon;
@@ -75,6 +75,7 @@ public class RobotNavigator extends Robot {
 	// En tournant, le robot change de case, on change donc la position vers la nouvelle
 	public void tourne(short d){ 
 		pilot.rotate(angleRotation+biaisAngle);
+		Cap = d;
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
 		switch (d){
@@ -155,13 +156,13 @@ public class RobotNavigator extends Robot {
 	//Le but change de l'objectif 1 (= étape 1) à l'objectif 4 (= étape 3)
 			//true = sauvageon,	false = garde de nuit
 	public void setGoal(){
-		if (this.isSauvageon == true && etape == 1){
+		if (isSauvageon == true && etape == 1){
 			goal = 0;
-		}else if (this.isSauvageon ==false && etape == 1) {
+		}else if (isSauvageon ==false && etape == 1) {
 			goal = 28;
-		} else if (this.isSauvageon == true && etape == 3) {
+		} else if (isSauvageon == true && etape == 3) {
 			goal = 30;
-		} else if (this.isSauvageon == false && etape == 3) {
+		} else if (isSauvageon == false && etape == 3) {
 			goal = 4;
 		}
 	}
@@ -210,11 +211,11 @@ public class RobotNavigator extends Robot {
 		if (Button.UP.isDown()){
 			//Sauvageons
 			carte = new Carte(true);
-			this.isSauvageon = true;
-		}else{
+			isSauvageon = true;
+		}else if (Button.DOWN.isDown()){
 			//Garde de nuit
 			carte = new Carte(false);
-			this.isSauvageon = false;
+			isSauvageon = false;
 		}
 		Delay.msDelay(300);
 		LCD.clear();

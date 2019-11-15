@@ -11,7 +11,7 @@ public class TestArbitre {
 		
 //##### Initialisation de l'arbitre, du biais et du robot ####
 
-		short newBiaisAngle = -0;
+		short newBiaisAngle = 10;
 		RobotNavigator robotNav = new RobotNavigator (newBiaisAngle);
 		byte goal = robotNav.getGoal();
 		byte position = robotNav.getPosition();

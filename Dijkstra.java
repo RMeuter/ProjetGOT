@@ -3,25 +3,24 @@ package OBJECTIF1;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import Test.TestCarte;
 
 public class Dijkstra {
 	
-	public static final short SUD = 0; 
+	public static final short SUD = 180; 
 	public static final short EST = -90;
 	public static final short OUEST = 90;
-	public static final short NORD = 180;
+	public static final short NORD = 0;
 	
 	private byte position; 
 	
 	private byte goal;
 	
-	private TestCarte carte;
+	private Carte carte;
 	
-	public Dijkstra(byte position, byte goal) {
-		position = position;
-		goal = goal;
-		carte = new TestCarte(true);
+	public Dijkstra(byte positionrobot, byte goalrobot) {
+		position = positionrobot;
+		goal = goalrobot;
+		carte = new Carte(true);
 	}
 	
 	
@@ -144,13 +143,13 @@ public class Dijkstra {
 		byte y = (byte) (plusPetit / 5);
 		ArrayList<Byte> voisins = new ArrayList<Byte>(4);
 		// Pour chaque coordonnée, on verifie que la coordonnées fait partie de la carte et que le sommet n'a pas déjà été fait
-		if (y+1 < TestCarte.yCarte && dejaFait[x+5*(y+1)] == 0){
+		if (y+1 < Carte.yCarte && dejaFait[x+5*(y+1)] == 0){
 			voisins.add( (byte) (x+5*(y+1)));
 		}
 		if (y-1 >= 0 && dejaFait[x+5*(y-1)] == 0){
 			voisins.add((byte) (x+5*(y-1)));
 		}
-		if (x+1 < TestCarte.xCarte && dejaFait[x+1+5*y] == 0){
+		if (x+1 < Carte.xCarte && dejaFait[x+1+5*y] == 0){
 			voisins.add((byte) (x+1+5*y));		
 		}
 		if (x-1 >= 0 && dejaFait[x-1+5*y] == 0){
