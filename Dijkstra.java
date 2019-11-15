@@ -1,13 +1,15 @@
-package ProjetGOT;
+package OBJECTIF1;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import Test.TestCarte;
+
 public class Dijkstra {
 	
 	public static final short SUD = 0; 
-	public static final short EST = 90;
-	public static final short OUEST = -90;
+	public static final short EST = -90;
+	public static final short OUEST = 90;
 	public static final short NORD = 180;
 	
 	private byte position; 
@@ -15,6 +17,13 @@ public class Dijkstra {
 	private byte goal;
 	
 	private TestCarte carte;
+	
+	public Dijkstra(byte position, byte goal) {
+		position = position;
+		goal = goal;
+		carte = new TestCarte(true);
+	}
+	
 	
 
 	public LinkedList <Short> dijkstra(){
@@ -75,7 +84,13 @@ public class Dijkstra {
 		byte successeur = goal;
 		byte predecesseur = chemin[goal];
 		
-        
+//        for (byte y = 0; y < dejaFait.length; ++y) {
+//			byte xch = (byte) (chemin[y] /5);
+//			byte ych = (byte) (chemin[y] % 5);
+//                System.out.print("(" + xch  + ", " + ych + ")  ");
+//            }
+//            System.out.print("\n");
+//        
 		
 		//Comme l'algo commence par le but pour remonter , on ajoute chaque direction en premier, devant les autres
 				//Ici on transforme les coordonnées en direction
@@ -85,10 +100,10 @@ public class Dijkstra {
 		while (!(predecesseur == -1)){
 			//System.out.println("successeur"+successeur);
 			//System.out.println("predecesseur"+predecesseur);
-			byte xSuc = (byte) (successeur /5);
-			byte ySuc = (byte) (successeur % 5);
-			byte xPr = (byte) (predecesseur /5);
-			byte yPr = (byte) (predecesseur % 5);
+			byte xSuc = (byte) (successeur % 5);
+			byte ySuc = (byte) (successeur / 5);
+			byte xPr = (byte) (predecesseur % 5);
+			byte yPr = (byte) (predecesseur / 5);
 			if (xSuc-xPr == 1){
 				//Si quand on soustrait les coordonnées x du predecesseur au successeur, on obtient 1, alors on va à l'est
 				//(pex (4,0) - (3,0) = 1, pour passer de la case (3,0) = predecesseur, à la case (4,0) = successeur, il faut aller à droite = est 
