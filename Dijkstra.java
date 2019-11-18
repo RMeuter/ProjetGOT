@@ -10,22 +10,16 @@ public class Dijkstra {
 	public static final short EST = -90;
 	public static final short OUEST = 90;
 	public static final short NORD = 0;
-	
-	private byte position; 
-	
-	private byte goal;
+
 	
 	private Carte carte;
-	
-	public Dijkstra(byte positionrobot, byte goalrobot) {
-		position = positionrobot;
-		goal = goalrobot;
-		carte = new Carte(true);
-	}
-	
-	
 
-	public LinkedList <Short> dijkstra(){
+	
+	public Dijkstra(boolean typeCarte){
+		carte = new Carte(typeCarte);
+	}
+
+	public LinkedList <Short> dijkstra(byte position, byte goal){
 		//Carte des poids
 		// -1 = + l'infini
 		short [] poids = initTableauPoids ();

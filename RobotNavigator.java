@@ -1,5 +1,7 @@
 package OBJECTIF1;
 
+import java.util.LinkedList;
+
 import OBJECTIF1.Robot;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
@@ -24,7 +26,7 @@ public class RobotNavigator extends Robot {
 	private int scalaireBiaisAngle;
 
 	// Etape = Objectif 1,2 ou 4
-	private byte etape = 0;
+	private byte etape = 1;
 	
 	// Coordonnées actuelles du robot [x, y]
 	private byte position; 
@@ -40,12 +42,15 @@ public class RobotNavigator extends Robot {
 			
 	// Recuperation de la carte
 	private Carte carte;
-		
+	
+	private Dijkstra fctDijkstra;
+	private LinkedList<Short> chemin;
 	
 // #### Constructeur ####
 	public RobotNavigator (short newBiaisAngle) {
 		scalaireBiaisAngle =1/4;
 		defineCamp();
+		fctDijkstra = new Dijkstra(isSauvageon);
 		setDebut();
 		setGoal();
 		this.biaisAngle = newBiaisAngle;
@@ -160,11 +165,15 @@ public class RobotNavigator extends Robot {
 			goal = 0;
 		}else if (isSauvageon ==false && etape == 1) {
 			goal = 28;
+
 		} else if (isSauvageon == true && etape == 3) {
 			goal = 30;
+
 		} else if (isSauvageon == false && etape == 3) {
 			goal = 4;
+			
 		}
+		chemin = fctDijkstra.dijkstra(getPosition(), getGoal());
 	}
 	
 	//#### Requêtes ####
@@ -197,6 +206,11 @@ public class RobotNavigator extends Robot {
 	
 	public byte getGoal(){
 		return goal;
+	}
+	
+	
+	public LinkedList<Short> getChemin(){
+		return chemin;
 	}
 	
 // ###### Definition des camps

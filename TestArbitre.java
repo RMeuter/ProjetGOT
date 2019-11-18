@@ -13,24 +13,13 @@ public class TestArbitre {
 
 		short newBiaisAngle = 10;
 		RobotNavigator robotNav = new RobotNavigator (newBiaisAngle);
-		byte goal = robotNav.getGoal();
-		byte position = robotNav.getPosition();
+
 		
-		Dijkstra dijkstra = new Dijkstra(position, goal);
-		
-		System.out.println(position);
-		Button.waitForAnyPress();
-		System.out.println(goal);
-		Button.waitForAnyPress();
-		LinkedList <Short> chemin = dijkstra.dijkstra();
-		
-		System.out.println(chemin);
-		Button.waitForAnyPress();
-		
-		LCD.clear();
+		LinkedList <Short> chemin = robotNav.getChemin();
 		
 		for (short x : chemin){
 			LCD.drawInt(robotNav.versDirection(x), 0, 0);
+			Button.waitForAnyEvent();
 			if (robotNav.versDirection(x) == 0){
 				robotNav.avance(x);
 			}else{
