@@ -27,7 +27,7 @@ public class TestConnection {
 		 * - T'as 10 seconds negue !
 		 * - Lancer le second périphérique (en appuyant sur n'importe quel touche sauf gauche)
 		 *  avant que les dix seconds ne s'écoulent !
-		 *  - Pour envoyer des infos appuyer si n'importe quel bouton sauf gauche
+		 *  - Pour envoyer des infos appuyer sur n'importe quel bouton sauf gauche
 		 *  - Bouton gauche pour sortir
 		 *  
 		 */

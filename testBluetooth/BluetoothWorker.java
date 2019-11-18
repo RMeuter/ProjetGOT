@@ -133,10 +133,7 @@ public class BluetoothWorker extends Thread {
 	        
 	        while (!stop) {
 	        	if (isSauvageon && isTest) {
-	        		System.out.println("received");
-		        	temps = (int) (Math.random()*20000.);
-		            System.out.println("temps aléatoire générer :" + temps);
-		        	sleep(temps);
+	        		System.out.println("test received");
 		        	position = readPosition(); // attention une fois envoyer il ne le garde pas en mémoire donc plutot faire un
 		        	// while read !
 		            System.out.println("received" + Arrays.toString(position));
