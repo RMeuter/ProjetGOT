@@ -10,59 +10,56 @@ import lejos.robotics.navigation.MovePilot;
 
 public class Robot {
 	
-	// Step of config Robot 
-	// Feature robot 
-	EV3ColorSensor color;
-	protected MovePilot pilot;
-	// Properties 
-	private int biaisAngle = -13;
-	// Perception 
-	private CalibrageColor tabColor; 
-	
-	public Robot () {
-		color = new EV3ColorSensor(SensorPort.S3);
-		buildRobot();
-		createPerception();
-	}
-	
-	public MovePilot getPilot() {
-		return pilot;
-	}
-	
-	
-	//##################################### Perception #####################################
-	
-	private void createPerception() {
+// #### Attributs ####	
+		EV3ColorSensor color;
+		public MovePilot pilot;
+		private CalibrageColor tabColor; 
 		
-		tabColor = new CalibrageColor(color);
-		tabColor.Calibrage();	
-	}
-	
-	public CalibrageColor getCalibrateColor() {
-		return tabColor;
-	}
-	
-	// ##################################### Bluid Robot ###################################
-
-	private void buildRobot () {
-		//######################## definition du chassis
-		Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-60);
-		Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(60);
-		Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);	
-		pilot = new MovePilot(chassis);
+// #### Constructeur ####
+		public Robot () {
+			color = new EV3ColorSensor(SensorPort.S3);
+			buildRobot();
+			createPerception();
+		}
 		
-		//######################## Alteration de la vitesse de base
-		pilot.setLinearSpeed(40.);
-		pilot.setAngularSpeed(40.);
-	}
-	
-	//####################################### Stop ##########################################
-	
-	public void stopProcess () {
-		pilot.stop();
-		color.close();
-		System.out.println("C'est bon ta finit mamène ! ");
-		System.exit(0);
-	}
+// #### Méthodes ####	
+		
+		// #### Requêtes ####
+		
+		public MovePilot getPilot() {
+			return pilot;
+		}
+		
+		public CalibrageColor getCalibrateColor() {
+			return tabColor;
+		}
+		
+		// #### Commandes ####
+		
+		// Création du tableau contenant les couleurs
+		private void createPerception() {
+			
+			tabColor = new CalibrageColor(color);
+			tabColor.Calibrage();	
+		}
+		
+		//Construction des éléments du robot
+		private void buildRobot () {
+			//Definition du chassis
+			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-60);
+			Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(60);
+			Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);	
+			pilot = new MovePilot(chassis);
+			
+			//Commandes de changement de vitesse d'avancée et de rotation
+			pilot.setLinearSpeed(40.);
+			pilot.setAngularSpeed(40.);
+		}
+		
+		// Arrêt de tous les processus du robot
+		public void stopProcess () {
+			pilot.stop();
+			color.close();
+		}
 
 }

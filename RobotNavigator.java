@@ -1,211 +1,193 @@
 package ProjetGOT;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
-import lejos.robotics.navigation.MovePilot;
 import lejos.utility.Delay;
 
 public class RobotNavigator extends Robot {
-	// Feature robot
+	
+// #### Attributs ####		
+	//Directions possibles pour le robot
+	public static final short SUD = 0; 
+	public static final short EST = 90;
+	public static final short OUEST = -90;
+	public static final short NORD = 180;
+	
+	// #### Attributs du robot####
 	private boolean isSauvageon = false;
-	private int biaisAngle = 0; // definit un angle pour lequel le robot semble tourner correctement;
-	private int [] step = new int [2];
+	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
+	private int scalaireBiaisAngle; // Le scalaire du biais angle
+	private int etape = 0; // Etape = Objectif 1,2 ou 4
 	
-	/*Nos differents steps :
-	 * - Le choix de l'etape
-	 * - Le scalaire du biais angle
-	 * */
+	// #### Localisation et repere
+	private int [] position = new int [2]; // Coordonnées actuelles du robot [x, y]
+	private short [] goal = new short [2]; // But du robot [x, y]
+	private short Cap; 	// Direction du robot vers lequel le robot regarde
+	private Carte carte; 	// Recuperation de la carte
+	private LinkedList <Short> chemin = new LinkedList <Short>();
+		
 	
-	// Where I AM
-	private int [] positionHistorique = new int[2]; //sur la carte avec coordonn�es [x, y]
-	private int [] goal = new int [2]; // [x, y]
-	private int Cap; //entre -180 et 180 -> la rotation
-	
-	// Recupere un robot et une carte
-	private Carte carte;
-	
-	public RobotNavigator (int newBiaisAngle,int choixEtape) {
-		step[1]=1/4;
-		step[0]= choixEtape;
+// #### Constructeur ####
+	public RobotNavigator (int newBiaisAngle) {
+		// Definition d'un chemin
+		chemin.add(NORD);chemin.add(EST);chemin.add(EST);
+		chemin.add(EST);chemin.add(EST);chemin.add(EST);
+		scalaireBiaisAngle = 1/4;
 		defineCamp();
 		setDebut();
-		setGoal(step[0]);
-		
+		setGoal();
 		this.biaisAngle = newBiaisAngle;
 	}
 
 	
-	public void doRot () {
-		int rot = getRotate();
-		if(rot<=90||rot>=-90) pilot.rotate(rot);
+// ##### Déplacements ######
+	
+	// #### Requêtes ####
+	
+	// Recherche de la rotation nécessaire pour aller vers la prochaine direction :
+	// angleRotation = angle actuel - angle futur    
+	public short versDirection(short newCap){ // d = SUD, OUEST,EST,NORD
+		short angleRotation = (short) (newCap - Cap);
+		Cap = newCap;
+		System.out.println("Cap :" + Cap);
+		while (angleRotation>=180) angleRotation -= 360;
+		while (angleRotation<=-180) angleRotation += 360;
+		short newBiais = (short) (angleRotation < 0 ? -biaisAngle: (angleRotation == 0 ? 0 : biaisAngle));
+		newBiais = (short) (angleRotation == 180 || angleRotation == -180? newBiais*2: newBiais);
+		return (short) (angleRotation + newBiais);
+	}
+	
+	// Permet de savoir si le robot a passé la ligne noire
+	public boolean verifiePasseLigneNoire(boolean ligne) {
+			if (ligne) return getCalibrateColor().getCalibreColor() == "noir";
+			else return getCalibrateColor().getCalibreColor() != "noir";
+		}
+	
+	// #### Commandes ####
+	
+	//Tourne le robot selon la nouvelle direction et un biais de rotation
+	// En tournant, le robot change de case, on change donc la position vers la nouvelle
+	public void tourne(){ 
+		short newDirection = chemin.getFirst();
+		short rot = versDirection(newDirection);
+		System.out.println("ND :"+newDirection);
+		System.out.println("rot : "+rot);
+		if(rot <= 90 || rot >= -90) pilot.rotate(rot);
 		else {
 			pilot.rotate(rot/2);
-			while (verifyBlack(true))
-				pilot.backward();
+			while (!verifiePasseLigneNoire(false)) pilot.backward();
 			pilot.rotate(rot/2);
-			while (verifyBlack(true))
-				pilot.backward();
+			while (!verifiePasseLigneNoire(false)) pilot.backward();
 		}
-		verifTravelRight();
+		replaceInCarte(newDirection);
 	}
-	
-	/*
-	 * Tu verifie que tu avance droit sans continuité sur la ligne noir
-	 * 
-	 * 
-	 * 
-	 * */
-	
-	public void verifTravelRight () {
-		pilot.travel(20);
-		if(verifyBlack(true)) {
-			pilot.rotate(biaisAngle*step[1]);
-			step[1]=-step[1]/2;
-		}
+		
+	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
+	public void sarreteNSeconde(){
+		short temps = carte.getPoids((short)1, (short) 2);
+		System.out.println("temps :"+temps);
+		System.out.println("Position :"+position[1]);
+		System.out.println("Position :"+position[0]);
+		pilot.stop();
+		if (temps <= 1) Delay.msDelay(1000);
+		else if (temps == 100) {} 
+		else Delay.msDelay(temps*1000);
 	}
 	
 	
 	
+// ###### Définition du point de départ et du but #####
 	
+	//#### Commandes ####
 	
-	// ################################################# Verify color ###################################
-	
-	public boolean verifyBlack(boolean isLigne) {
-		if (isLigne) return getCalibrateColor().getCalibreColor()=="noir";
-		else return getCalibrateColor().getCalibreColor()!="noir";
+	//Initialise les coordonnées du point de départ dans la position actuelle du robot
+	public void setDebut(){
+		// true = sauvageon,  false = garde de nuit
+
+		if (this.isSauvageon) position = new int [] {4, 0};
+		else position = new int [] {0, 6};
 	}
 	
+	//Initialise les coordonnées du but et donne l'étape (objectif)
+	//Le but change de l'objectif 1 (= étape 1) à l'objectif 4 (= étape 3)
+			//true = sauvageon,	false = garde de nuit
+	public void setGoal(){
+		this.goal = new short[2];
+		if (this.isSauvageon && etape == 1) goal = new short [] {0, 0};
+		else if (!this.isSauvageon && etape == 1) goal = new short [] {3, 5};
+		else if (this.isSauvageon && etape == 3) goal = new short [] {0, 6};
+		else goal = new short [] {4, 0};
+	}
 	
-	// ################################################# Definition des rotations #######################
+	//#### Requêtes ####
 	
-	public int findNewPositionDynamique() {
-		/*
-		 * Return une nouvelle position dynamique en degre
-		 * Cette position est calculer entre la position historique et le but.
-		 * On recupere le x s'il est different de 0 sinon le y.
-		 * 
-		 * Pourquoi juste le x xor y ? car on ne traverse pas en diagonal !
-		 * */
-		int newCap;
-		if (goal[0]-positionHistorique[0]!=0) {
-			if (goal[0]-positionHistorique[0]<0 && positionHistorique[0]-1>=0) {
-				newCap = 90;
-				positionHistorique[0]-=1;
-			} else {
-				newCap = 270;
-				positionHistorique[0]+=1;
-			}
-		} else {
-			if (goal[1]-positionHistorique[1]<0 && positionHistorique[0]-1>=0) {
-				newCap = 180;
-				positionHistorique[1]-=1;
-			} else {
-				newCap = 0;
-				positionHistorique[1]+=1;
-			}
-		}
-		return newCap;
+	//Verifie si le robot est arrivé à destination
+	public boolean isArriveGoal() {
+		return goal[0] == position[0] && goal[1] == position[1];
 	}
 
 	
-	public int getRotate() {
-		// Définit la rotation entre -180 et 180 degres
-		// Redefinit le cap à l'angle calculer
-		// Donne une rotation en fonction du biais angulaire du robot
-		int newCap = findNewPositionDynamique();
-		int rotate = newCap - Cap;
-		Cap = newCap;
-		
-		while (rotate>=180) rotate -= 360;
-		while (rotate<=-180) rotate += 360;
-		int newBiais = (rotate < 0 ? -biaisAngle: (rotate == 0 ? 0 : biaisAngle));
-		newBiais = (rotate == 180 || rotate == -180? newBiais*2: newBiais);
-		return rotate + newBiais;
-	}
-	
-	// ################################ Trouver et tester une position dans l'espace ##############################
-	
-	public void setDebut(){
-		/*
-		 * true = sauvageon
-		 * false = garde de nuit
-		 */
-		if (this.isSauvageon){
-			positionHistorique = new int [] {4, 0};
-		}else {
-			positionHistorique= new int [] {0, 6};
-		}
-	}
-	
-	
-	public boolean isArriveGoal() {
-		// verification du robot qui est arriver au but donnée
-		return goal[0] == positionHistorique[0] && goal[1] == positionHistorique[1];
-	}
-	
-	public void setGoal(int step){
-		/*
-		 * Le but change au fur et � mesure de la partie il faut donc le red�finir � chaque fois
-		 * true = sauvageon
-		 * false = garde de nuit
-		 */
-		this.goal = new int[2];
-		if (this.isSauvageon && step == 1){
-			goal = new int [] {0, 0};
-		}else if (!this.isSauvageon && step == 1) {
-			goal = new int [] {3, 5};
-		} else if (this.isSauvageon && step == 2) {
-			goal = new int [] {0, 6};
-		} else {
-			goal = new int [] {4, 0};
-		}
-	}
-	//##################################### fonction quelconque ############################################
-	
-	public void setPositionHistorique(int[] positionHistorique) {
-		this.positionHistorique = positionHistorique;
-	}
-	
-	public int[] getPositionHistorique() {
-		return positionHistorique;
-	}
-	
 	public void addOneMoreMission () {
-		step[0] += 1 ;
+		etape += 2 ;
+	}
+	// Donne l'étape (=objectif)
+	public int getEtape(){
+		return etape;
 	}
 	
-	// ################################# Define Camps
+//##### Position du robot ######
 	
+	//#### Requêtes ####
+	public int[] getPosition() {
+		return position;
+	}
+	
+	private void replaceInCarte(int d) {
+		switch (d){
+		case SUD : 
+			position[1] = position[1] - 1;
+			break;
+		case NORD : 
+			position[1] = position[1] + 1;
+			break;
+		case EST : 
+			position[0] = position[0] + 1;
+			break;
+		case OUEST : 
+			position[0] = position[0] - 1;
+			break;
+		default : 
+			throw new InternalError();// normalement impossible
+		}
+		if (!chemin.isEmpty()) {
+			chemin.remove(0);
+			System.out.println("fin du chemin :"+chemin.isEmpty());
+		}
+	}
+	
+// ###### Definition des camps
+	
+	//L'utilisateur doit choisir le camp du robot :
+	// sauvageon ou garde de nuit
 	public void defineCamp () {
 		LCD.drawString("Choisis ton camp", 0, 0);
-		LCD.drawString("H/G pour Sauvageons", 0, 1);
-		LCD.drawString("B/reste pour garde de nuit", 0, 2);
-		LCD.drawString("Les boutons de coté D/G sont pour le bleutooth et autre ss bluetooth ", 0, 3);
-		
-		switch (Button.waitForAnyPress()) {
-			case Button.ID_RIGHT:  
-				carte = new Carte(false);
-				LCD.drawString("Garde de la nuit", 0, 0);
-				//bl = new Bluetooth(false);
-				break;
-			case Button.ID_DOWN:
-				carte = new Carte(false);
-				LCD.drawString("Garde de la nuit", 0, 0);
-				break;
-			case Button.ID_LEFT:
-				carte = new Carte(true);
-				LCD.drawString("Sauvageon", 0, 0);
-				//bl = new Bluetooth(true);
-				break;
-			default:
-				carte = new Carte(true);
-				LCD.drawString("Sauvageon", 0, 0);
-				break;
+		LCD.drawString("H : Sauvageons", 0, 1);
+		LCD.drawString("B : Garde de nuit", 0, 2);
+		Button.waitForAnyPress();
+		if (Button.UP.isDown()){
+			//Sauvageons
+			carte = new Carte(true);
+			isSauvageon = true;
+		}else{
+			//Garde de nuit
+			carte = new Carte(false);
+			isSauvageon = false;
 		}
 		Delay.msDelay(300);
 		LCD.clear();
 	}
 	
-
-
 }

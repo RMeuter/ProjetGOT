@@ -1,17 +1,17 @@
-package ProjetGOT;
+package ProjetGOT.TestStep;
 
+import ProjetGOT.ArretBouton;
+import ProjetGOT.ArriveGoal;
+import ProjetGOT.LigneNoire;
+import ProjetGOT.RobotNavigator;
+import ProjetGOT.WhereIAm;
 import lejos.hardware.Button;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
-public class Arbitre {
-	
-	// Site pour optimisation ::
-	// https://florat.net/tutorial-java/chapitre08-opti.html
-	
+public class StepTwo {
 	public static void main(String[] args) {
 		Button.waitForAnyPress();
-		
 //##### Initialisation de l'arbitre, du biais et du robot ####
 		Arbitrator arby = null;
 		int newBiaisAngle = -13;
