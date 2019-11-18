@@ -7,29 +7,36 @@ import lejos.hardware.lcd.LCD;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
+
 public class WhereIAm implements Behavior {
-	Carte carte;
 	
-	public WhereIAm (Carte carte) {
-		this.carte = carte;
+// #### Attributs ####
+	RobotNavigator robotNav;
+	
+// #### Constructeur ####	
+	public WhereIAm (RobotNavigator robotNav) {
+		this.robotNav= robotNav;
 	}
 
+// #### Méthodes ####	
+	
+	// Raison pour laquelle le comportement prend le dessus
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
 		return Button.RIGHT.isDown();
 	}
 
+	// Action réalisé par le comportement
 	@Override
 	public void action() {
-		LCD.drawString(Arrays.toString(carte.getPositionHistorique()), 0, 0);
+		LCD.drawString(Arrays.toString(robotNav.getPosition()), 0, 0);
 		Delay.msDelay(1000);
 		LCD.clear();
 	}
 
+	// Comportement ou action supprimé par le comportement actuel
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
 		
 	}
 

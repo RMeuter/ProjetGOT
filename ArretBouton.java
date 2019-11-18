@@ -1,39 +1,40 @@
 package ProjetGOT;
 
 import lejos.hardware.Button;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
 public class ArretBouton implements Behavior{
-	private Arbitrator arby;
-	private EV3ColorSensor cs;
-	private MovePilot pilot;
-
 	
-	public ArretBouton(Arbitrator arby, EV3ColorSensor cs, MovePilot pilot) {
+// #### Attributs ####
+	private Arbitrator arby;
+	private Robot rb;
+
+// #### Constructeur ####
+	public ArretBouton(Arbitrator arby, Robot rb) {
 		this.arby = arby;
-		this.cs = cs;
-		this.pilot = pilot;
+		this.rb = rb;
 	}
 
+// #### Méthodes ####
+	
+	// Déclaration de l'arbitre
 	public void setArbitrator(Arbitrator arby) {
 		this.arby = arby;
 	}
 	
+	// Raison pour laquelle le comportement prend le dessus
 	public boolean takeControl(){
-		return Button.RIGHT.isDown();
+		return Button.LEFT.isDown();
 	}
 	
+	// Action réalisé par le comportement
 	public void action(){
-		pilot.stop();
-		cs.close();
+		rb.stopProcess();
 		arby.stop();
-		System.out.println("C'est bon ta finit mamène ! ");
-		System.exit(0);
 	}
 	
+	// Comportement ou action supprimé par le comportement actuel
 	public void suppress(){
 		
 	}
