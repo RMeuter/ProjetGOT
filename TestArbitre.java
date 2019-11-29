@@ -18,25 +18,22 @@ public class TestArbitre {
 		LinkedList <Short> chemin = robotNav.getChemin();
 		
 
-		robotNav.addOneMoreMission();
-		robotNav.setDebut();
-		robotNav.setGoal();
-	
-		chemin = robotNav.getChemin();
-		
+//		robotNav.addOneMoreMission();
+//		robotNav.setDebut();
+//		robotNav.setGoal();
+//	
+//		chemin = robotNav.getChemin();
+//		
 		
 		for (short x : chemin){
-			LCD.drawInt(robotNav.getPosition(), 0, 1);
 			if (robotNav.versDirection(x) == 0){
 				robotNav.avance(x);
-				//robotNav.sarreteNSeconde();
+				robotNav.sarreteNSeconde();
 			}else{
 				robotNav.tourne(x);
-				//robotNav.sarreteNSeconde();
+				robotNav.sarreteNSeconde();
 			}
 		}
-		LCD.drawInt(robotNav.getPosition(), 0, 1);
-		Button.waitForAnyPress();
 		
 	}
 }
