@@ -65,7 +65,11 @@ public class RobotNavigator extends Robot {
 	// angleRotation = angle actuel - angle futur    
 	public short versDirection(short d){ // d = SUD, OUEST,EST,NORD
 		angleRotation = (short) (Cap - d);
-		return angleRotation;
+		while (angleRotation>=180) angleRotation -= 360;
+		while (angleRotation<=-180) angleRotation += 360;
+		short newBiais = (short) (angleRotation < 0 ? -biaisAngle: (angleRotation == 0 ? 0 : biaisAngle));
+		newBiais = (short) (angleRotation == 180 || angleRotation == -180? newBiais*2: newBiais);
+		return (short) (angleRotation + newBiais);
 	}
 	
 	// Permet de savoir si le robot a passé la ligne noire
@@ -79,16 +83,17 @@ public class RobotNavigator extends Robot {
 	//Tourne le robot selon la nouvelle direction et un biais de rotation
 	// En tournant, le robot change de case, on change donc la position vers la nouvelle
 	public void tourne(short d){ 
-		pilot.rotate(angleRotation+biaisAngle);
+		pilot.rotate(versDirection(d));
+		pilot.travel(Carte.tailleCase*10+Carte.ligneCase*10);
 		Cap = d;
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
 		switch (d){
 		case SUD : 
-			position = (byte) (xposition + (5*yposition-1));
+			position = (byte) (xposition + (5*(yposition+1)));
 			break;
 		case NORD : 
-			position = (byte) (xposition + (5*yposition+1));
+			position = (byte) (xposition + (5*(yposition-1)));
 			break;
 		case EST : 
 			position = (byte) (xposition+1 + 5*yposition);
@@ -109,10 +114,10 @@ public class RobotNavigator extends Robot {
 		byte yposition = (byte) (position / 5);
 		switch (d){
 		case SUD : 
-			position = (byte) (xposition + (5*yposition-1));
+			position = (byte) (xposition + (5*(yposition+1)));
 			break;
 		case NORD : 
-			position = (byte) (xposition + (5*yposition+1));
+			position = (byte) (xposition + (5*(yposition-1)));
 			break;
 		case EST : 
 			position = (byte) (xposition+1 + 5*yposition);
@@ -126,20 +131,12 @@ public class RobotNavigator extends Robot {
 	}
 		
 	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
-	/*
+
 	public void sarreteNSeconde(){
-		short [] carteCouleur = carte.getCarteCouleur();
-		int temps = carteCouleur[position];
 		pilot.stop();
-		if (temps < 2){
-			Delay.msDelay(1000);
-		}else if (temps == 2){
-			Delay.msDelay(5000);
-		}else {
-			Delay.msDelay(10000);
-		}
+		Delay.msDelay(1000*carte.getPoids(position));
+		
 	}
-	*/
 	
 	
 // ###### Définition du point de départ et du but #####
@@ -152,8 +149,10 @@ public class RobotNavigator extends Robot {
 
 		if (this.isSauvageon){
 			position = 4;
+			Cap = SUD;
 		}else {
 			position = 30;
+			Cap = NORD;
 		}
 	}
 	
@@ -185,7 +184,7 @@ public class RobotNavigator extends Robot {
 
 	
 	public void addOneMoreMission () {
-		etape += 2 ;
+		etape = 3 ;
 	}
 	// Donne l'étape (=objectif)
 	public byte getEtape(){

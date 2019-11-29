@@ -11,22 +11,32 @@ public class TestArbitre {
 		
 //##### Initialisation de l'arbitre, du biais et du robot ####
 
-		short newBiaisAngle = 10;
+		short newBiaisAngle = -15;
 		RobotNavigator robotNav = new RobotNavigator (newBiaisAngle);
 
 		
 		LinkedList <Short> chemin = robotNav.getChemin();
 		
+
+		robotNav.addOneMoreMission();
+		robotNav.setDebut();
+		robotNav.setGoal();
+	
+		chemin = robotNav.getChemin();
+		
+		
 		for (short x : chemin){
-			LCD.drawInt(robotNav.versDirection(x), 0, 0);
-			Button.waitForAnyEvent();
+			LCD.drawInt(robotNav.getPosition(), 0, 1);
 			if (robotNav.versDirection(x) == 0){
 				robotNav.avance(x);
+				//robotNav.sarreteNSeconde();
 			}else{
 				robotNav.tourne(x);
-				robotNav.avance(x);
+				//robotNav.sarreteNSeconde();
 			}
 		}
+		LCD.drawInt(robotNav.getPosition(), 0, 1);
+		Button.waitForAnyPress();
 		
 	}
 }
