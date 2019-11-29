@@ -1,8 +1,8 @@
-package OBJECTIF1;
+package ProjetGOT;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-import OBJECTIF1.Robot;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
@@ -17,43 +17,35 @@ public class RobotNavigator extends Robot {
 	public static final short NORD = 0;
 	
 	// #### Attributs du robot####
-	private boolean isSauvageon;
+	private boolean isSauvageon = false;
+	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
+	private byte etape = 1; // Etape = Objectif 1,2 ou 4
 	
-	// Angle où le robot semble tourner correctement;
-	private short biaisAngle = 0; 
-	
-	// Le scalaire du biais angle
-	private int scalaireBiaisAngle;
-
-	// Etape = Objectif 1,2 ou 4
-	private byte etape = 1;
-	
-	// Coordonnées actuelles du robot [x, y]
-	private byte position; 
-	
-	// But du robot [x, y]
-	private byte goal;
-	
-	// Direction du robot vers lequel le robot regarde
-	private short Cap; 
-	
-	// Angle de rotation nécessaire afin de changer la direction du robot
-	private short angleRotation; 
-			
-	// Recuperation de la carte
-	private Carte carte;
-	
+	// #### Localisation et repere
+	private byte position; // Coordonnées actuelles du robot [x, y]
+	private byte goal; // But du robot [x, y]
+	private short Cap; 	// Direction du robot vers lequel le robot regarde
+	private Carte carte; 	// Recuperation de la carte
+	private LinkedList <Short> chemin = new LinkedList <Short>();
 	private Dijkstra fctDijkstra;
-	private LinkedList<Short> chemin;
 	
 // #### Constructeur ####
-	public RobotNavigator (short newBiaisAngle) {
-		scalaireBiaisAngle =1/4;
+	public RobotNavigator (int newBiaisAngle) {
+		// Definition d'un chemin
+		/*
+		 * 
+		chemin.add(EST);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);
+		chemin.add(EST);chemin.add(EST);chemin.add(EST);chemin.add(NORD);chemin.add(OUEST);chemin.add(OUEST);
+		chemin.add(OUEST);chemin.add(SUD);
+		 * 
+		 * */
+		// Ordre important !!
 		defineCamp();
-		fctDijkstra = new Dijkstra(isSauvageon);
 		setDebut();
+		fctDijkstra = new Dijkstra(isSauvageon);
 		setGoal();
 		this.biaisAngle = newBiaisAngle;
+		System.out.println(chemin);
 	}
 
 	
@@ -63,8 +55,9 @@ public class RobotNavigator extends Robot {
 	
 	// Recherche de la rotation nécessaire pour aller vers la prochaine direction :
 	// angleRotation = angle actuel - angle futur    
-	public short versDirection(short d){ // d = SUD, OUEST,EST,NORD
-		angleRotation = (short) (Cap - d);
+	public short versDirection(short newCap){ // d = SUD, OUEST,EST,NORD
+		short angleRotation = (short) (newCap - Cap);
+		Cap = newCap; //// ---------------> Attention risque d'erreur !!!
 		while (angleRotation>=180) angleRotation -= 360;
 		while (angleRotation<=-180) angleRotation += 360;
 		short newBiais = (short) (angleRotation < 0 ? -biaisAngle: (angleRotation == 0 ? 0 : biaisAngle));
@@ -74,20 +67,52 @@ public class RobotNavigator extends Robot {
 	
 	// Permet de savoir si le robot a passé la ligne noire
 	public boolean verifiePasseLigneNoire(boolean ligne) {
-			if (ligne) return getCalibrateColor().getCalibreColor()=="noir";
-			else return getCalibrateColor().getCalibreColor()!="noir";
+			if (ligne) return getCalibrateColor().getCalibreColor() == "noir";
+			else return getCalibrateColor().getCalibreColor() != "noir";
 		}
 	
 	// #### Commandes ####
 	
 	//Tourne le robot selon la nouvelle direction et un biais de rotation
 	// En tournant, le robot change de case, on change donc la position vers la nouvelle
-	public void tourne(short d){ 
-		pilot.rotate(versDirection(d));
-		pilot.travel(Carte.tailleCase*10+Carte.ligneCase*10);
-		Cap = d;
+	public void tourne(){ 
+		if (!chemin.isEmpty()) {
+			short newDirection = chemin.getFirst();
+			short rot = versDirection(newDirection);
+			short scalaire = (short) (rot/(90+biaisAngle));
+			while(scalaire > 0) { // On prend 110 pour le biais qui peut etre compris en 0 et 20
+				pilot.travel(20);
+				pilot.rotate(rot/scalaire);
+				if(rot>0) {
+					while (!verifiePasseLigneNoire(false)) {
+						pilot.backward();
+					}
+				} else {
+					while (!verifiePasseLigneNoire(false)) {
+						pilot.forward();
+					}
+				}
+				scalaire --;
+			}
+			pilot.travel(30);
+			replaceInCarte(newDirection);
+		} else {
+			chemin.add(EST);
+			System.out.println("c'est finit ! Appuyer sur le boutons pour un nouveau but");
+			Button.waitForAnyEvent();
+		}
+	}
+		
+	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
+	public void sarreteNSeconde(){
+		pilot.stop();
+		Delay.msDelay(1000*carte.getPoids(position));
+	}
+	
+	private void replaceInCarte(int d) {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
+		System.out.println("Position actuelle : "+getPosition());
 		switch (d){
 		case SUD : 
 			position = (byte) (xposition + (5*(yposition+1)));
@@ -104,40 +129,11 @@ public class RobotNavigator extends Robot {
 		default : 
 			throw new InternalError();
 		}
-	}
-		
-	
-	// Le robot avance tout droit d'une case et actualise sa position
-	public void avance(short d){ 
-		pilot.travel(Carte.tailleCase*10+Carte.ligneCase*10);
-		byte xposition = (byte) (position % 5);
-		byte yposition = (byte) (position / 5);
-		switch (d){
-		case SUD : 
-			position = (byte) (xposition + (5*(yposition+1)));
-			break;
-		case NORD : 
-			position = (byte) (xposition + (5*(yposition-1)));
-			break;
-		case EST : 
-			position = (byte) (xposition+1 + 5*yposition);
-			break;
-		case OUEST : 
-			position = (byte) (xposition-1 + 5*yposition);
-			break;
-		default : 
-			throw new InternalError();// normalement impossible
+		if (!chemin.isEmpty()) {
+			chemin.remove(0);
+			System.out.println("fin du chemin :"+chemin.isEmpty());
 		}
 	}
-		
-	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
-
-	public void sarreteNSeconde(){
-		pilot.stop();
-		Delay.msDelay(1000*carte.getPoids(position));
-		
-	}
-	
 	
 // ###### Définition du point de départ et du but #####
 	

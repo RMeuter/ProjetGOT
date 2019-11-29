@@ -8,8 +8,7 @@ import lejos.utility.Delay;
 
 public class LigneNoire implements Behavior{
 
-	RobotNavigator robotNav;
-	private boolean suppressed = false;
+	private RobotNavigator robotNav;
 	
 	public LigneNoire(RobotNavigator robotNav) {
 		this.robotNav= robotNav;
@@ -20,8 +19,6 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public void suppress() {
-		robotNav.pilot.stop();
-		suppressed = true;
 	}
 
 	public void action() {
@@ -30,13 +27,9 @@ public class LigneNoire implements Behavior{
 		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
 		 * 
 		 * */
-		suppressed = false;
-		LCD.drawString("Position :"+Arrays.toString(robotNav.getPosition()), 0, 3);
-		LCD.drawString("Comportement LN", 0, 4);
-		robotNav.doRot();
+		System.out.println("Comportement LN");
+		robotNav.tourne();
 		Delay.msDelay(3000);
-		robotNav.pilot.forward();
-		while( robotNav.pilot.isMoving() && !suppressed ) Thread.yield();
 		LCD.clear();
 	}
 }

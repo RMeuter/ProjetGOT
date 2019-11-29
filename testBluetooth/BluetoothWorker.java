@@ -27,43 +27,44 @@ public class BluetoothWorker extends Thread {
     static boolean isSauvageon;
     static boolean isTest = false;
     boolean stop = false;
+    static int timeForWrite = 1000;
     
-    private static void main (String args[])  {
-    	int TCP_SERVER_PORT = 9701;
-    	boolean test = false;
-    	/*
-    	 * Pour tester il faut :
-    	 * -> activer une permiere fois le main avec test = true
-    	 * -> activer une seconde fois avec test = false
-    	 * */
-    	
-    	if (test) {
-    		ServerSocket serversocket = null;
-            try {
-    			serversocket = new ServerSocket(TCP_SERVER_PORT);
-    		} catch (IOException e1) {
-    			e1.printStackTrace();
-    		}
-            while (true) {
-                Socket clientsocket;
-    			try {
-    				clientsocket = serversocket.accept();
-    				new BluetoothWorker(false, clientsocket).start();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-            } 
-    	} else {
-    		Socket socket;
-    		try {
-    			socket = new Socket("localhost", 9701);
-    	    	BluetoothWorker tc = new BluetoothWorker(true, socket);
-    	    	tc.start();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}   
-    	}
-    }
+//    private static void main (String args[])  {
+//    	int TCP_SERVER_PORT = 9701;
+//    	boolean test = false;
+//    	/*
+//    	 * Pour tester il faut :
+//    	 * -> activer une permiere fois le main avec test = true
+//    	 * -> activer une seconde fois avec test = false
+//    	 * */
+//    	
+//    	if (test) {
+//    		ServerSocket serversocket = null;
+//            try {
+//    			serversocket = new ServerSocket(TCP_SERVER_PORT);
+//    		} catch (IOException e1) {
+//    			e1.printStackTrace();
+//    		}
+//            while (true) {
+//                Socket clientsocket;
+//    			try {
+//    				clientsocket = serversocket.accept();
+//    				new BluetoothWorker(false, clientsocket).start();
+//    			} catch (IOException e) {
+//    				e.printStackTrace();
+//    			}
+//            } 
+//    	} else {
+//    		Socket socket;
+//    		try {
+//    			socket = new Socket("localhost", 9701);
+//    	    	BluetoothWorker tc = new BluetoothWorker(true, socket);
+//    	    	tc.start();
+//    		} catch (IOException e) {
+//    			e.printStackTrace();
+//    		}   
+//    	}
+//    }
     
     // ################################## Constructeur ############################################ 
     public BluetoothWorker(boolean Camps, BTConnector btc, BTConnection btconnection) throws IOException {
@@ -113,21 +114,26 @@ public class BluetoothWorker extends Thread {
     
     public void run() {
     	try {
+    		/*
     		carte = doCarte();
     		if (isSauvageon) {
     			System.out.println("send map");
     	        sendCarte();
+    	        sleep(3000);
     	        System.out.println("read map");
     	        readCarte();	
     		} else {
     	        System.out.println("read map");
+    	        System.out.println("read le prems: "+input.readInt());
     	        readCarte();
+    	        sleep(3000);
     			System.out.println("send map");
     	        sendCarte();
     		}
 	        for (int i = 0; i<carte.length;i++) {
 	        	System.out.println(Arrays.toString(carte[i]));
 	        }
+	        */
 	        int temps;
 	        int [] position = {2, 3};
 	        
@@ -147,16 +153,12 @@ public class BluetoothWorker extends Thread {
 	        	} else {
 	        		System.out.println("received");
 		        	temps = (int) (Math.random()*20000.);
-		            System.out.println("temps aléatoire générer :" + temps);
-		        	sleep(temps);
 		        	position = readPosition(); // attention une fois envoyer il ne le garde pas en mémoire donc plutot faire un
 		        	// while read !
 		            System.out.println("received" + Arrays.toString(position));
 	        	}
 	        }
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,17 +178,18 @@ public class BluetoothWorker extends Thread {
 			e.printStackTrace();
 		} finally {
 			try {
-	    	if(isNTXConnexion) {
-	    		ntxConnection.close();
-		    	btConnector.cancel();
-	    	} else if (isTest) {
-				socket.close();
-	    	} else {
-				btConnection.close();
-		    	btConnector.cancel();
-	    	}
-
+		    	if(isNTXConnexion) {
+		    		ntxConnection.close();
+			    	btConnector.cancel();
+		    	} else if (isTest) {
+					socket.close();
+		    	} else {
+					btConnection.close();
+			    	btConnector.cancel();
+		    	}
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
 
@@ -225,24 +228,38 @@ public class BluetoothWorker extends Thread {
     	}
     }
     
-    private static void sendCarte () throws IOException {
-    	int [][] carte= doCarte();
-    	String str = "";
+    private static void sendCarte () throws IOException, InterruptedException{
+    	carte = doCarte();
+    	sleep(timeForWrite);
+    	System.out.println("write one");
+    	output.writeInt(carte.length);
+    	sleep(timeForWrite);
+    	System.out.println("write two");
+    	output.writeInt(carte[0].length);
     	for (int i= 0;i< carte.length; i++) {
     		for (int j= 0;j < carte[0].length; j++) {
-    	    	str += String.valueOf(carte[i][j]);
+					sleep(timeForWrite);
+					System.out.println("write other");
+	    	    	output.writeInt(carte[i][j]);
         	}
     	}
-    	output.writeUTF(str);
-    	System.out.println("C'est envoyer !");
-    }
 
+    }
     private static void readCarte () throws IOException {
-    	String str = input.readUTF();
-    	for (int i = 0; i < 7; i++) {
-    		for (int j = 0; j < 5; j++) {
-    			int numb = Character.getNumericValue (str.charAt(5*i+j));
-    			if (numb != 0) carte[i][j] = Character.getNumericValue (str.charAt(5*i+j));
+		int line = input.readInt();
+		System.out.println(line);
+		int inLine = input.readInt();
+		System.out.println(inLine);
+    	for (int i = 0; i < line; i++) {
+    		for (int j = 0; j < inLine; j++) {
+    			if(carte[i][j]==0) {
+    				carte[i][j] = input.readInt();
+    				System.out.println("nb non connu :"+carte[i][j]);
+    			}
+    			else {
+    				System.out.println("nb connu: :"+input.readInt()); // On lit les données qui nous servent à rien 
+    			}
+    			// afin d'éviter de prendre une données inutile dans notre carte
         	}
     	}
     }

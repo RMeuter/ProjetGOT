@@ -14,12 +14,19 @@ public class StepOnlyArbitrator {
 		Button.waitForAnyPress();
 		int newBiaisAngle = -13;
 		RobotNavigator robotNav = new RobotNavigator (newBiaisAngle);
-		Button.waitForAnyEvent();
-		while(Button.LEFT.isDown()) {
-			Button.waitForAnyEvent();
+		while(!Button.LEFT.isDown()) {
+			System.out.print("Lancer une action");
+			Button.waitForAnyPress();
 			if (Button.RIGHT.isDown()) robotNav.tourne();
-			else if (Button.DOWN.isDown()) robotNav.verifiePasseLigneNoire(true);
+			else if (Button.DOWN.isDown()) System.out.println(robotNav.verifiePasseLigneNoire(false));
 			else if (Button.UP.isDown()) robotNav.sarreteNSeconde();
+			else if (Button.ENTER.isDown()) {
+				System.out.println("hey");
+				robotNav.pilot.rotate(180/2);
+				while (!robotNav.verifiePasseLigneNoire(false)) robotNav.pilot.backward();
+				robotNav.pilot.rotate(180/2);
+				while (!robotNav.verifiePasseLigneNoire(false)) robotNav.pilot.backward();
+			}
 			System.out.println("Action faite !");
 		}
 		robotNav.stopProcess();

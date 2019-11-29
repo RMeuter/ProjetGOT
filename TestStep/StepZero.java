@@ -14,6 +14,10 @@ public class StepZero {
 		Robot rb = new Robot();
 		System.out.println("Press for view color");
 		Button.waitForAnyPress();
-		rb.getCalibrateColor().getCalibreColor();
+		while(!Button.DOWN.isDown()) {
+			Button.waitForAnyPress();
+			System.out.println(rb.getCalibrateColor().getCalibreColor());
+		}
+
 	}
 }

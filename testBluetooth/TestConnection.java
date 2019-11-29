@@ -67,6 +67,7 @@ public class TestConnection {
     			e.printStackTrace();
     		}
     	}
+		
 		while(!Button.LEFT.isDown()) {
     		System.out.println("Do you write ?");
     		Button.waitForAnyPress();
