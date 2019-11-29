@@ -11,15 +11,14 @@ public class RobotNavigator extends Robot {
 	
 // #### Attributs ####		
 	//Directions possibles pour le robot
-	public static final short SUD = 0; 
-	public static final short EST = 90;
-	public static final short OUEST = -90;
-	public static final short NORD = 180;
+	public static final short SUD = 180; 
+	public static final short EST = -90;
+	public static final short OUEST = 90;
+	public static final short NORD = 0;
 	
 	// #### Attributs du robot####
 	private boolean isSauvageon = false;
 	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
-	private int scalaireBiaisAngle; // Le scalaire du biais angle
 	private int etape = 0; // Etape = Objectif 1,2 ou 4
 	
 	// #### Localisation et repere
@@ -33,9 +32,9 @@ public class RobotNavigator extends Robot {
 // #### Constructeur ####
 	public RobotNavigator (int newBiaisAngle) {
 		// Definition d'un chemin
-		chemin.add(NORD);chemin.add(EST);chemin.add(EST);
-		chemin.add(EST);chemin.add(EST);chemin.add(EST);
-		scalaireBiaisAngle = 1/4;
+		chemin.add(EST);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);
+		chemin.add(EST);chemin.add(EST);chemin.add(EST);chemin.add(NORD);chemin.add(OUEST);chemin.add(OUEST);
+		chemin.add(OUEST);chemin.add(SUD);
 		defineCamp();
 		setDebut();
 		setGoal();
@@ -71,18 +70,35 @@ public class RobotNavigator extends Robot {
 	//Tourne le robot selon la nouvelle direction et un biais de rotation
 	// En tournant, le robot change de case, on change donc la position vers la nouvelle
 	public void tourne(){ 
-		short newDirection = chemin.getFirst();
-		short rot = versDirection(newDirection);
-		System.out.println("ND :"+newDirection);
-		System.out.println("rot : "+rot);
-		if(rot <= 90 || rot >= -90) pilot.rotate(rot);
-		else {
-			pilot.rotate(rot/2);
-			while (!verifiePasseLigneNoire(false)) pilot.backward();
-			pilot.rotate(rot/2);
-			while (!verifiePasseLigneNoire(false)) pilot.backward();
+		if (!chemin.isEmpty()) {
+			short newDirection = chemin.getFirst();
+			short rot = versDirection(newDirection);
+			System.out.println("ND :"+newDirection);
+			System.out.println("rot : "+rot);
+			short scalaire = (short) (rot/(90+biaisAngle));
+			while(scalaire > 0) { // On prend 110 pour le biais qui peut etre compris en 0 et 20
+				pilot.travel(20);
+				pilot.rotate(rot/scalaire);
+				if(rot>0) {
+					while (!verifiePasseLigneNoire(false)) {
+						System.out.print("arriere");
+						pilot.backward();
+					}
+				} else {
+					while (!verifiePasseLigneNoire(false)) {
+						System.out.print("avant");
+						pilot.forward();
+					}
+				}
+				scalaire --;
+			}
+			pilot.travel(30);
+			replaceInCarte(newDirection);
+		} else {
+			chemin.add(EST);
+			System.out.println("c'est finit ! Appuyer sur le boutons pour un nouveau but");
+			Button.waitForAnyEvent();
 		}
-		replaceInCarte(newDirection);
 	}
 		
 	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
@@ -126,7 +142,7 @@ public class RobotNavigator extends Robot {
 	
 	//Verifie si le robot est arrivé à destination
 	public boolean isArriveGoal() {
-		return goal[0] == position[0] && goal[1] == position[1];
+		return chemin.isEmpty();
 	}
 
 	

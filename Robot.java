@@ -12,7 +12,7 @@ public class Robot {
 	
 // #### Attributs ####	
 		EV3ColorSensor color;
-		public MovePilot pilot;
+		protected MovePilot pilot;
 		private CalibrageColor tabColor; 
 		
 // #### Constructeur ####

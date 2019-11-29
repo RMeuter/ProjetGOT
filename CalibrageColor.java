@@ -65,7 +65,7 @@ public class CalibrageColor {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(color.getRGBMode(),5);// 0 est le numero de la case
 		meanColorPercep.fetchSample(sample, 0);
-		float base = (float) 0.035;
+		float base = (float) 0.03;
 		for(int i=0; i<calibreColor.length; i++) {
 			if (sample[0]>-base+calibreColor[i][0] && sample[0]<base+calibreColor[i][0]
 					&& sample[1]>-base+calibreColor[i][1] && sample[1]<base+calibreColor[i][1]

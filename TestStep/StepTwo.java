@@ -2,6 +2,7 @@ package ProjetGOT.TestStep;
 
 import ProjetGOT.ArretBouton;
 import ProjetGOT.ArriveGoal;
+import ProjetGOT.DetectCouleur;
 import ProjetGOT.LigneNoire;
 import ProjetGOT.RobotNavigator;
 import ProjetGOT.WhereIAm;
@@ -19,18 +20,16 @@ public class StepTwo {
 		
 //##### Définition des comportements #####
 		Behavior b1 = new LigneNoire(robotNav);
-		Behavior b2 = new ArriveGoal(robotNav);
-		Behavior b4 = new WhereIAm(robotNav);
+		Behavior b3 = new DetectCouleur(robotNav);
 		Behavior b5 = new ArretBouton(arby, robotNav);
 		
 		// du moins important au plus important
-		Behavior[] bArray = {b1,b2,b4,b5}; 
+		Behavior[] bArray = {b3,b1,b5}; 
 		arby = new Arbitrator(bArray);
 		
 //##### Arrêt de l'arbitre ####
-		if(b4 instanceof ArretBouton) {
-			ArretBouton b = (ArretBouton)b4;
-			b.setArbitrator(arby);
+		if(b5 instanceof ArretBouton) {
+			((ArretBouton) b5).setArbitrator(arby);
 		}
 		arby.go();
 }

@@ -21,6 +21,7 @@ public class StepOnlyArbitrator {
 			else if (Button.DOWN.isDown()) System.out.println(robotNav.verifiePasseLigneNoire(false));
 			else if (Button.UP.isDown()) robotNav.sarreteNSeconde();
 			else if (Button.ENTER.isDown()) {
+				System.out.println("hey");
 				robotNav.pilot.rotate(180/2);
 				while (!robotNav.verifiePasseLigneNoire(false)) robotNav.pilot.backward();
 				robotNav.pilot.rotate(180/2);

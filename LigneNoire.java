@@ -31,7 +31,7 @@ public class LigneNoire implements Behavior{
 		System.out.println("Position :"+Arrays.toString(robotNav.getPosition()));
 		System.out.println("Comportement LN");
 		robotNav.tourne();
-		Delay.msDelay(500);
+		Delay.msDelay(3000);
 		LCD.clear();
 	}
 }

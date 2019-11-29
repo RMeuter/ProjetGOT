@@ -13,8 +13,6 @@ public class DetectCouleur implements Behavior{
 	 * 
 	 * */
 	private RobotNavigator robotNav;
-	private int [] etape;
-	private boolean suppressed = false;
 	
 	public DetectCouleur(RobotNavigator robotNav) {
 		this.robotNav= robotNav;
@@ -25,7 +23,6 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public void suppress() {
-		suppressed = true;
 		robotNav.pilot.stop();
 	}
 
@@ -36,11 +33,9 @@ public class DetectCouleur implements Behavior{
 		 * A refaire par la suite
 		* */
 		
-		suppressed = false;		
-		LCD.drawString("Comportement DC", 0, 3);
+		System.out.println("Comportement DC");
 		robotNav.pilot.forward();
-		Delay.msDelay(500);
-		LCD.clear();
+		Delay.msDelay(3000);
 	}
 	
 	

@@ -27,6 +27,7 @@ public class BluetoothWorker extends Thread {
     static boolean isSauvageon;
     static boolean isTest = false;
     boolean stop = false;
+    static int timeForWrite = 1000;
     
 //    private static void main (String args[])  {
 //    	int TCP_SERVER_PORT = 9701;
@@ -113,21 +114,26 @@ public class BluetoothWorker extends Thread {
     
     public void run() {
     	try {
+    		/*
     		carte = doCarte();
     		if (isSauvageon) {
     			System.out.println("send map");
     	        sendCarte();
+    	        sleep(3000);
     	        System.out.println("read map");
     	        readCarte();	
     		} else {
     	        System.out.println("read map");
+    	        System.out.println("read le prems: "+input.readInt());
     	        readCarte();
+    	        sleep(3000);
     			System.out.println("send map");
     	        sendCarte();
     		}
 	        for (int i = 0; i<carte.length;i++) {
 	        	System.out.println(Arrays.toString(carte[i]));
 	        }
+	        */
 	        int temps;
 	        int [] position = {2, 3};
 	        
@@ -224,13 +230,16 @@ public class BluetoothWorker extends Thread {
     
     private static void sendCarte () throws IOException, InterruptedException{
     	carte = doCarte();
-    	sleep(1000);
+    	sleep(timeForWrite);
+    	System.out.println("write one");
     	output.writeInt(carte.length);
-    	sleep(1000);
+    	sleep(timeForWrite);
+    	System.out.println("write two");
     	output.writeInt(carte[0].length);
     	for (int i= 0;i< carte.length; i++) {
     		for (int j= 0;j < carte[0].length; j++) {
-					sleep(1000);
+					sleep(timeForWrite);
+					System.out.println("write other");
 	    	    	output.writeInt(carte[i][j]);
         	}
     	}
@@ -238,16 +247,21 @@ public class BluetoothWorker extends Thread {
     }
     private static void readCarte () throws IOException {
 		int line = input.readInt();
+		System.out.println(line);
 		int inLine = input.readInt();
-    	System.out.println(line+inLine);
+		System.out.println(inLine);
     	for (int i = 0; i < line; i++) {
     		for (int j = 0; j < inLine; j++) {
-    			if(carte[i][j]==0) carte[i][j] = input.readInt();
-    			else input.readInt(); // On lit les données qui nous servent à rien 
+    			if(carte[i][j]==0) {
+    				carte[i][j] = input.readInt();
+    				System.out.println("nb non connu :"+carte[i][j]);
+    			}
+    			else {
+    				System.out.println("nb connu: :"+input.readInt()); // On lit les données qui nous servent à rien 
+    			}
     			// afin d'éviter de prendre une données inutile dans notre carte
         	}
     	}
-
     }
  // ######################################### Position ######################################################
     
