@@ -4,13 +4,15 @@ import ProjetGOT.ArretBouton;
 import ProjetGOT.DetectCouleur;
 import ProjetGOT.HitRobot;
 import ProjetGOT.LigneNoire;
+import ProjetGOT.Robot;
 import ProjetGOT.RobotNavigator;
 import lejos.hardware.Button;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
-public class StepTwo {
+public class StepUltrason {
 	public static void main(String[] args) {
+
 		Button.waitForAnyPress();
 //##### Initialisation de l'arbitre, du biais et du robot ####
 		Arbitrator arby = null;
@@ -32,3 +34,4 @@ public class StepTwo {
 		arby.go();
 	}
 }
+

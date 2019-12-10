@@ -1,6 +1,5 @@
 package ProjetGOT;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import lejos.hardware.Button;
@@ -19,7 +18,7 @@ public class RobotNavigator extends Robot {
 	// #### Attributs du robot####
 	private boolean isSauvageon = false;
 	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
-	private byte etape = 1; // Etape = Objectif 1,2 ou 4
+	private byte etape = 3; // Etape = Objectif 1,2 ou 4
 	
 	// #### Localisation et repere
 	private byte position; // Coordonnées actuelles du robot [x, y]
@@ -28,17 +27,11 @@ public class RobotNavigator extends Robot {
 	private Carte carte; 	// Recuperation de la carte
 	private LinkedList <Short> chemin = new LinkedList <Short>();
 	private Dijkstra fctDijkstra;
+	private boolean waitNewCarte = false; // attend avant de recreer une carte
 	
 // #### Constructeur ####
 	public RobotNavigator (int newBiaisAngle) {
 		// Definition d'un chemin
-		/*
-		 * 
-		chemin.add(EST);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);chemin.add(NORD);
-		chemin.add(EST);chemin.add(EST);chemin.add(EST);chemin.add(NORD);chemin.add(OUEST);chemin.add(OUEST);
-		chemin.add(OUEST);chemin.add(SUD);
-		 * 
-		 * */
 		// Ordre important !!
 		defineCamp();
 		setDebut();
@@ -56,8 +49,8 @@ public class RobotNavigator extends Robot {
 	// Recherche de la rotation nécessaire pour aller vers la prochaine direction :
 	// angleRotation = angle actuel - angle futur    
 	public short versDirection(short newCap){ // d = SUD, OUEST,EST,NORD
-		short angleRotation = (short) (newCap - Cap);
-		Cap = newCap; //// ---------------> Attention risque d'erreur !!!
+		short angleRotation = (short) (Cap - newCap);
+		Cap = newCap;
 		while (angleRotation>=180) angleRotation -= 360;
 		while (angleRotation<=-180) angleRotation += 360;
 		short newBiais = (short) (angleRotation < 0 ? -biaisAngle: (angleRotation == 0 ? 0 : biaisAngle));
@@ -80,60 +73,75 @@ public class RobotNavigator extends Robot {
 			short newDirection = chemin.getFirst();
 			short rot = versDirection(newDirection);
 			short scalaire = (short) (rot/(90+biaisAngle));
-			while(scalaire > 0) { // On prend 110 pour le biais qui peut etre compris en 0 et 20
-				pilot.travel(20);
-				pilot.rotate(rot/scalaire);
-				if(rot>0) {
-					while (!verifiePasseLigneNoire(false)) {
-						pilot.backward();
-					}
-				} else {
-					while (!verifiePasseLigneNoire(false)) {
-						pilot.forward();
-					}
-				}
-				scalaire --;
+			System.out.println("scalaire : "+scalaire);
+			if (scalaire>0) rot = (short) (rot/scalaire);
+			else if (scalaire<0) {
+				scalaire = (short) -scalaire;
+				rot = (short) (rot/scalaire);
 			}
-			pilot.travel(30);
+			while(scalaire != 0) { // On prend 110 pour le biais qui peut etre compris en 0 et 20
+				if(rot>0) {
+					pilot.travel(30);
+				} else {
+					pilot.travel(-30);
+				}
+				while (!verifiePasseLigneNoire(false)) {
+					pilot.backward();
+				}
+				pilot.rotate(rot);
+				System.out.println(rot);
+				if(scalaire>0) scalaire --;
+				else if(scalaire<0) scalaire ++;
+			}
+			pilot.travel(100);
+			//if (etape==3) sarreteNSeconde();
 			replaceInCarte(newDirection);
+			if (waitNewCarte) waitNewCarte=true;
 		} else {
-			chemin.add(EST);
 			System.out.println("c'est finit ! Appuyer sur le boutons pour un nouveau but");
-			Button.waitForAnyEvent();
+			pilot.stop();
+			Button.waitForAnyPress();
+			if (etape<3) etape++;
+			else System.out.println("Plus d'étape");
+			setGoal();
 		}
 	}
 		
 	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
 	public void sarreteNSeconde(){
 		pilot.stop();
+		Delay.msDelay(300); // il me fait un null pointer exception
 		Delay.msDelay(1000*carte.getPoids(position));
 	}
 	
-	private void replaceInCarte(int d) {
+	private void replaceInCarte(short d) {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
-		System.out.println("Position actuelle : "+getPosition());
+		System.out.println("Position actuelle : "+getPosition()+" et angle :"+Cap);
 		switch (d){
-		case SUD : 
-			position = (byte) (xposition + (5*(yposition+1)));
-			break;
-		case NORD : 
-			position = (byte) (xposition + (5*(yposition-1)));
-			break;
-		case EST : 
-			position = (byte) (xposition+1 + 5*yposition);
-			break;
-		case OUEST : 
-			position = (byte) (xposition-1 + 5*yposition);
-			break;
-		default : 
-			throw new InternalError();
+			case SUD : 
+				position = (byte) (xposition + (5*(yposition+1)));
+				break;
+			case NORD : 
+				position = (byte) (xposition + (5*(yposition-1)));
+				break;
+			case EST : 
+				position = (byte) (xposition+1 + 5*yposition);
+				break;
+			case OUEST : 
+				position = (byte) (xposition-1 + 5*yposition);
+				break;
+			default : 
+				throw new InternalError();
 		}
 		if (!chemin.isEmpty()) {
 			chemin.remove(0);
 			System.out.println("fin du chemin :"+chemin.isEmpty());
+			
 		}
 	}
+	
+	
 	
 // ###### Définition du point de départ et du but #####
 	
@@ -158,9 +166,15 @@ public class RobotNavigator extends Robot {
 	public void setGoal(){
 		if (isSauvageon == true && etape == 1){
 			goal = 0;
-		}else if (isSauvageon ==false && etape == 1) {
+		}else if (isSauvageon == false && etape == 1) {
 			goal = 28;
 
+		} else if (isSauvageon == true && etape == 2) {
+			goal = 4;
+
+		} else if (isSauvageon == false && etape == 2) {
+			goal = 30;
+			
 		} else if (isSauvageon == true && etape == 3) {
 			goal = 30;
 
@@ -168,7 +182,36 @@ public class RobotNavigator extends Robot {
 			goal = 4;
 			
 		}
+
 		chemin = fctDijkstra.dijkstra(getPosition(), getGoal());
+	}
+	
+	protected void getPlaceRobot() {
+		byte xposition = (byte) (position % 5);
+		byte yposition = (byte) (position / 5);
+		byte robotPlace;
+		switch (Cap){
+			case SUD : 
+				robotPlace= (byte) (xposition + (5*(yposition+1)));
+				break;
+			case NORD : 
+				robotPlace= (byte) (xposition + (5*(yposition-1)));
+				break;
+			case EST : 
+				robotPlace= (byte) (xposition+1 + 5*yposition);
+				break;
+			case OUEST : 
+				robotPlace= (byte) (xposition-1 + 5*yposition);
+				break;
+			default : 
+				throw new InternalError();
+		}
+		fctDijkstra.changePoidRobot(robotPlace);
+		System.out.println("NewCarte");
+		chemin = fctDijkstra.dijkstra(getPosition(), getGoal());
+		fctDijkstra.raiseCarte();
+		waitNewCarte =true;
+		System.out.println("position : "+getPosition());
 	}
 	
 	//#### Requêtes ####
@@ -180,7 +223,7 @@ public class RobotNavigator extends Robot {
 
 	
 	public void addOneMoreMission () {
-		etape = 3 ;
+		etape = 3;
 	}
 	// Donne l'étape (=objectif)
 	public byte getEtape(){
@@ -207,7 +250,9 @@ public class RobotNavigator extends Robot {
 	public LinkedList<Short> getChemin(){
 		return chemin;
 	}
-	
+	public boolean getWaitNewCarte() {
+		return waitNewCarte;
+	}
 // ###### Definition des camps
 	
 	//L'utilisateur doit choisir le camp du robot :

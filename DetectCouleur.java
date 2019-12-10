@@ -23,6 +23,7 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public void suppress() {
+		robotNav.pilot.stop();
 	}
 
 	public void action() {
@@ -34,7 +35,7 @@ public class DetectCouleur implements Behavior{
 		
 		System.out.println("Comportement DC");
 		robotNav.pilot.forward();
-		Delay.msDelay(2000);
+		Delay.msDelay(1000);
 	}
 	
 	

@@ -1,5 +1,4 @@
-package OBJECTIF1;
-
+package ProjetGOT;
 public class Carte {
 	
 	/**
@@ -18,6 +17,14 @@ public class Carte {
 	public static final float ligneCase = (float) 1.5;
 	
 	public Carte(boolean camp){
+		CarteCouleur = new short[]{-2, 10, 1, 1, -1,
+				1, 10, 1, 1, 1,
+				1, 10, 10, 1, 5,
+				1, 1, 10, 1, 1,
+				1, 5, 5, 5, 1,
+				1, 1, 1, -2, 10,
+				-1, 1, 1, 1, 10};
+		/*
 		if (camp == true){
 			CarteCouleur = new short[]{-2, 10, 1, 1, -1,
 									100, 10, 1, 1, 1,
@@ -35,6 +42,7 @@ public class Carte {
 										1, 1, 1, -2, 10,
 										-1, 1, 1, 1, 10};
 		}
+		*/
 		
 	}
 	
@@ -54,4 +62,18 @@ public class Carte {
 	public void setCarteCouleur(short[] carteCouleur) {
 		CarteCouleur = carteCouleur;
 	}
+	
+	protected void NewPoids(short robot) {
+		/*Prendre les bords en comptes
+		 * 
+		 * */
+		byte xposition = (byte) (robot % 5);
+		byte yposition = (byte) (robot / 5);
+		CarteCouleur[robot]=15;
+		CarteCouleur[xposition + (5*(yposition+1))]=15;
+		CarteCouleur[xposition + (5*(yposition-1))]=15;
+		CarteCouleur[xposition+1 + 5*yposition]=15;
+		CarteCouleur[xposition-1 + 5*yposition]=15;
+	}
+
 }

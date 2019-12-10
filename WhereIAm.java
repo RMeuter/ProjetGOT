@@ -29,7 +29,7 @@ public class WhereIAm implements Behavior {
 	// Action réalisé par le comportement
 	@Override
 	public void action() {
-		LCD.drawString(Arrays.toString(robotNav.getPosition()), 0, 0);
+		//LCD.drawString(Arrays.toString(robotNav.getPosition()), 0, 0);
 		Delay.msDelay(1000);
 		LCD.clear();
 	}

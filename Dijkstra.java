@@ -1,5 +1,4 @@
-package OBJECTIF1;
-
+package ProjetGOT;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -11,12 +10,13 @@ public class Dijkstra {
 	public static final short OUEST = 90;
 	public static final short NORD = 0;
 
-	
+	private boolean isSauvageons;
 	private Carte carte;
 
 	
 	public Dijkstra(boolean typeCarte){
-		carte = new Carte(typeCarte);
+		isSauvageons = typeCarte;
+		carte = new Carte(isSauvageons);
 	}
 
 	public LinkedList <Short> dijkstra(byte position, byte goal){
@@ -176,5 +176,12 @@ public class Dijkstra {
                 }
 			}
 		return coordPetitPoids;
+	}
+	
+	protected void changePoidRobot(short robotPlace) {
+		carte.NewPoids(robotPlace);
+	}
+	protected void raiseCarte() {
+		carte = new Carte(isSauvageons);
 	}
 }

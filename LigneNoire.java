@@ -1,8 +1,5 @@
 package ProjetGOT;
 
-import java.util.Arrays;
-
-import lejos.hardware.lcd.LCD;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
@@ -19,6 +16,7 @@ public class LigneNoire implements Behavior{
 	}
 	
 	public void suppress() {
+		robotNav.pilot.stop();
 	}
 
 	public void action() {
@@ -27,9 +25,9 @@ public class LigneNoire implements Behavior{
 		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
 		 * 
 		 * */
+
 		System.out.println("Comportement LN");
 		robotNav.tourne();
 		Delay.msDelay(3000);
-		LCD.clear();
 	}
 }

@@ -3,6 +3,7 @@ package ProjetGOT;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.chassis.Chassis;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
@@ -11,13 +12,15 @@ import lejos.robotics.navigation.MovePilot;
 public class Robot {
 	
 // #### Attributs ####	
-		EV3ColorSensor color;
-		public MovePilot pilot;
-		private CalibrageColor tabColor; 
+		protected EV3ColorSensor color;
+		protected MovePilot pilot;
+		private CalibrageColor tabColor;
+		protected EV3UltrasonicSensor ultrasonic;
+
+		private float[] value= new float[]{(float)1.0};
 		
 // #### Constructeur ####
 		public Robot () {
-			color = new EV3ColorSensor(SensorPort.S3);
 			buildRobot();
 			createPerception();
 		}
@@ -38,7 +41,8 @@ public class Robot {
 		
 		// Création du tableau contenant les couleurs
 		private void createPerception() {
-			
+			this.color = new EV3ColorSensor(SensorPort.S3);
+			this.ultrasonic = new EV3UltrasonicSensor(SensorPort.S4);
 			tabColor = new CalibrageColor(color);
 			tabColor.Calibrage();	
 		}
@@ -60,6 +64,16 @@ public class Robot {
 		public void stopProcess () {
 			pilot.stop();
 			color.close();
+			ultrasonic.close();
 		}
-
+		
+		public boolean verifyDistance() {
+			ultrasonic.getDistanceMode().fetchSample(value,0);
+			return value[0]<0.1;
+		}
+		
+		public float writeDistance() {
+			ultrasonic.getDistanceMode().fetchSample(value,0);
+			return value[0];
+		}
 }

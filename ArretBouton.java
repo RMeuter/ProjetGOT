@@ -8,10 +8,10 @@ public class ArretBouton implements Behavior{
 	
 // #### Attributs ####
 	private Arbitrator arby;
-	private Robot rb;
+	private RobotNavigator rb;
 
 // #### Constructeur ####
-	public ArretBouton(Arbitrator arby, Robot rb) {
+	public ArretBouton(Arbitrator arby, RobotNavigator rb) {
 		this.arby = arby;
 		this.rb = rb;
 	}
