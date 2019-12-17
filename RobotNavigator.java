@@ -38,7 +38,6 @@ public class RobotNavigator extends Robot {
 		fctDijkstra = new Dijkstra(isSauvageon);
 		setGoal();
 		this.biaisAngle = newBiaisAngle;
-		System.out.println(chemin);
 	}
 
 	
@@ -73,7 +72,6 @@ public class RobotNavigator extends Robot {
 			short newDirection = chemin.getFirst();
 			short rot = versDirection(newDirection);
 			short scalaire = (short) (rot/(90+biaisAngle));
-			System.out.println("scalaire : "+scalaire);
 			if (scalaire>0) rot = (short) (rot/scalaire);
 			else if (scalaire<0) {
 				scalaire = (short) -scalaire;
@@ -88,14 +86,16 @@ public class RobotNavigator extends Robot {
 				while (!verifiePasseLigneNoire(false)) {
 					pilot.backward();
 				}
-				pilot.rotate(rot);
-				System.out.println(rot);
+				pilot.rotate(rot, false);
 				if(scalaire>0) scalaire --;
 				else if(scalaire<0) scalaire ++;
 			}
-			pilot.travel(100);
-			//if (etape==3) sarreteNSeconde();
+			pilot.travel(80);
 			replaceInCarte(newDirection);
+//			if (etape==3) {
+//				short temps = carte.getPoids(position);
+//				sarreteNSeconde(temps);
+//			}
 			if (waitNewCarte) waitNewCarte=true;
 		} else {
 			System.out.println("c'est finit ! Appuyer sur le boutons pour un nouveau but");
@@ -108,16 +108,14 @@ public class RobotNavigator extends Robot {
 	}
 		
 	// Afin de représenter les poids de chaque case, le robot s'arrête en fonction de leurs poids.
-	public void sarreteNSeconde(){
+	public void sarreteNSeconde(short temps){
 		pilot.stop();
-		Delay.msDelay(300); // il me fait un null pointer exception
-		Delay.msDelay(1000*carte.getPoids(position));
+		Delay.msDelay(1000*temps);
 	}
 	
 	private void replaceInCarte(short d) {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
-		System.out.println("Position actuelle : "+getPosition()+" et angle :"+Cap);
 		switch (d){
 			case SUD : 
 				position = (byte) (xposition + (5*(yposition+1)));
@@ -136,7 +134,6 @@ public class RobotNavigator extends Robot {
 		}
 		if (!chemin.isEmpty()) {
 			chemin.remove(0);
-			System.out.println("fin du chemin :"+chemin.isEmpty());
 			
 		}
 	}
@@ -190,29 +187,34 @@ public class RobotNavigator extends Robot {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
 		byte robotPlace;
+		byte base;
 		switch (Cap){
 			case SUD : 
 				robotPlace= (byte) (xposition + (5*(yposition+1)));
+				base = (byte) (xposition + (5*(yposition-1)));
 				break;
 			case NORD : 
 				robotPlace= (byte) (xposition + (5*(yposition-1)));
+				base = (byte) (xposition + (5*(yposition+1)));
 				break;
 			case EST : 
 				robotPlace= (byte) (xposition+1 + 5*yposition);
+				base = (byte) (xposition-1 + 5*yposition);
 				break;
 			case OUEST : 
 				robotPlace= (byte) (xposition-1 + 5*yposition);
+				base = (byte) (xposition+1 + 5*yposition);
 				break;
 			default : 
 				throw new InternalError();
 		}
 		fctDijkstra.changePoidRobot(robotPlace);
-		System.out.println("NewCarte");
-		chemin = fctDijkstra.dijkstra(getPosition(), getGoal());
+		chemin = fctDijkstra.dijkstra(base, getGoal());
 		fctDijkstra.raiseCarte();
-		waitNewCarte =true;
-		System.out.println("position : "+getPosition());
+		waitNewCarte = true;
 	}
+	
+	
 	
 	//#### Requêtes ####
 	

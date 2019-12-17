@@ -25,6 +25,7 @@ public class Robot {
 			createPerception();
 		}
 		
+		
 // #### Méthodes ####	
 		
 		// #### Requêtes ####
@@ -50,8 +51,8 @@ public class Robot {
 		//Construction des éléments du robot
 		private void buildRobot () {
 			//Definition du chassis
-			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-60);
-			Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(60);
+			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-56);
+			Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(56);
 			Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);	
 			pilot = new MovePilot(chassis);
 			

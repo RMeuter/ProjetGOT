@@ -1,8 +1,6 @@
 package ProjetGOT;
 
-import lejos.hardware.lcd.LCD;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.navigation.MovePilot;
+
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
@@ -32,8 +30,6 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		* */
-		
-		System.out.println("Comportement DC");
 		robotNav.pilot.forward();
 		Delay.msDelay(1000);
 	}

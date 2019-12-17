@@ -33,7 +33,7 @@ public class TestConnection {
 		 */
 		BluetoothWorker bw = null;
 		Button.waitForAnyPress();
-		if (Button.LEFT.isDown()) {
+		if (Button.LEFT.isDown()) { // Jojo
 			try {
 				BTConnector bt = new BTConnector();
 				NXTConnection btc = bt.waitForConnection(timeout, NXTConnection.PACKET);
@@ -51,12 +51,12 @@ public class TestConnection {
 			} catch (Exception e) {
 			}
 		}
-    	else {
+    	else { // Pas JOJO
     		EV3 ev = LocalEV3.get();
     		System.out.println("--"+ev.getName()+"--");
     		try {
     			BTConnector bt = new BTConnector();
-    			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
+    			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//Adresse de Joffred5 :le premier paramètre est l'adresse du récepteur affiché sur l'écra de l'émetteur après association (pair) bluetooth
     			LCD.clear();
     			LCD.drawString("connecter", 0, 0);
     			LCD.refresh();
@@ -67,20 +67,18 @@ public class TestConnection {
     			e.printStackTrace();
     		}
     	}
-		
-		while(!Button.LEFT.isDown()) {
-    		System.out.println("Do you write ?");
-    		Button.waitForAnyPress();
-    		// Ici je redéfinis un nouvelle itinéraire !
-            System.out.println("Of course Jamel ! Envoie donc !");
-            try {
-				bw.writePosition((int) (Math.random()*7.) , (int) (Math.random()*5.));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		bw.stop = true;
+//		try {
+//			while(!Button.LEFT.isDown()) {
+//	    		System.out.println("Do you write ?");
+//	    		Button.waitForAnyPress();
+//				bw.writePosition((int) (Math.random()*32.));
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		bw.stop = true;
 	}
 	
 	

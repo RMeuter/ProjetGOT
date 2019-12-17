@@ -14,7 +14,11 @@ import lejos.robotics.filter.MeanFilter;
  * */
 
 public class CalibrageColor {
-	
+	/*
+	 * Calcul de la distance euclidienne :
+	 * https://www.robotshop.com/community/forum/t/tcs3200-color-sensor-with-k-nearest-neighbor-classification-algorithm/13554
+	 * 
+	 * */
 // #### Attributs ####	
 	private float [][] calibreColor = new float [6][3];
 	private static String [] nom = new String [] {"noir", "rouge", "orange", "vert", "blanc", "bleu"};
@@ -74,6 +78,29 @@ public class CalibrageColor {
 			}
 		}
 		return "Aucune couleur";
+	}
+	
+	public String getNewCalibreColor() {
+		float[] sample = new float[3];
+		SampleProvider meanColorPercep = new MeanFilter(color.getRGBMode(),5);// 0 est le numero de la case
+		meanColorPercep.fetchSample(sample, 0);
+		
+		float min = distanceEuclidienne(sample, 0);
+		int iMin = 0;
+		for(int i=1; i<calibreColor.length; i++) {
+			float test = distanceEuclidienne(sample, i);
+			if (min > test) {
+				min = test;
+				iMin = i;
+			}
+		}
+		return "Aucune couleur";
+	}
+	private float distanceEuclidienne (float [] sample, int i) {
+		double nb = (float) (Math.pow((sample[0]-calibreColor[i][0]),2) + 
+				Math.pow((sample[1]-calibreColor[i][1]),2) +
+				Math.pow((sample[2]-calibreColor[i][2]),2));
+		return (float) Math.sqrt(nb);
 	}
 
 }

@@ -26,7 +26,6 @@ public class LigneNoire implements Behavior{
 		 * 
 		 * */
 
-		System.out.println("Comportement LN");
 		robotNav.tourne();
 		Delay.msDelay(3000);
 	}

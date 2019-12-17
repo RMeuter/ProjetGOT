@@ -1,5 +1,7 @@
 package ProjetGOT.TestStep;
 
+import java.util.Arrays;
+
 import ProjetGOT.Robot;
 import ProjetGOT.RobotNavigator;
 import lejos.hardware.Button;
@@ -13,10 +15,11 @@ public class StepZero {
 //##### Initialisation de l'arbitre, du biais et du robot ####
 		Robot rb = new Robot();
 		System.out.println("Press for view color");
+		
 		Button.waitForAnyPress();
 		while(!Button.DOWN.isDown()) {
 			Button.waitForAnyPress();
-			System.out.println(rb.getCalibrateColor().getCalibreColor());
+			System.out.println(rb.getCalibrateColor().getNewCalibreColor());
 		}
 
 	}

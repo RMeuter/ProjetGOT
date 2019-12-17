@@ -19,9 +19,8 @@ public class HitRobot implements Behavior{
 
 	@Override
 	public void action() {
-		System.out.println("Obstacle");
-		System.out.println(robotNav.writeDistance());
-		Delay.msDelay(2000);
+		System.out.println("Dectect un obstacle");
+		Delay.msDelay(4000);
 		if (robotNav.getWaitNewCarte()) {
 			robotNav.pilot.backward();
 		}else {
