@@ -11,70 +11,62 @@ import lejos.robotics.navigation.MovePilot;
 
 public class Robot {
 	
-// #### Attributs ####	
-		protected EV3ColorSensor color;
-		protected MovePilot pilot;
-		private CalibrageColor tabColor;
-		protected EV3UltrasonicSensor ultrasonic;
 
-		private float[] value= new float[]{(float)1.0};
+		protected EV3ColorSensor senseurCoulor;
+		protected EV3UltrasonicSensor senseurUltrason;
+		protected MovePilot pilot;
+		private CalibrageCouleur tabColor;
+		private float[] distance = new float[]{(float)1.0};
 		
-// #### Constructeur ####
+		// ############################### Constructeur ############################
+
 		public Robot () {
-			buildRobot();
-			createPerception();
+			constructionRobot();
+			creationDePerception();
 		}
 		
-		
-// #### Méthodes ####	
-		
-		// #### Requêtes ####
+		// ############################### Construction physique/sensorielle du robot ############################
 		
 		public MovePilot getPilot() {
 			return pilot;
 		}
 		
-		public CalibrageColor getCalibrateColor() {
+		public CalibrageCouleur getCalibrateColor() {
 			return tabColor;
 		}
 		
-		// #### Commandes ####
-		
-		// Création du tableau contenant les couleurs
-		private void createPerception() {
-			this.color = new EV3ColorSensor(SensorPort.S3);
-			this.ultrasonic = new EV3UltrasonicSensor(SensorPort.S4);
-			tabColor = new CalibrageColor(color);
+		private void creationDePerception() {
+			this.senseurCoulor = new EV3ColorSensor(SensorPort.S3);
+			this.senseurUltrason = new EV3UltrasonicSensor(SensorPort.S4);
+			tabColor = new CalibrageCouleur(senseurCoulor);
 			tabColor.Calibrage();	
 		}
 		
 		//Construction des éléments du robot
-		private void buildRobot () {
-			//Definition du chassis
+		private void constructionRobot () {
 			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-56);
 			Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(56);
 			Chassis chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, 2);	
 			pilot = new MovePilot(chassis);
-			
-			//Commandes de changement de vitesse d'avancée et de rotation
 			pilot.setLinearSpeed(40.);
 			pilot.setAngularSpeed(40.);
 		}
 		
-		// Arrêt de tous les processus du robot
-		public void stopProcess () {
-			pilot.stop();
-			color.close();
-			ultrasonic.close();
-		}
+		// ############################### Distance ############################
 		
 		public boolean verifyDistance() {
-			ultrasonic.getDistanceMode().fetchSample(value,0);
-			return value[0]<0.1;
+			senseurUltrason.getDistanceMode().fetchSample(distance,0);
+			return distance[0]<0.1;
 		}
 		
-		public float writeDistance() {
-			ultrasonic.getDistanceMode().fetchSample(value,0);
-			return value[0];
+		
+		// ############################### Arret ############################
+		
+		public void arretProcessus () {
+			pilot.stop();
+			senseurCoulor.close();
+			senseurUltrason.close();
 		}
+		
+
 }

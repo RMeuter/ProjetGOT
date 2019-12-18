@@ -3,16 +3,16 @@ package ProjetGOT;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
-public class LigneNoire implements Behavior{
-
+public class Avance implements Behavior{
+	
 	private NavigateurRobot navRobot;
 	
-	public LigneNoire(NavigateurRobot navRobot) {
+	public Avance(NavigateurRobot navRobot) {
 		this.navRobot = navRobot;
 	}
 	
-	public boolean takeControl() { 
-		return navRobot.estPasserLigneNoire(true);
+	public boolean takeControl() {
+			return true;
 	}
 	
 	public void suppress() {
@@ -20,7 +20,13 @@ public class LigneNoire implements Behavior{
 	}
 
 	public void action() {
-		navRobot.tourne();
-		Delay.msDelay(3000);
+		navRobot.pilot.forward();
+		Delay.msDelay(1000);
 	}
+	
+	
+	
 }
+
+
+
