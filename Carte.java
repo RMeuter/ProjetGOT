@@ -2,71 +2,56 @@ package ProjetGOT;
 
 public class Carte {
 	
-// #### Attributs ####
-	private short[][] CarteCouleur; 
+	/**
+	 * Les Couleurs de la carte :
+	 *   -2 : Camps
+     *   10 : Mur
+     *    1 : Champs
+     *   -1 : Ville
+     *    0 : Inconnu
+     *    5 : Marais
+	 */
 	
-	public static final float tailleCase = 12;
-	public static final float ligneCase = (float) 1.5;
+	private short [] carteCouleur;
+	public static final byte xMaxCarte = 5;
+	public static final byte yMaxCarte = 7;
 	
-	
-// ##### Constructeur #####
-
-	//Definition de la carte gr�ce au camp
-	
-	// La carte est cod� selon la valeur de ses couleurs :
-	// -2: Camps, -1: Ville, 100: Inconnu, 1: Champs, 5: Marais, 10: Mur
-	
-	// le (0,0) est en haut � gauche
-	
-	// true = sauvageon, false = garde de nuit
-	public Carte(boolean Camp){
-		if (Camp == true){
-			CarteCouleur = new short[][]{
-			    {-2, 10, 1, 1, -1},
-				{100, 10, 1, 1, 1},
-				{100, 10, 10, 1, 5},
-				{100, 100, 10, 1, 1},
-				{100, 100, 100, 5, 1},
-				{100, 100, 100, 100, 10},
-				{100, 100, 100, 100, 10}
-			};
-		}else {
-			CarteCouleur = new short[][] {
-			 	{-2, 10, 100, 100, 100},
-				{1, 10, 100, 100, 100},
-				{1, 10, 10, 100, 100},
-				{1, 1, 10, 100, 100},
-				{1, 5, 5, 5, 100},
-				{1, 1, 1, -2, 10},
-				{-1, 1, 1, 1, 10}
-			};
-		}
-		
-	}
-
-//#### M�thodes ####
-
-	// #### Requ�tes ####
-	public short[][] getCarteCouleur() {
-		return CarteCouleur;
-	}
-
-	// Gr�ce aux cordonn�es donn�es, on peut obtenir le poids de la case
-	public short getPoids(short x, short y){
-		if (CarteCouleur[x][y] < 2){
-			return 1;
-		}else if (CarteCouleur[x][y] > 10) {
-			return 0;
-		}else {
-			return CarteCouleur[x][y];
-		}
+	public Carte(boolean camp){
+		carteCouleur = new short[]{
+				-2, 10, 1, 1, -1,
+				1, 10, 1, 1, 1,
+				1, 10, 10, 1, 5,
+				1, 1, 10, 1, 1,
+				1, 5, 5, 5, 1,
+				1, 1, 1, -2, 10,
+				-1, 1, 1, 1, 10
+				};		
 	}
 	
-	// #### Commande ####
-	public void setCarteCouleur(short [][] carteCouleur) {
-		CarteCouleur = carteCouleur;
+	public Carte(short[] couleurs){
+		carteCouleur = couleurs;
+	}
+
+	public short getPoids(byte coordonnees){
+        if (carteCouleur[coordonnees] < 2){
+            return 1;
+        }else {
+            return carteCouleur[coordonnees];
+        }
+    }
+	
+	public void setCarteCouleur(short[] carteCouleur) {
+		this.carteCouleur = carteCouleur;
 	}
 	
-
+	protected void redefinitionCartePourUltrason(short positionRobotAdverse) {
+		byte xPosition = (byte) (positionRobotAdverse % 5);
+		byte yPosition = (byte) (positionRobotAdverse / 5);
+		carteCouleur[positionRobotAdverse]=15;
+		if(yPosition < yMaxCarte) carteCouleur[xPosition + (5*(yPosition+1))]=15;
+		if(yPosition > 0) carteCouleur[xPosition + (5*(yPosition-1))]=15;
+		if(xPosition < xMaxCarte) carteCouleur[xPosition+1 + 5*yPosition]=15;
+		if(xPosition > 0) carteCouleur[xPosition-1 + 5*yPosition]=15;
+	}
 
 }

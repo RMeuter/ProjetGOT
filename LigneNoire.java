@@ -1,37 +1,26 @@
 package ProjetGOT;
 
-import java.util.Arrays;
-
-import lejos.hardware.lcd.LCD;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
 public class LigneNoire implements Behavior{
 
-	private RobotNavigator robotNav;
+	private NavigateurRobot navRobot;
 	
-	public LigneNoire(RobotNavigator robotNav) {
-		this.robotNav= robotNav;
+	public LigneNoire(NavigateurRobot navRobot) {
+		this.navRobot = navRobot;
 	}
 	
 	public boolean takeControl() { 
-		return robotNav.verifiePasseLigneNoire(true);
+		return navRobot.estPasserLigneNoire(true);
 	}
 	
 	public void suppress() {
-		robotNav.pilot.stop();
+		navRobot.pilot.stop();
 	}
 
 	public void action() {
-		/*
-		 * Recupere la position dynamique proposer par la carte afin que le robot puisse 
-		 * tourner sur un nouvelle angle puis avancement de 12 cm pour dépasser la case
-		 * 
-		 * */
-		System.out.println("Position :"+Arrays.toString(robotNav.getPosition()));
-		System.out.println("Comportement LN");
-		robotNav.tourne();
-		Delay.msDelay(500);
-		LCD.clear();
+		navRobot.tourne();
+		Delay.msDelay(3000);
 	}
 }
