@@ -1,8 +1,12 @@
 package ProjetGOT;
 
+<<<<<<< HEAD
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.navigation.MovePilot;
+=======
+
+>>>>>>> 3bc8ed9ac6fc22502b0f7d0b21e845a92671e6c6
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
@@ -13,8 +17,11 @@ public class DetectCouleur implements Behavior{
 	 * 
 	 * */
 	private RobotNavigator robotNav;
+<<<<<<< HEAD
 	private int [] etape;
 	private boolean suppressed = false;
+=======
+>>>>>>> 3bc8ed9ac6fc22502b0f7d0b21e845a92671e6c6
 	
 	public DetectCouleur(RobotNavigator robotNav) {
 		this.robotNav= robotNav;
@@ -25,7 +32,10 @@ public class DetectCouleur implements Behavior{
 	}
 	
 	public void suppress() {
+<<<<<<< HEAD
 		suppressed = true;
+=======
+>>>>>>> 3bc8ed9ac6fc22502b0f7d0b21e845a92671e6c6
 		robotNav.pilot.stop();
 	}
 
@@ -35,12 +45,17 @@ public class DetectCouleur implements Behavior{
 		 * au max.
 		 * A refaire par la suite
 		* */
+<<<<<<< HEAD
 		
 		suppressed = false;		
 		LCD.drawString("Comportement DC", 0, 3);
 		robotNav.pilot.forward();
 		Delay.msDelay(500);
 		LCD.clear();
+=======
+		robotNav.pilot.forward();
+		Delay.msDelay(1000);
+>>>>>>> 3bc8ed9ac6fc22502b0f7d0b21e845a92671e6c6
 	}
 	
 	
