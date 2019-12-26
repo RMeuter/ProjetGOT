@@ -8,28 +8,28 @@ import lejos.utility.Delay;
 
 public class NavigateurRobot extends Robot {
 	
-// #### Attributs ####		
+// ATTRIBUTS //		
 	//Directions possibles pour le robot
 	public static final short SUD = 180; 
 	public static final short EST = -90;
 	public static final short OUEST = 90;
 	public static final short NORD = 0;
 	
-	// #### Attributs du robot####
+	// Attributs du robot
 	private boolean estSauvageon = false;
-	private int biaisAngle = 0;  // Angle oÃ¹ le robot semble tourner correctement;
+	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
 	private byte objectif = 1; // Etape = Objectif 1,2 ou 4
 	
-	// #### Localisation et repere
-	private byte position; // CoordonnÃ©es actuelles du robot [x, y]
+	// Localisation et repères
+	private byte position; // Coordonnées actuelles du robot [x, y]
 	private byte positionObjectif; // But du robot [x, y]
 	private short cap; 	// Direction du robot vers lequel le robot regarde
 	private Carte carte; 	// Recuperation de la carte
 	private LinkedList <Short> chemin = new LinkedList <Short>();
 	private Dijkstra fctDijkstra;
-	private boolean attenteNouvelleCarte = false; // attend avant de recreer une carte
+	private boolean attenteNouvelleCarte = false; // attend avant de recréer une carte
 	
-// #### Constructeur ####
+// CONSTRUCTEUR //
 	public NavigateurRobot (int newBiaisAngle) {
 		definitionCamp();
 		setDebut();
@@ -38,6 +38,7 @@ public class NavigateurRobot extends Robot {
 		this.biaisAngle = newBiaisAngle;
 	}
 
+// REQUETES // 
 	private short versDirection(short nouveauCap){ // d = SUD, OUEST,EST,NORD
 		short angleRotation = (short) (cap - nouveauCap);
 		cap = nouveauCap;
@@ -52,6 +53,8 @@ public class NavigateurRobot extends Robot {
 			if (ligne) return getCalibrateColor().getCalibreColor() == "noir";
 			else return getCalibrateColor().getCalibreColor() != "noir";
 		}
+
+// COMMANDES // 
 
 	protected void tourne(){ 
 		if (!chemin.isEmpty()) {
@@ -122,9 +125,6 @@ public class NavigateurRobot extends Robot {
 		}
 	}
 	
-	
-	
-
 	private void setDebut(){
 		if (this.estSauvageon){
 			position = 4;
@@ -134,7 +134,6 @@ public class NavigateurRobot extends Robot {
 			cap = NORD;
 		}
 	}
-	
 
 	private void setPositionObjectif(){
 		if (estSauvageon == true && objectif == 1){
@@ -189,9 +188,9 @@ public class NavigateurRobot extends Robot {
 	}
 	
 
-//##### Position du robot ######
+// Position du robot
 
-
+// REQUETES //
 	public byte getPosition() {
 		return position;
 	}	
@@ -202,7 +201,7 @@ public class NavigateurRobot extends Robot {
 		return attenteNouvelleCarte;
 	}
 
-	
+// COMMANDES // 	
 	private void definitionCamp () {
 		LCD.drawString("Choisis ton camp", 0, 0);
 		LCD.drawString("H : Sauvageons", 0, 1);

@@ -6,6 +6,9 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 
+//DESCRIPTION //
+	// Création des méthodes pour le calibrage de la couleur.
+
 public class CalibrageCouleur {
 	/*
 	 * Calcul de la distance euclidienne :
@@ -13,15 +16,20 @@ public class CalibrageCouleur {
 	 * 
 	 * */
 
+//	ATTRIBUTS //	
+
 	private float [][] tabCouleurCalibre = new float [6][3];
 	private static String [] nomCouleur = new String [] {"noir", "rouge", "orange", "vert", "blanc", "bleu"};
 	private static EV3ColorSensor senseurCouleur;
 	
 
+// CONSTRUCTEUR //
+
 	public CalibrageCouleur (EV3ColorSensor senseurColor) {
 		CalibrageCouleur.senseurCouleur = senseurColor;
 	}
 
+//	COMMANDES //
 
 	protected void Calibrage () {
 		LCD.drawString("Pret pour le calibrage ?", 0, 0);
@@ -36,6 +44,8 @@ public class CalibrageCouleur {
 			LCD.clear();
 		}
 	}
+
+// REQUETES //
 	
 	// Cette méthode permet d'obtenir les codes RGB de la couleur captée lors du calibrage
 	private static float [] returnColorRGB() {
