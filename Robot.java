@@ -9,12 +9,17 @@ import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
 
-//DESCRIPTION //
-	// Déclaration des caractéristiques et méthodes du robot.
+/**
+ * DESCRIPTION
+ * 
+ * Déclaration des caractéristiques et méthodes du robot.
+ */
 
 public class Robot {
 	
-//	ATTRIBUTS //
+/**
+ * 	ATTRIBUTS
+ */
 		protected EV3ColorSensor senseurCouleur;
 		protected EV3UltrasonicSensor senseurUltrason;
 		protected MovePilot pilot;
@@ -22,26 +27,40 @@ public class Robot {
 		private float[] distance = new float[]{(float)1.0};
 		
 		
-// CONSTRUCTEURS //
-		// Construction du robot.
+/**
+ *  CONSTRUCTEURS 
+ */
+		/**
+		 *  Construction du robot.
+		 */
 		public Robot () {
 			constructionRobot();
 			creationDePerception();
 		}
 		
-		// Construction de la physique du robot.
+		/**
+		 *  Construction de la physique du robot.
+		 * @return le pilote du robot
+		 */
 		public MovePilot getPilot() {
 			return pilot;
 		}
 		
-		// Construction de la perception des couleurs du robot.
+		/**
+		 *  Construction de la perception des couleurs du robot.
+		 * @return la table des couleurs.
+		 */
 		public CalibrageCouleur getCalibrateColor() {
 			return tabCouleur;
 		}
 	
-//	COMMANDES //
+/** 
+ * COMMANDES 
+ */
 		
-		// Initialisation des capteurs.
+		/**
+		 *  Initialisation des capteurs.
+		 */
 		private void creationDePerception() {
 			this.senseurCouleur = new EV3ColorSensor(SensorPort.S3);
 			this.senseurUltrason = new EV3UltrasonicSensor(SensorPort.S4);
@@ -49,7 +68,9 @@ public class Robot {
 			tabCouleur.Calibrage();	
 		}
 		
-		//Construction des éléments du robot (roues et chassis) et initialisation de la vitesse.
+		/**
+		 * Construction des éléments du robot (roues et chassis) et initialisation de la vitesse.
+		 */
 		private void constructionRobot () {
 			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-56);
 			Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 56.).offset(56);
@@ -59,15 +80,22 @@ public class Robot {
 			pilot.setAngularSpeed(40.);
 		}
 		
-		// Arret du robot (pilote, capteurs).
+		/**
+		 *  Arret du robot (pilote, capteurs).
+		 */
 		public void arretProcessus () {
 			pilot.stop();
 			senseurCouleur.close();
 			senseurUltrason.close();
 		}
 		
-// REQUETES //		
-		// Vérifie que la distance entre le robot et un autre objet (un autre robot) est inférieure à 0.1 m.
+/**
+ *  REQUETES		
+ */
+		/*
+		 *  Vérifie que la distance entre le robot et un autre objet (un autre robot) est inférieure à 0.1 m.
+		 *  @return true si la distance est inférieure à 10 cm. Retourne false sinon.
+		 */
 		public boolean verifyDistance() {
 			senseurUltrason.getDistanceMode().fetchSample(distance,0);
 			return distance[0]<0.1;

@@ -8,19 +8,27 @@ import lejos.utility.Delay;
 
 public class NavigateurRobot extends Robot {
 	
-// ATTRIBUTS //		
-	//Directions possibles pour le robot
+/**
+ *  ATTRIBUTS		
+ */
+	/**
+	 * Directions possibles pour le robot.
+	 */
 	public static final short SUD = 180; 
 	public static final short EST = -90;
 	public static final short OUEST = 90;
 	public static final short NORD = 0;
 	
-	// Attributs du robot
+	/**
+	 *  Attributs du robot.
+	 */
 	private boolean estSauvageon = false;
 	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
 	private byte objectif = 1; // Etape = Objectif 1,2 ou 4
 	
-	// Localisation et repères
+	/**
+	 *  Localisation et repères
+	 */
 	private byte position; // Coordonnées actuelles du robot [x, y]
 	private byte positionObjectif; // But du robot [x, y]
 	private short cap; 	// Direction du robot vers lequel le robot regarde
@@ -29,7 +37,10 @@ public class NavigateurRobot extends Robot {
 	private Dijkstra fctDijkstra;
 	private boolean attenteNouvelleCarte = false; // attend avant de recréer une carte
 	
-// CONSTRUCTEUR //
+/**
+ *  CONSTRUCTEUR
+ * @param newBiaisAngle : le biais d'ajustement du robot.
+ */
 	public NavigateurRobot (int newBiaisAngle) {
 		definitionCamp();
 		setDebut();
@@ -38,7 +49,11 @@ public class NavigateurRobot extends Robot {
 		this.biaisAngle = newBiaisAngle;
 	}
 
-// REQUETES // 
+/**
+ *  REQUETES 
+ * @param nouveauCap TODO
+ * @return TODO
+ */
 	private short versDirection(short nouveauCap){ // d = SUD, OUEST,EST,NORD
 		short angleRotation = (short) (cap - nouveauCap);
 		cap = nouveauCap;
@@ -49,13 +64,23 @@ public class NavigateurRobot extends Robot {
 		return (short) (angleRotation + nouveauBiais);
 	}
 	
+	/**
+	 * TODO
+	 * @param ligne TODO
+	 * @return TODO
+	 */
 	protected boolean estPasserLigneNoire(boolean ligne) {
 			if (ligne) return getCalibrateColor().getCalibreColor() == "noir";
 			else return getCalibrateColor().getCalibreColor() != "noir";
 		}
 
-// COMMANDES // 
-
+/**
+ *  COMMANDES  
+ */
+	
+	/**
+	 * TODO
+	 */
 	protected void tourne(){ 
 		if (!chemin.isEmpty()) {
 			short newDirection = chemin.getFirst();
@@ -96,11 +121,19 @@ public class NavigateurRobot extends Robot {
 		}
 	}
 		
+	/**
+	 * Le robot s'arrête pendant le temps spécifié.
+	 * @param temps poids récupéré correspondant au temps que le robot doit s'arrêter.
+	 */
 	private void sarreteNSeconde(short temps){
 		pilot.stop();
 		Delay.msDelay(1000*temps);
 	}
 	
+	/**
+	 * TODO
+	 * @param d TODO
+	 */
 	private void replaceInCarte(short d) {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
@@ -125,6 +158,9 @@ public class NavigateurRobot extends Robot {
 		}
 	}
 	
+	/**
+	 * Détermine la position de début du robot et la direction vers laquelle il regarde.
+	 */
 	private void setDebut(){
 		if (this.estSauvageon){
 			position = 4;
@@ -135,6 +171,9 @@ public class NavigateurRobot extends Robot {
 		}
 	}
 
+	/**
+	 * Détermine, selon l'étape à laquelle on est, la position du robot.
+	 */
 	private void setPositionObjectif(){
 		if (estSauvageon == true && objectif == 1){
 			positionObjectif = 0;
@@ -156,6 +195,9 @@ public class NavigateurRobot extends Robot {
 		chemin = fctDijkstra.dijkstra(getPosition(), getPositionObjectif());
 	}
 	
+	/**
+	 * TODO
+	 */
 	protected void getPlaceRobot() {
 		byte xPosition = (byte) (position % 5);
 		byte yPosition = (byte) (position / 5);
@@ -188,20 +230,41 @@ public class NavigateurRobot extends Robot {
 	}
 	
 
-// Position du robot
+/**
+ *  Position du robot
+ */
 
-// REQUETES //
+/**
+ *  REQUETES
+ */
+	
+	/**
+	 * @return la position du robot.
+	 */
 	public byte getPosition() {
 		return position;
 	}	
+	
+	/**
+	 * @return la position de départ de l'étape.
+	 */
 	public byte getPositionObjectif(){
 		return positionObjectif;
 	}
+	
+	/**
+	 * @return TODO
+	 */
 	public boolean getAttenteNouvelleCarte() {
 		return attenteNouvelleCarte;
 	}
 
-// COMMANDES // 	
+/**
+ *  COMMANDES  	
+ */
+	/**
+	 * Définit le camp du robot (sauvageon ou garde de nuit), ainsi que sa carte.
+	 */
 	private void definitionCamp () {
 		LCD.drawString("Choisis ton camp", 0, 0);
 		LCD.drawString("H : Sauvageons", 0, 1);

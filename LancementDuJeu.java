@@ -15,14 +15,16 @@ public class LancementDuJeu {
 	public static void main(String[] args) {
 		Button.waitForAnyPress();
 		
-//Initialisation de l'arbitre, du biais et du robot.
-		
+/**
+ * Initialisation de l'arbitre, du biais et du robot.
+ */	
 		Arbitrator arby = null;
 		int nouveauBiaisAngle = -6;
 		NavigateurRobot navRobot = new NavigateurRobot (nouveauBiaisAngle);
 		
-//Définition des comportements et initialisation des comportements.
-		
+/**
+ * Définition des comportements et initialisation des comportements.
+ */
 		Behavior b1 = new LigneNoire(navRobot);
 		Behavior b2 = new HeurteRobot(navRobot);
 		Behavior b3 = new Avance(navRobot);
@@ -32,7 +34,9 @@ public class LancementDuJeu {
 		Behavior[] bArray = {b3,b1,b2,b4,b5}; 
 		arby = new Arbitrator(bArray);
 		
-//Arrêt de l'arbitre.
+/**
+ * Arrêt de l'arbitre.
+ */
 		((ArretRobot) b5).setArbitrator(arby);
 		arby.go();
 	}

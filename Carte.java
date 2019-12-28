@@ -1,10 +1,11 @@
 package ProjetGOT;
 
-//DESCRIPTION //
-	// Déclaration des caractéristiques et méthodes de la carte
-
+/**
+ * DESCRIPTION 
+ *  
+ * Déclaration des caractéristiques et méthodes de la carte.
+ */
 public class Carte {
-	
 	/**
 	 * Les cases de la carte :
 	 *   -2 : Camps
@@ -15,13 +16,18 @@ public class Carte {
      *    5 : Marais
 	 */
 	
-//	ATTRIBUTS //
+/**
+ * 	ATTRIBUTS
+ */
 	private short [] carteCouleur;
 	public static final byte xMaxCarte = 5;
 	public static final byte yMaxCarte = 7;
 	
-// CONSTRUCTEURS //
-	//Initialisation des valeurs de la carte.
+/**
+ *  CONSTRUCTEURS
+ *  Initialisation des poids de la carte. 
+ * @param camp : camp choisi pour le robot (garde de nuit ou sauvageon).
+ */
 	public Carte(boolean camp){
 		carteCouleur = new short[]{
 				-2, 10, 1, 1, -1,
@@ -34,15 +40,25 @@ public class Carte {
 				};		
 	}
 	
-	// Initialisation de la carte des couleurs.
+	/**
+	 * Initialisation de la carte des couleurs.
+	 * @param couleurs : liste des valeurs de couleurs.
+	 */
 	public Carte(short[] couleurs){
 		carteCouleur = couleurs;
 	}
 
-// REQUETES //
-	// Retourne le poids de la case à la coordonée donnée.
-	// Certaines cases ont les mêmes poids, même si elles ne sont pas du même type.
-	// {camps, champs, ville, inconnu} = 1, marais = 5, mur = 10
+/**
+ * REQUETES 
+ */
+	
+	/**	
+	 * Retourne le poids de la case à la coordonée donnée.
+	 * Certaines cases ont les mêmes poids, même si elles ne sont pas du même type.
+	 * {camps, champs, ville, inconnu} = 1, marais = 5, mur = 10.
+	 * @param coordonnees : les coordonnées données.
+	 * @return return le poids à la cordonnée donnée.
+	 */
 	public short getPoids(byte coordonnees){
         if (carteCouleur[coordonnees] < 2){
             return 1;
@@ -52,13 +68,22 @@ public class Carte {
     }
 	
 	
-// COMMANDES //
-	// Attribue une carte des couleurs.
+/**
+ *  COMMANDES 
+ */
+	
+	/**
+	 * Attribue une carte des couleurs.
+	 * @param carteCouleur : liste des valeurs des couleurs.
+	 */
 	public void setCarteCouleur(short[] carteCouleur) {
 		this.carteCouleur = carteCouleur;
 	}
 	
-	// 
+	/**
+	 * TODO.
+	 * @param positionRobotAdverse : TODO.
+	 */
 	protected void redefinitionCartePourUltrason(short positionRobotAdverse) {
 		byte xPosition = (byte) (positionRobotAdverse % 5);
 		byte yPosition = (byte) (positionRobotAdverse / 5);

@@ -6,9 +6,11 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 
-//DESCRIPTION //
-	// Création des méthodes pour le calibrage de la couleur.
-
+/** 
+ * DESCRIPTION
+ * 
+ * Création des méthodes pour le calibrage de la couleur.
+ */
 public class CalibrageCouleur {
 	/*
 	 * Calcul de la distance euclidienne :
@@ -16,21 +18,29 @@ public class CalibrageCouleur {
 	 * 
 	 * */
 
-//	ATTRIBUTS //	
-
+/**
+ * ATTRIBUTS 	
+ */
 	private float [][] tabCouleurCalibre = new float [6][3];
 	private static String [] nomCouleur = new String [] {"noir", "rouge", "orange", "vert", "blanc", "bleu"};
 	private static EV3ColorSensor senseurCouleur;
 	
 
-// CONSTRUCTEUR //
+/**
+ *  CONSTRUCTEUR 
+ *  @param senseurColor : capteur de couleur.
+ */
 
 	public CalibrageCouleur (EV3ColorSensor senseurColor) {
 		CalibrageCouleur.senseurCouleur = senseurColor;
 	}
 
-//	COMMANDES //
-
+/**
+ * 	COMMANDES
+ */
+	/**
+	 * TODO.
+	 */
 	protected void Calibrage () {
 		LCD.drawString("Pret pour le calibrage ?", 0, 0);
 		Button.waitForAnyPress();
@@ -45,9 +55,14 @@ public class CalibrageCouleur {
 		}
 	}
 
-// REQUETES //
+/**
+ *  REQUETES
+ */
 	
-	// Cette méthode permet d'obtenir les codes RGB de la couleur captée lors du calibrage
+	/**
+	 * Cette méthode permet d'obtenir les codes RGB de la couleur captée lors du calibrage
+	 * @return : retourne la couleur en code RGB.
+	 */
 	private static float [] returnColorRGB() {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(senseurCouleur.getRGBMode(),5);// 0 est le numero de la case
@@ -58,7 +73,10 @@ public class CalibrageCouleur {
 		return sample;
 	}
 	
-
+	/**
+	 * TODO.
+	 * @return : TODO.
+	 */
 	protected String getCalibreColor() {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(senseurCouleur.getRGBMode(),5);// 0 est le numero de la case
@@ -74,8 +92,11 @@ public class CalibrageCouleur {
 		return "Aucune couleur";
 	}
 	
-	//########################### Nouvelle méthode #######################################
 	
+	/**
+	 * Nouvelle méthode TODO.
+	 * @return : TODO.
+	 */
 	protected String getNewCalibreColor() {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(senseurCouleur.getRGBMode(),5);// 0 est le numero de la case
@@ -93,6 +114,10 @@ public class CalibrageCouleur {
 		return nomCouleur[iMin];
 	}
 	
+	/**
+	 * TODO.
+	 * @return : TODO.
+	 */
 	private float distanceEuclidienne (float [] sample, int i) {
 		double nb = (float) (Math.pow((sample[0]-tabCouleurCalibre[i][0]),2) + 
 				Math.pow((sample[1]-tabCouleurCalibre[i][1]),2) +
