@@ -14,7 +14,7 @@ import lejos.remote.nxt.BTConnector;
 import lejos.remote.nxt.NXTConnection;
 
 public class TransmetteurBluetooth extends Thread {
-	static Socket socket;
+	private static Socket socket; 
     private BTConnector btConnector = null;
     private BTConnection btConnection = null;
     private NXTConnection ntxConnection = null;
@@ -69,6 +69,13 @@ public class TransmetteurBluetooth extends Thread {
 //    }
     
     // ################################## Constructeur ############################################ 
+    /**
+     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
+     * Parametre :
+     * @param Camps:  un boolean définissant le camps;
+     * @param btc: un objet BTConnector;
+     * @param btconnection :un objet BTConnection;
+     */
     public TransmetteurBluetooth(boolean Camps, BTConnector btc, BTConnection btconnection) throws IOException {
     	this.estSauvageon = Camps;
     	try {
@@ -83,6 +90,13 @@ public class TransmetteurBluetooth extends Thread {
     	
     }
     
+    /**
+     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
+     * Parametre :
+     * @param Camps:  un boolean définissant le camps;
+     * @param btc: un objet BTConnector;
+     * @param ntxconnection :un objet NXTConnection;
+     */
     public TransmetteurBluetooth(boolean Camps, BTConnector btc, NXTConnection ntxConnection) throws IOException {
     	this.estSauvageon = Camps;
     	try {
@@ -96,6 +110,12 @@ public class TransmetteurBluetooth extends Thread {
 		}
     }
     
+    /**
+     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
+     * Parametre :
+     * @param Camps:  un boolean définissant le camps;
+     * @param socket: un objet Socket;
+     */
     public TransmetteurBluetooth(boolean Camps, Socket socket) {
         // TODO Auto-generated constructor stub
     	this.estSauvageon = Camps;
@@ -152,13 +172,16 @@ public class TransmetteurBluetooth extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeCanaux();
+			fermetureCannaux();
 		}
     }
     
     // ######################################### Open/Close Stream ##########################################
-    
-    public void closeCanaux () {
+    /**
+     * Ferme les canaux d'entré et de sortie (Input et output)
+     * Verifier quel socket doit etre fermer par un suite de boolean
+     */
+    public void fermetureCannaux () {
     	try {
     		entre.close();
 			sortie.close();
@@ -177,6 +200,9 @@ public class TransmetteurBluetooth extends Thread {
     }
     
     // ######################################### Carte ######################################################
+    /**
+     * Creation d'une liste representant la carte suivant l'attribut de l'objet estSauvageon. 
+     */
     private static short [] doCarte() {
     	if (estSauvageon) {
     		return new short[] {
@@ -208,6 +234,9 @@ public class TransmetteurBluetooth extends Thread {
     	}
     }
     
+    /**
+     * Envoie des données de carte définis selon le boolean estSauveageon par socket
+     */
     private static void envoieCarte () throws IOException, InterruptedException{
     	LCD.drawString("Envoie Map", 0, 3);
     	carte = doCarte();
@@ -219,6 +248,10 @@ public class TransmetteurBluetooth extends Thread {
 	    	sortie.flush();
     	}
     }
+    
+    /**
+     * Reçois des données de carte par socket
+     */
     private static void receptionCarte () throws IOException {
     	LCD.drawString("Reception Map", 0, 3);
         int r = 0;
@@ -234,11 +267,19 @@ public class TransmetteurBluetooth extends Thread {
         }
     }
  // ######################################### Position ######################################################
-    
+    /**
+     * Recois des données de position par socket
+     * @return un int qui est la position de 
+     * l'autre périphérique
+     */
     private static int receptionPosition() throws IOException {
     	return entre.readInt();
     }
     
+    /**
+     * Envoie des données de position par socket
+     * @param x : un int qui est la position du robot
+     */
     protected void envoiePosition(int x) throws IOException {
     	sortie.writeInt(x);
     	sortie.flush();

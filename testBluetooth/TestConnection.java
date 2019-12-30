@@ -1,8 +1,6 @@
 package ProjetGOT.testBluetooth;
 
 
-import java.io.IOException;
-
 import lejos.hardware.Button;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.ev3.LocalEV3;
@@ -23,8 +21,7 @@ public class TestConnection {
 		 * - T'as 10 seconds !
 		 * - Lancer le second périphérique (en appuyant sur n'importe quel touche sauf gauche)
 		 *  avant que les dix seconds ne s'écoulent !
-		 *  - Pour envoyer des infos appuyer sur n'importe quel bouton sauf gauche
-		 *  - Bouton gauche pour sortir
+		 *  - Attendre que les cartes soient échanger.
 		 *  
 		 */
 		TransmetteurBluetooth tb = null;
@@ -62,17 +59,6 @@ public class TestConnection {
     			e.printStackTrace();
     		}
     	}
-		try {
-			while(!Button.LEFT.isDown()) {
-				LCD.drawString("Envoyer position ?", 0, 2);
-	    		Button.waitForAnyPress();
-	    		LCD.clear();
-				tb.envoiePosition((int) (Math.random()*32.));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		tb.arret = true; // evitez !
 	}
 	
 	

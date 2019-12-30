@@ -3,7 +3,7 @@ package ProjetGOT;
 /**
  * DESCRIPTION 
  *  
- * Déclaration des caractéristiques et méthodes de la carte.
+ * Declaration des caracteristiques et methodes de la carte.
  */
 public class Carte {
 	/**
@@ -41,8 +41,8 @@ public class Carte {
 	}
 	
 	/**
-	 * Initialisation de la carte des couleurs.
-	 * @param couleurs : liste des valeurs de couleurs.
+	 * Initialisation de la carte des couleurs;
+	 * @param couleurs : liste de short qui sont des valeurs de couleurs;
 	 */
 	public Carte(short[] couleurs){
 		carteCouleur = couleurs;
@@ -53,11 +53,11 @@ public class Carte {
  */
 	
 	/**	
-	 * Retourne le poids de la case à la coordonée donnée.
-	 * Certaines cases ont les mêmes poids, même si elles ne sont pas du même type.
+	 * Retourne le poids de la case ï¿½ la coordonï¿½e donnï¿½e.
+	 * Certaines cases ont les mï¿½mes poids, mï¿½me si elles ne sont pas du mï¿½me type.
 	 * {camps, champs, ville, inconnu} = 1, marais = 5, mur = 10.
-	 * @param coordonnees : les coordonnées données.
-	 * @return return le poids à la cordonnée donnée.
+	 * @param coordonnees : les coordonnï¿½es donnï¿½es.
+	 * @return return le poids ï¿½ la cordonnï¿½e donnï¿½e.
 	 */
 	public short getPoids(byte coordonnees){
         if (carteCouleur[coordonnees] < 2){
@@ -73,16 +73,18 @@ public class Carte {
  */
 	
 	/**
-	 * Attribue une carte des couleurs.
-	 * @param carteCouleur : liste des valeurs des couleurs.
+	 * Attribue une carte des couleurs;
+	 * @param carteCouleur : liste de short qui sont des valeurs des couleurs;
 	 */
 	public void setCarteCouleur(short[] carteCouleur) {
 		this.carteCouleur = carteCouleur;
 	}
 	
 	/**
-	 * TODO.
-	 * @param positionRobotAdverse : TODO.
+	 * Redefinition des poids de la carte sur la position de l'obstacle
+	 * et autour de lui lors que le dikjtra doit recalculer
+	 * le chemin;
+	 * @param positionRobotAdverse : short qui est la position du robot adverse;
 	 */
 	protected void redefinitionCartePourUltrason(short positionRobotAdverse) {
 		byte xPosition = (byte) (positionRobotAdverse % 5);

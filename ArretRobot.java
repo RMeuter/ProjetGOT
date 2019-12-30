@@ -22,8 +22,8 @@ public class ArretRobot implements Behavior{
  */
 	
 	/**	
-	 * @param arbi : initiale l'arbitre du robot.
-	 * @param nr : initialise la navigation du robot.
+	 * @param arbi : un objet qui initiale l'arbitre du robot.
+	 * @param nr : un objet qui initialise la navigation du robot.
 	 */
 	public ArretRobot(Arbitrator arbi, NavigateurRobot nr) {
 		this.arbi = arbi;
@@ -57,7 +57,7 @@ public class ArretRobot implements Behavior{
 	
 	/**
 	 *  Attribue un arbitre 
-	 * @param arby : arbitre du robot.
+	 * @param arby : un objet qui est arbitre du robot.
 	 */
 	public void setArbitrator(Arbitrator arby) {
 		this.arbi = arby;

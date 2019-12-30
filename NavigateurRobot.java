@@ -23,23 +23,23 @@ public class NavigateurRobot extends Robot {
 	 *  Attributs du robot.
 	 */
 	private boolean estSauvageon = false;
-	private int biaisAngle = 0;  // Angle où le robot semble tourner correctement;
+	private int biaisAngle = 0;  // Angle oï¿½ le robot semble tourner correctement;
 	private byte objectif = 1; // Etape = Objectif 1,2 ou 4
 	
 	/**
-	 *  Localisation et repères
+	 *  Localisation et repï¿½res
 	 */
-	private byte position; // Coordonnées actuelles du robot [x, y]
+	private byte position; // Coordonnï¿½es actuelles du robot [x, y]
 	private byte positionObjectif; // But du robot [x, y]
 	private short cap; 	// Direction du robot vers lequel le robot regarde
 	private Carte carte; 	// Recuperation de la carte
 	private LinkedList <Short> chemin = new LinkedList <Short>();
 	private Dijkstra fctDijkstra;
-	private boolean attenteNouvelleCarte = false; // attend avant de recréer une carte
+	private boolean attenteNouvelleCarte = false; // attend avant de recrï¿½er une carte
 	
 /**
  *  CONSTRUCTEUR
- * @param newBiaisAngle : le biais d'ajustement du robot.
+ * @param newBiaisAngle : un int qui est le biais d'ajustement du robot.
  */
 	public NavigateurRobot (int newBiaisAngle) {
 		definitionCamp();
@@ -51,9 +51,11 @@ public class NavigateurRobot extends Robot {
 
 /**
  *  REQUETES 
- * @param nouveauCap TODO
- * @return TODO
- */
+     * Calcul un angle permettant au robot de s'orienter vers la destination voulu
+     * Parametre :
+     * @param nouveauCap: un short definissant le nouveau Cap;
+     * @return un short qui est l'angle de rotation du robot actuelle
+     */
 	private short versDirection(short nouveauCap){ // d = SUD, OUEST,EST,NORD
 		short angleRotation = (short) (cap - nouveauCap);
 		cap = nouveauCap;
@@ -64,14 +66,16 @@ public class NavigateurRobot extends Robot {
 		return (short) (angleRotation + nouveauBiais);
 	}
 	
-	/**
-	 * TODO
-	 * @param ligne TODO
-	 * @return TODO
-	 */
+	 /**
+     * Verifie si le capteur couleur est sur du noir
+     * (Cette fonction est lÃ  pour allÃ©ger l'ecriture des autres fonctions)
+     * Parametre :
+     * @param ligne: un boolean definissant si le robot doit voir du noir ou l'inverse (toutes couleurs sauf du noir);
+     * @return un boolean qui signifie s'il y a du noir ou l'inverse;
+     */
 	protected boolean estPasserLigneNoire(boolean ligne) {
-			if (ligne) return getCalibrateColor().getCalibreColor() == "noir";
-			else return getCalibrateColor().getCalibreColor() != "noir";
+			if (ligne) return getCalibrateColor().getCalibrationCouleur() == "noir";
+			else return getCalibrateColor().getCalibrationCouleur() != "noir";
 		}
 
 /**
@@ -79,7 +83,22 @@ public class NavigateurRobot extends Robot {
  */
 	
 	/**
-	 * TODO
+	 * Fonction qui verifie en premier si la liste chemin 
+	 * n'est pas vide si elle n'est pas, la fonction
+	 * fait par 90 degres, avant de tourner le robot avance 
+	 * s'il tourne Ã  gauche, sinon il recule cela 
+	 * puis il tourne de 90 degres plus ou moins sont biais.
+	 * 
+	 * Cette fonction verifie egalement si le robot 
+	 * doit s'arreter durant le temps que la couleur de la 
+	 * case lui indique.
+	 * Enfin il verifie s'il est toujour en manoeuvre de redefinition
+	 * de la carte pour contourner un obstacle.
+	 * 
+	 * Si la liste chemin est vide, le robot s'arret et attend
+	 * qu'un bouton soit presser pour passer Ã  l'etape suivant 
+	 * s'elle existe, et permettera la redefinition de l'objectif
+	 * de position;
 	 */
 	protected void tourne(){ 
 		if (!chemin.isEmpty()) {
@@ -91,7 +110,7 @@ public class NavigateurRobot extends Robot {
 				scalaire = (short) -scalaire;
 				rot = (short) (rot/scalaire);
 			}
-			while(scalaire != 0) { // On prend 110 pour le biais qui peut etre compris en 0 et 20
+			while(scalaire != 0) { 
 				if(rot>0) {
 					pilot.travel(30);
 				} else {
@@ -105,9 +124,9 @@ public class NavigateurRobot extends Robot {
 				else if(scalaire < 0) scalaire ++;
 			}
 			pilot.travel(80);
-			replaceInCarte(newDirection);
+			repositionnementCarte(newDirection);
 			if (objectif==3) {
-				short temps = carte.getPoids(position);// Sortie pour Forcer a obtenir la position avec le delay
+				short temps = carte.getPoids(position);
 				sarreteNSeconde(temps);
 			}
 			if (attenteNouvelleCarte) attenteNouvelleCarte=true;
@@ -122,8 +141,8 @@ public class NavigateurRobot extends Robot {
 	}
 		
 	/**
-	 * Le robot s'arrête pendant le temps spécifié.
-	 * @param temps poids récupéré correspondant au temps que le robot doit s'arrêter.
+	 * Le robot s'arrete pendant le temps specifie.
+	 * @param temps poids recupere correspondant au temps que le robot doit s'arreter.
 	 */
 	private void sarreteNSeconde(short temps){
 		pilot.stop();
@@ -131,10 +150,12 @@ public class NavigateurRobot extends Robot {
 	}
 	
 	/**
-	 * TODO
-	 * @param d TODO
+	 * Redefinit la position du robot sur la carte 
+	 * et supprime premier element de la liste chemin 
+	 * 
+	 * @param d : un short qui est le Cap actuelle du robot 
 	 */
-	private void replaceInCarte(short d) {
+	private void repositionnementCarte(short d) {
 		byte xposition = (byte) (position % 5);
 		byte yposition = (byte) (position / 5);
 		switch (d){
@@ -159,7 +180,7 @@ public class NavigateurRobot extends Robot {
 	}
 	
 	/**
-	 * Détermine la position de début du robot et la direction vers laquelle il regarde.
+	 * Determine la position de debut du robot et la direction vers laquelle il regarde.
 	 */
 	private void setDebut(){
 		if (this.estSauvageon){
@@ -172,7 +193,7 @@ public class NavigateurRobot extends Robot {
 	}
 
 	/**
-	 * Détermine, selon l'étape à laquelle on est, la position du robot.
+	 * Determine, selon l'etape a laquelle on est, la position du robot.
 	 */
 	private void setPositionObjectif(){
 		if (estSauvageon == true && objectif == 1){
@@ -196,7 +217,14 @@ public class NavigateurRobot extends Robot {
 	}
 	
 	/**
-	 * TODO
+	 * Determine la position de l'obstacle lorsque le 
+	 * robot detecte un obstacle devant soi et definit sa position 
+	 * de recule.
+	 * Avec ces variables, une liste chemin est recreer, 
+	 * elle contourne l'obstacle, 
+	 * Egalement le boolean attenteNouvelleCarte est 
+	 * dÃ©finit Ã  true afin que le robot puisse se 
+	 * repositionner correctement sur la carte apres recule ;
 	 */
 	protected void getPlaceRobot() {
 		byte xPosition = (byte) (position % 5);
@@ -246,14 +274,15 @@ public class NavigateurRobot extends Robot {
 	}	
 	
 	/**
-	 * @return la position de départ de l'étape.
+	 * @return la position d'arrivee de l'etape.
 	 */
 	public byte getPositionObjectif(){
 		return positionObjectif;
 	}
 	
 	/**
-	 * @return TODO
+	 * @return le boolean d'attente de la redefinition de la 
+	 * carte lorsqu'il y presence d'obstacle.
 	 */
 	public boolean getAttenteNouvelleCarte() {
 		return attenteNouvelleCarte;
@@ -263,7 +292,7 @@ public class NavigateurRobot extends Robot {
  *  COMMANDES  	
  */
 	/**
-	 * Définit le camp du robot (sauvageon ou garde de nuit), ainsi que sa carte.
+	 * Definit le camp du robot (sauvageon ou garde de nuit), ainsi que sa carte.
 	 */
 	private void definitionCamp () {
 		LCD.drawString("Choisis ton camp", 0, 0);

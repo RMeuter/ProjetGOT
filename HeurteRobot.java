@@ -44,7 +44,7 @@ public class HeurteRobot implements Behavior{
 	/**
 	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
 	 *  Ici, le robot doit afficher qu'il a détecté un objet/robot et si il est en attente d'une nouvelle carte de navigation, il doit reculer.
-	 *  Et si il a déjà reculé, il doit actualiser sa position (coordonnées). 
+	 *  Et s'il a déjà reculé, il doit actualiser sa position (coordonnées). 
 	 */
 	public void action() {
 		LCD.clear();

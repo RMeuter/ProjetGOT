@@ -39,7 +39,9 @@ public class CalibrageCouleur {
  * 	COMMANDES
  */
 	/**
-	 * TODO.
+	 * Fonction qui calibre chaque couleur enoncer de la liste nomCouleur
+	 * en établissant les trois couleurs primaire par liste à l'iteration de la couleur
+	 * énoncer de la liste nomCouleur ;
 	 */
 	protected void Calibrage () {
 		LCD.drawString("Pret pour le calibrage ?", 0, 0);
@@ -74,18 +76,21 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * TODO.
-	 * @return : TODO.
+	 * Determine la couleur recu par le capteur de couleur en utilisant
+	 * un intervalle de seuil de plus ou moins 0.3 du code RGB des listes de couleur
+	 * calibre.
+	 * @return : retourne un string qui est la couleur capter par le robot;
+	 * 
 	 */
-	protected String getCalibreColor() {
+	protected String getCalibrationCouleur() {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(senseurCouleur.getRGBMode(),5);// 0 est le numero de la case
 		meanColorPercep.fetchSample(sample, 0);
-		float base = (float) 0.03;
+		float seuil = (float) 0.03;
 		for(int i=0; i<tabCouleurCalibre.length; i++) {
-			if (sample[0]>-base+tabCouleurCalibre[i][0] && sample[0]<base+tabCouleurCalibre[i][0]
-					&& sample[1]>-base+tabCouleurCalibre[i][1] && sample[1]<base+tabCouleurCalibre[i][1]
-					&& sample[2]>-base+tabCouleurCalibre[i][2] && sample[2]<base+tabCouleurCalibre[i][2] ) {
+			if (sample[0]>-seuil+tabCouleurCalibre[i][0] && sample[0]<seuil+tabCouleurCalibre[i][0]
+					&& sample[1]>-seuil+tabCouleurCalibre[i][1] && sample[1]<seuil+tabCouleurCalibre[i][1]
+					&& sample[2]>-seuil+tabCouleurCalibre[i][2] && sample[2]<seuil+tabCouleurCalibre[i][2] ) {
 				return nomCouleur[i];
 			}
 		}
@@ -94,10 +99,12 @@ public class CalibrageCouleur {
 	
 	
 	/**
-	 * Nouvelle méthode TODO.
-	 * @return : TODO.
+	 * Essaie de nouvelle fonction pour pallier les defaut du capteur :
+	 * Recupere le code RGB de la couleur capter, et trouve la distance euclidienne minimal
+	 * entre toutes les valeurs de couleur calibrer
+	 * @return : Retourne la couleur qui a la distance euclidienne la plus minimal 
 	 */
-	protected String getNewCalibreColor() {
+	protected String getNouvelleCalibrationCouleur() {
 		float[] sample = new float[3];
 		SampleProvider meanColorPercep = new MeanFilter(senseurCouleur.getRGBMode(),5);// 0 est le numero de la case
 		meanColorPercep.fetchSample(sample, 0);
@@ -115,8 +122,9 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * TODO.
-	 * @return : TODO.
+	 * Calcul la distance euclidienne entre une couleur capteur et une couleur calibrer 
+	 * par la formule "racineCarre(somme(Xi-Yi)²)"
+	 * @return : retourne un float qui est la distance euclidienne 
 	 */
 	private float distanceEuclidienne (float [] sample, int i) {
 		double nb = (float) (Math.pow((sample[0]-tabCouleurCalibre[i][0]),2) + 
