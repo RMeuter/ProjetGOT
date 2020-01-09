@@ -3,10 +3,7 @@ package ProjetGOT.testBluetooth;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
 
 import lejos.hardware.lcd.LCD;
 import lejos.remote.nxt.BTConnection;
@@ -14,17 +11,25 @@ import lejos.remote.nxt.BTConnector;
 import lejos.remote.nxt.NXTConnection;
 
 public class TransmetteurBluetooth extends Thread {
+	
+/**
+ * 	ATTRIBUTS
+ */
 	private static Socket socket; 
     private BTConnector btConnector = null;
     private BTConnection btConnection = null;
     private NXTConnection ntxConnection = null;
     private boolean isNTXConnexion;
     
-    // IO stream
+    /**
+     * IO stream
+     */
     static DataInputStream entre;
     static DataOutputStream sortie;
     
-    // definition de l'entree du flux
+    /**
+     *  D√©finition de l'entr√©e du flux
+     */
     static short[] carte; 
     static boolean estSauvageon;
     static boolean estTest = false;
@@ -67,17 +72,20 @@ public class TransmetteurBluetooth extends Thread {
 //    		}   
 //    	}
 //    }
+
+	
+/**
+*  CONSTRUCTEURS 
+*/    
     
-    // ################################## Constructeur ############################################ 
     /**
-     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
-     * Parametre :
-     * @param Camps:  un boolean dÈfinissant le camps;
-     * @param btc: un objet BTConnector;
-     * @param btconnection :un objet BTConnection;
+     * Cr√©ation d'un objet TransmetteurBluetooth.
+     * @param Camps:  un boolean d√©finissant le camp.
+     * @param btc: un objet BTConnector.
+     * @param btconnection: un objet BTConnection.
      */
     public TransmetteurBluetooth(boolean Camps, BTConnector btc, BTConnection btconnection) throws IOException {
-    	this.estSauvageon = Camps;
+    	TransmetteurBluetooth.estSauvageon = Camps;
     	try {
     		this.btConnector = btc;
         	this.btConnection = btconnection;
@@ -91,14 +99,13 @@ public class TransmetteurBluetooth extends Thread {
     }
     
     /**
-     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
-     * Parametre :
-     * @param Camps:  un boolean dÈfinissant le camps;
-     * @param btc: un objet BTConnector;
-     * @param ntxconnection :un objet NXTConnection;
+     * Cr√©ation d'un objet TransmetteurBluetooth. 
+     * @param Camps:  un boolean d√©finissant le camp.
+     * @param btc: un objet BTConnector.
+     * @param ntxconnection :un objet NXTConnection.
      */
     public TransmetteurBluetooth(boolean Camps, BTConnector btc, NXTConnection ntxConnection) throws IOException {
-    	this.estSauvageon = Camps;
+    	TransmetteurBluetooth.estSauvageon = Camps;
     	try {
 	    	this.btConnector = btc;
 	    	this.ntxConnection = ntxConnection;
@@ -111,26 +118,28 @@ public class TransmetteurBluetooth extends Thread {
     }
     
     /**
-     * Creation d'un objet TransmetteurBluetooth, et initialise l'objet avec les parametre. 
-     * Parametre :
-     * @param Camps:  un boolean dÈfinissant le camps;
-     * @param socket: un objet Socket;
+     * Cr√©ation d'un objet TransmetteurBluetooth.
+     * @param Camps:  un boolean d√©finissant le camps.
+     * @param socket: un objet Socket.
      */
     public TransmetteurBluetooth(boolean Camps, Socket socket) {
-        // TODO Auto-generated constructor stub
-    	this.estSauvageon = Camps;
-    	this.socket = socket;
+       	TransmetteurBluetooth.estSauvageon = Camps;
+    	TransmetteurBluetooth.socket = socket;
     	estTest = true;
 		try {
 			entre = new DataInputStream(socket.getInputStream());
 	    	sortie = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    
-    // ################################## run de la thread ############################################ 
+  
+/**
+ * COMMANDES
+ */
+    /**
+     * Ex√©cution de la thread.
+     */
     
     public void run() {
     	try {
@@ -147,13 +156,13 @@ public class TransmetteurBluetooth extends Thread {
     	        envoieCarte();
     	        LCD.clear();
     		}
-        	LCD.drawString("Carte reÁu", 0, 3);
+        	LCD.drawString("Carte re√ßu", 0, 3);
 	        int position = 32;
 	        while (!arret) {
 	        	if (estSauvageon && estTest) {
 		        	position = receptionPosition();
 		        	LCD.clear();
-		        	LCD.drawString("Position reÁu :" + position, 0, 3);
+		        	LCD.drawString("Position re√ßu :" + position, 0, 3);
 		            estSauvageon = false;
 	        	} else if (!estSauvageon && estTest){
 	        		position = (int) (Math.random()*32.);
@@ -164,7 +173,7 @@ public class TransmetteurBluetooth extends Thread {
 	        	} else {
 		        	position = receptionPosition();
 		        	LCD.clear();
-		        	LCD.drawString("Position reÁu :" + position, 0, 3);
+		        	LCD.drawString("Position re√ßu :" + position, 0, 3);
 	        	}
 	        }
 		} catch (IOException e) {
@@ -176,10 +185,12 @@ public class TransmetteurBluetooth extends Thread {
 		}
     }
     
-    // ######################################### Open/Close Stream ##########################################
     /**
-     * Ferme les canaux d'entrÈ et de sortie (Input et output)
-     * Verifier quel socket doit etre fermer par un suite de boolean
+     * Open/Close Stream 
+     */
+    /**
+     * Ferme les canaux d'entr√©es et de sorties (Input et output).
+     * V√©rifie quelle socket doit √™tre ferm√©e par un suite de bool√©en.
      */
     public void fermetureCannaux () {
     	try {
@@ -199,20 +210,56 @@ public class TransmetteurBluetooth extends Thread {
 		} 
     }
     
-    // ######################################### Carte ######################################################
+    
     /**
-     * Creation d'une liste representant la carte suivant l'attribut de l'objet estSauvageon. 
+     * Envoie des donn√©es de la carte, d√©finie selon le bool√©en estSauveageon, par socket.
      */
+    private static void envoieCarte () throws IOException, InterruptedException{
+    	LCD.drawString("Envoie Map", 0, 3);
+    	carte = doCarte();
+    	sleep(tempsEcritureChaquePositionCarte);
+    	for (int i= 0; i< carte.length; i++) {
+			sleep(tempsEcritureChaquePositionCarte);
+			if(carte[i]==-2) sortie.writeInt(-carte[i]);
+			else sortie.writeInt(carte[i]);
+	    	sortie.flush();
+    	}
+    }
+    
+    /**
+     * Re√ßoit des donn√©es de carte par socket.
+     */
+    private static void receptionCarte () throws IOException {
+    	LCD.drawString("Reception Map", 0, 3);
+        int r = 0;
+        int j = 0;
+        while(j<carte.length) {
+        	r = entre.readInt();
+        	if(r == 100) {
+        		if (r==2) carte[j] = (short) -r;
+        		else carte[j] = (short) r;
+        	}
+        	j++;
+        	
+        }
+    }
+    
+/**
+ * REQUETES
+ */
+    
+    /**
+     * Carte
+     * Cr√©ation d'une liste repr√©sentant la carte suivant le bool√©en estSauvageon. 
+     */
+    /**
+	 * 1 : champs, 2 : camps, 3 : ville
+	 * 4 : mur, 5 : marais, 100 inconnu
+	 * */
     private static short [] doCarte() {
     	if (estSauvageon) {
     		return new short[] {
-    			/*
-    			 * 1 les champs
-    			 * 2 les camps
-    			 * 3 la ville
-    			 * 4 le mur
-    			 * 5 les marais
-    			 * */
+
     			-2, 10, 1, 1, 0,
 				100, 10, 1, 1, 1,
 				100, 10, 10, 1, 5,
@@ -235,50 +282,18 @@ public class TransmetteurBluetooth extends Thread {
     }
     
     /**
-     * Envoie des donnÈes de carte dÈfinis selon le boolean estSauveageon par socket
-     */
-    private static void envoieCarte () throws IOException, InterruptedException{
-    	LCD.drawString("Envoie Map", 0, 3);
-    	carte = doCarte();
-    	sleep(tempsEcritureChaquePositionCarte);
-    	for (int i= 0; i< carte.length; i++) {
-			sleep(tempsEcritureChaquePositionCarte);
-			if(carte[i]==-2) sortie.writeInt(-carte[i]);
-			else sortie.writeInt(carte[i]);
-	    	sortie.flush();
-    	}
-    }
-    
-    /**
-     * ReÁois des donnÈes de carte par socket
-     */
-    private static void receptionCarte () throws IOException {
-    	LCD.drawString("Reception Map", 0, 3);
-        int r = 0;
-        int j = 0;
-        while(j<carte.length) {
-        	r = entre.readInt();
-        	if(r == 100) {
-        		if (r==2) carte[j] = (short) -r;
-        		else carte[j] = (short) r;
-        	}
-        	j++;
-        	
-        }
-    }
- // ######################################### Position ######################################################
-    /**
-     * Recois des donnÈes de position par socket
+     * Position
+     * Recois des donn√©es de position par socket
      * @return un int qui est la position de 
-     * l'autre pÈriphÈrique
+     * l'autre p√©riph√©rique
      */
     private static int receptionPosition() throws IOException {
     	return entre.readInt();
     }
     
     /**
-     * Envoie des donnÈes de position par socket
-     * @param x : un int qui est la position du robot
+     * Envoie des donn√©es de position par socket.
+     * @param x : un int qui est la position du robot.
      */
     protected void envoiePosition(int x) throws IOException {
     	sortie.writeInt(x);

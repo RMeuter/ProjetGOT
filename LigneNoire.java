@@ -6,7 +6,7 @@ import lejos.utility.Delay;
 /**
  * DESCRIPTION
  *
- * Lorsque le robot "voit" une ligne noire (grâce à son capteur de couleur), il doit alors tourner.
+ * Lorsque le robot "voit" une ligne noire (grÃ¢ce Ã  son capteur de couleur), il doit alors tourner.
  */
 
 public class LigneNoire implements Behavior{
@@ -29,7 +29,8 @@ public class LigneNoire implements Behavior{
  */
 	/**
 	 * Quand le comportement doit prendre le dessus.
-	 * Ici, la condition est remplie lorsque la condition "la couleur détectée est égale à du noir" est vraie.
+	 * Ici, la condition est remplie lorsque la condition "la couleur dÃ©tectÃ©e est Ã©gale Ã  du noir" est vraie, 
+	 * afin de signifier que le robot est sur une ligne noire.
 	 */
 	public boolean takeControl() { 
 		return navRobot.estPasserLigneNoire(true);
@@ -40,7 +41,7 @@ public class LigneNoire implements Behavior{
  */
 	
 	/**
-	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
+	 *  L'action qui doit Ãªtre faÃ®te lors de la prise de contrÃ´le du comportement.
 	 *  Ici, le robot doit tourner pendant 3000 secondes.
 	 */
 	public void action() {
@@ -49,8 +50,8 @@ public class LigneNoire implements Behavior{
 	}
 	
 	/**
-	 *  Le(s) comportement(s) supprimé(s) par le nouveau comportement. 
-	 * Ici, le robot doit arrêter d'être arrêté. 
+	 *  Le(s) comportement(s) supprimÃ©(s) par le nouveau comportement. 
+	 * Ici, le robot doit arrÃªter d'Ãªtre arrÃªtÃ©. 
 	 */
 	public void suppress() {
 		navRobot.pilot.stop();

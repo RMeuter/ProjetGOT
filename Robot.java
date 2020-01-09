@@ -92,7 +92,7 @@ public class Robot {
 /**
  *  REQUETES		
  */
-		/*
+		/**
 		 *  Vérifie que la distance entre le robot et un autre objet (un autre robot) est inférieure à 0.1 m.
 		 *  @return true si la distance est inférieure à 10 cm. Retourne false sinon.
 		 */

@@ -53,11 +53,11 @@ public class Carte {
  */
 	
 	/**	
-	 * Retourne le poids de la case ï¿½ la coordonï¿½e donnï¿½e.
-	 * Certaines cases ont les mï¿½mes poids, mï¿½me si elles ne sont pas du mï¿½me type.
+	 * Retourne le poids de la case et la coordonnée donnée.
+	 * Certaines cases ont les mêmes poids, même si elles ne sont pas du même type.
 	 * {camps, champs, ville, inconnu} = 1, marais = 5, mur = 10.
-	 * @param coordonnees : les coordonnï¿½es donnï¿½es.
-	 * @return return le poids ï¿½ la cordonnï¿½e donnï¿½e.
+	 * @param coordonnees : les coordonnées données.
+	 * @return return le poids et la cordonnée donnée.
 	 */
 	public short getPoids(byte coordonnees){
         if (carteCouleur[coordonnees] < 2){
@@ -82,9 +82,8 @@ public class Carte {
 	
 	/**
 	 * Redefinition des poids de la carte sur la position de l'obstacle
-	 * et autour de lui lors que le dikjtra doit recalculer
-	 * le chemin;
-	 * @param positionRobotAdverse : short qui est la position du robot adverse;
+	 * et autour de lui lorsque le dikjtra doit recalculer le chemin.
+	 * @param positionRobotAdverse : short qui est la position du robot adverse.
 	 */
 	protected void redefinitionCartePourUltrason(short positionRobotAdverse) {
 		byte xPosition = (byte) (positionRobotAdverse % 5);

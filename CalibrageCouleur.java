@@ -39,9 +39,8 @@ public class CalibrageCouleur {
  * 	COMMANDES
  */
 	/**
-	 * Fonction qui calibre chaque couleur enoncer de la liste nomCouleur
-	 * en établissant les trois couleurs primaire par liste à l'iteration de la couleur
-	 * énoncer de la liste nomCouleur ;
+	 * Fonction qui calibre chaque couleur de la liste nomCouleur
+	 * Cette fonction utilise le système RGB pour être calculée.
 	 */
 	protected void Calibrage () {
 		LCD.drawString("Pret pour le calibrage ?", 0, 0);
@@ -76,10 +75,9 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * Determine la couleur recu par le capteur de couleur en utilisant
-	 * un intervalle de seuil de plus ou moins 0.3 du code RGB des listes de couleur
-	 * calibre.
-	 * @return : retourne un string qui est la couleur capter par le robot;
+	 * Determine la couleur reçue par le capteur de couleur en utilisant
+	 * un seuil avec un intervalle de plus ou moins 0.3 du code RGB.
+	 * @return : retourne un string qui est la couleur captée par le robot.
 	 * 
 	 */
 	protected String getCalibrationCouleur() {
@@ -99,10 +97,10 @@ public class CalibrageCouleur {
 	
 	
 	/**
-	 * Essaie de nouvelle fonction pour pallier les defaut du capteur :
-	 * Recupere le code RGB de la couleur capter, et trouve la distance euclidienne minimal
-	 * entre toutes les valeurs de couleur calibrer
-	 * @return : Retourne la couleur qui a la distance euclidienne la plus minimal 
+	 * Essai d'une nouvelle fonction pour pallier les défauts du capteur de couleur:
+	 * On récupere le code RGB de la couleur captée, et trouve la distance euclidienne minimale
+	 * entre toutes les valeurs de la couleur à calibrer.
+	 * @return : retourne la couleur qui a la distance euclidienne la plus petite.
 	 */
 	protected String getNouvelleCalibrationCouleur() {
 		float[] sample = new float[3];
@@ -122,9 +120,9 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * Calcul la distance euclidienne entre une couleur capteur et une couleur calibrer 
-	 * par la formule "racineCarre(somme(Xi-Yi)²)"
-	 * @return : retourne un float qui est la distance euclidienne 
+	 * Calcule la distance euclidienne entre une couleur captée et une couleur calibrée 
+	 * par la formule "racineCarre(somme(Xi-Yi)²)".
+	 * @return : retourne un float qui est la distance euclidienne.
 	 */
 	private float distanceEuclidienne (float [] sample, int i) {
 		double nb = (float) (Math.pow((sample[0]-tabCouleurCalibre[i][0]),2) + 
