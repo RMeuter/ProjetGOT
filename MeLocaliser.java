@@ -7,7 +7,7 @@ import lejos.utility.Delay;
 
 /**
  * DESCRIPTION
- * Lorsque le bouton droit du robot est pressé, il doit afficher sa position actuelle (coordonnées).
+ * Lorsque le bouton droit du robot est pressÃ©, il doit afficher sa position actuelle (coordonnÃ©es).
  */
 
 public class MeLocaliser implements Behavior {
@@ -30,7 +30,7 @@ public class MeLocaliser implements Behavior {
  */
 	/**
 	 * Quand le comportement doit prendre le dessus.
-	 * Ici, la condition est remplie lorsque le bouton droit est pressé.
+	 * Ici, la condition est remplie lorsque le bouton droit est pressÃ©.
 	 */
 	public boolean takeControl() {
 		return Button.RIGHT.isDown();
@@ -41,8 +41,8 @@ public class MeLocaliser implements Behavior {
  */
 	
 	/**
-	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
-	 *  Ici, le robot doit afficher sa position actuelle (coordonnées) pendant 3000 secondes.
+	 *  L'action qui doit Ãªtre faÃ®te lors de la prise de contrÃ´le du comportement.
+	 *  Ici, le robot doit afficher sa position actuelle (coordonnÃ©es) pendant 3000 secondes.
 	 */
 	public void action() {
 		LCD.clear();
@@ -52,8 +52,8 @@ public class MeLocaliser implements Behavior {
 	}
 
 	/**
-	 *  Le(s) comportement(s) supprimé(s) par le nouveau comportement.
-	 *  Ici, il n'y a pas de comportements à supprimer.
+	 *  Le(s) comportement(s) supprimÃ©(s) par le nouveau comportement.
+	 *  Ici, il n'y a pas de comportements Ã  supprimer.
 	 */
 	public void suppress() {
 		

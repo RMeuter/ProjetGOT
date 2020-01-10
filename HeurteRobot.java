@@ -8,7 +8,7 @@ import lejos.utility.Delay;
 /**
  * DESCRIPTION 
  * 
- * Si le robot détecte un objet/robot, il doit l'éviter.
+ * Si le robot dÃ©tecte un objet/robot, il doit l'Ã©viter.
  */
 	
 public class HeurteRobot implements Behavior{
@@ -31,7 +31,7 @@ public class HeurteRobot implements Behavior{
  */
 	/**
 	 *  Quand le comportement doit prendre le dessus.
-	 *  Ici, la condition est remplie lorsque la distance avec un autre objet/robot est inférieure à 10 cm.
+	 *  Ici, la condition est remplie lorsque la distance avec un autre objet/robot est infÃ©rieure Ã  10 cm.
 	 */ 
 	public boolean takeControl() {
 		return navRobot.verifyDistance();
@@ -42,9 +42,9 @@ public class HeurteRobot implements Behavior{
  */
 	
 	/**
-	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
-	 *  Ici, le robot doit afficher qu'il a détecté un objet/robot et si il est en attente d'une nouvelle carte de navigation, il doit reculer.
-	 *  Et s'il a déjà reculé, il doit actualiser sa position (coordonnées). 
+	 *  L'action qui doit Ãªtre faÃ®te lors de la prise de contrÃ´le du comportement.
+	 *  Ici, le robot doit afficher qu'il a dÃ©tectÃ© un objet/robot et si il a obtenu la nouvelle carte de navigation, il doit reculer.
+	 *  Et s'il n'a pas obtenu la nouvelle carte, il doit en crÃ©er une nouvelle avec la place du robot ennemi. 
 	 */
 	public void action() {
 		LCD.clear();
@@ -59,8 +59,8 @@ public class HeurteRobot implements Behavior{
 	}
 	
 	/**
-	 *  Le(s) comportement(s) supprimé(s) par le nouveau comportement.
-	 *  Ici, le robot doit arrêter de s'arrêter. 
+	 *  Le(s) comportement(s) supprimÃ©(s) par le nouveau comportement.
+	 *  Ici, le robot doit arrÃªter de s'arrÃªter. 
 	 */
 	public void suppress() {
 		navRobot.pilot.stop();

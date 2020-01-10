@@ -3,7 +3,7 @@ package ProjetGOT;
 /**
  * DESCRIPTION 
  *  
- * Declaration des caracteristiques et methodes de la carte.
+ * DÃ©claration des caractÃ©ristiques et mÃ©thodes de la carte.
  */
 public class Carte {
 	/**
@@ -41,8 +41,8 @@ public class Carte {
 	}
 	
 	/**
-	 * Initialisation de la carte des couleurs;
-	 * @param couleurs : liste de short qui sont des valeurs de couleurs;
+	 * Initialisation de la carte des couleurs.
+	 * @param couleurs : liste de short qui sont des valeurs de couleurs.
 	 */
 	public Carte(short[] couleurs){
 		carteCouleur = couleurs;
@@ -53,11 +53,11 @@ public class Carte {
  */
 	
 	/**	
-	 * Retourne le poids de la case et la coordonnée donnée.
-	 * Certaines cases ont les mêmes poids, même si elles ne sont pas du même type.
+	 * Retourne le poids de la case et la coordonnÃ©e donnÃ©e.
+	 * Certaines cases ont les mÃªmes poids, mÃªme si elles ne sont pas du mÃªme type.
 	 * {camps, champs, ville, inconnu} = 1, marais = 5, mur = 10.
-	 * @param coordonnees : les coordonnées données.
-	 * @return return le poids et la cordonnée donnée.
+	 * @param coordonnees : les coordonnÃ©es donnÃ©es.
+	 * @return return le poids et la cordonnÃ©e donnÃ©e.
 	 */
 	public short getPoids(byte coordonnees){
         if (carteCouleur[coordonnees] < 2){
@@ -73,16 +73,16 @@ public class Carte {
  */
 	
 	/**
-	 * Attribue une carte des couleurs;
-	 * @param carteCouleur : liste de short qui sont des valeurs des couleurs;
+	 * Attribue une carte de couleurs.
+	 * @param carteCouleur : liste de short qui sont des valeurs des couleurs.
 	 */
 	public void setCarteCouleur(short[] carteCouleur) {
 		this.carteCouleur = carteCouleur;
 	}
 	
 	/**
-	 * Redefinition des poids de la carte sur la position de l'obstacle
-	 * et autour de lui lorsque le dikjtra doit recalculer le chemin.
+	 * RedÃ©finition des poids de la carte sur la position de l'obstacle
+	 * et autour de celui-ci, lorsque le dikjtra doit recalculer le chemin.
 	 * @param positionRobotAdverse : short qui est la position du robot adverse.
 	 */
 	protected void redefinitionCartePourUltrason(short positionRobotAdverse) {

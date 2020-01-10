@@ -23,7 +23,7 @@ public class LancementDuJeu {
 		NavigateurRobot navRobot = new NavigateurRobot (nouveauBiaisAngle);
 		
 /**
- * Définition des comportements et initialisation des comportements.
+ * DÃ©finition des comportements et initialisation des comportements.
  */
 		Behavior b1 = new LigneNoire(navRobot);
 		Behavior b2 = new HeurteRobot(navRobot);
@@ -35,7 +35,7 @@ public class LancementDuJeu {
 		arby = new Arbitrator(bArray);
 		
 /**
- * Arrêt de l'arbitre.
+ * ArrÃªt de l'arbitre.
  */
 		((ArretRobot) b5).setArbitrator(arby);
 		arby.go();

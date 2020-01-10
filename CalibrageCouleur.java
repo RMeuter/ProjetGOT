@@ -9,10 +9,10 @@ import lejos.robotics.filter.MeanFilter;
 /** 
  * DESCRIPTION
  * 
- * Création des méthodes pour le calibrage de la couleur.
+ * CrÃ©ation des mÃ©thodes pour le calibrage de la couleur.
  */
 public class CalibrageCouleur {
-	/*
+	/**
 	 * Calcul de la distance euclidienne :
 	 * https://www.robotshop.com/community/forum/t/tcs3200-color-sensor-with-k-nearest-neighbor-classification-algorithm/13554
 	 * 
@@ -39,8 +39,8 @@ public class CalibrageCouleur {
  * 	COMMANDES
  */
 	/**
-	 * Fonction qui calibre chaque couleur de la liste nomCouleur
-	 * Cette fonction utilise le système RGB pour être calculée.
+	 * Fonction qui calibre chaque couleur de la liste nomCouleur.
+	 * Cette fonction utilise le systÃ¨me RGB pour Ãªtre calculÃ©e.
 	 */
 	protected void Calibrage () {
 		LCD.drawString("Pret pour le calibrage ?", 0, 0);
@@ -61,7 +61,7 @@ public class CalibrageCouleur {
  */
 	
 	/**
-	 * Cette méthode permet d'obtenir les codes RGB de la couleur captée lors du calibrage
+	 * Cette mÃ©thode permet d'obtenir les codes RGB de la couleur captÃ©e lors du calibrage.
 	 * @return : retourne la couleur en code RGB.
 	 */
 	private static float [] returnColorRGB() {
@@ -75,9 +75,9 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * Determine la couleur reçue par le capteur de couleur en utilisant
+	 * DÃ©termine la couleur reÃ§ue par le capteur de couleur en utilisant
 	 * un seuil avec un intervalle de plus ou moins 0.3 du code RGB.
-	 * @return : retourne un string qui est la couleur captée par le robot.
+	 * @return : retourne un string qui est la couleur captï¿½e par le robot.
 	 * 
 	 */
 	protected String getCalibrationCouleur() {
@@ -97,9 +97,9 @@ public class CalibrageCouleur {
 	
 	
 	/**
-	 * Essai d'une nouvelle fonction pour pallier les défauts du capteur de couleur:
-	 * On récupere le code RGB de la couleur captée, et trouve la distance euclidienne minimale
-	 * entre toutes les valeurs de la couleur à calibrer.
+	 * Essai d'une nouvelle fonction pour pallier les dÃ©fauts du capteur de couleur:
+	 * On rÃ©cupere le code RGB de la couleur captÃ©e, et on trouve la distance euclidienne minimale
+	 * entre toutes les valeurs de la couleur Ã  calibrer.
 	 * @return : retourne la couleur qui a la distance euclidienne la plus petite.
 	 */
 	protected String getNouvelleCalibrationCouleur() {
@@ -120,8 +120,8 @@ public class CalibrageCouleur {
 	}
 	
 	/**
-	 * Calcule la distance euclidienne entre une couleur captée et une couleur calibrée 
-	 * par la formule "racineCarre(somme(Xi-Yi)²)".
+	 * Calcule la distance euclidienne entre une couleur captÃ©e et une couleur calibrÃ©e 
+	 * par la formule "racineCarre(somme(Xi-Yi)^2)".
 	 * @return : retourne un float qui est la distance euclidienne.
 	 */
 	private float distanceEuclidienne (float [] sample, int i) {

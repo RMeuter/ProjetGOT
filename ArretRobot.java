@@ -7,7 +7,7 @@ import lejos.robotics.subsumption.Behavior;
 /** 
  * DESCRIPTION 
  * 
- * Le robot doit s'arrêter lorsque l'on appuie sur le bouton gauche du robot.
+ * Le robot doit s'arrÃªter lorsque l'on appuie sur le bouton gauche du robot.
  */
 public class ArretRobot implements Behavior{
 	
@@ -36,7 +36,7 @@ public class ArretRobot implements Behavior{
 
 	/**	
 	 *  Quand le comportement doit prendre le dessus.
-	 *  Ici, la condition est remplie lorsque le bouton gauche du robot est pressé. 
+	 *  Ici, la condition est remplie lorsque le bouton gauche du robot est pressÃ©. 
 	 */
 	public boolean takeControl(){
 		return Button.LEFT.isDown();
@@ -47,8 +47,8 @@ public class ArretRobot implements Behavior{
  */
 	
 	/**
-	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
-	 *  Ici, le robot doit s'arrêter lorsque l'on appuie sur le bouton gauche.
+	 *  L'action qui doit Ãªtre faÃ®te lors de la prise de contrÃ´le du comportement.
+	 *  Ici, le robot doit s'arrÃªter lorsque l'on appuie sur le bouton gauche.
 	 */
 	public void action(){
 		navRobot.arretProcessus();
@@ -64,8 +64,8 @@ public class ArretRobot implements Behavior{
 	}
 	
 	/**
-	 * Le(s) comportement(s) supprimé(s) par le nouveau comportement. 
-	 * Ici, il n'y a pas de comportements à supprimer.
+	 * Le(s) comportement(s) supprimÃ©(s) par le nouveau comportement. 
+	 * Ici, il n'y a pas de comportements Ã  supprimer.
 	 */
 	public void suppress(){}
 }

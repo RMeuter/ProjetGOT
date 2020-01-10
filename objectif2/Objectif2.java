@@ -13,17 +13,26 @@ import lejos.remote.nxt.NXTConnection;
 public class Objectif2 {
 	private static int timeout = 10000;
 	
+
+	/**
+	 * La fonction main est séparée en deux par une boucle conditionnelle répondant à l'appui du bouton :
+	 * 
+	 *Si on appuie sur le bouton gauche : Récepteur (uniquement Joffred5).
+	 * 	Cette condition initialise la socket bluetooth et attend une connexion.
+	 * 	Une fois la connexion obtenue, affichage d'une connexion,
+	 * 		puis activation de la theard de l'objet TransmetteurBluetooth.
+	 * 	Si la connexion n'est pas faite alors il y a un affichage "aucune connexion"
+	 *		puis sortie du programme.
+	 *Si on appuie sur le bouton droit : Emetteur (n'importe quel autre robot).
+	 * Cette condition initialise la socket bluetooth et cherche une connexion avec Joffred5.
+	 * Si elle est obtenu, il y a un affichage d'une connexion,
+	 * 		puis activation de la theard de l'objet TransmetteurBluetooth.
+	 * Sinon une erreur se produit.
+	 * 
+	 * */	
+	
 	public static void main (String [] args) {
-		/**
-		 * Instruction : 
-		 * - Apparailler les deux p�riph�riques
-		 * - Lancer le receveur en premier (Bouton gauche) qui est Jofred8 obligatoirement !
-		 * - T'as 10 seconds !
-		 * - Lancer le second p�riph�rique (en appuyant sur n'importe quel touche sauf gauche)
-		 *  avant que les dix seconds ne s'�coulent !
-		 *  - Attendre que les cartes soient �changer.
-		 *  
-		 */
+
 		TransmetteurBluetooth tb = null;
 		Button.waitForAnyPress();
 		if (Button.LEFT.isDown()) { 
@@ -49,7 +58,11 @@ public class Objectif2 {
     		LCD.drawString("--"+ev.getName()+"--", 0, 0);
     		try {
     			BTConnector bt = new BTConnector();
-    			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);//Adresse de Joffred5 :le premier param�tre est l'adresse du r�cepteur affich� sur l'�cra de l'�metteur apr�s association (pair) bluetooth
+    			/**
+    			 * Adresse de Joffred5 :le premier paramètre est l'adresse du récepteur ,
+    			 * affiché sur l'écran de l'émetteur après association (pairage) bluetooth.
+    			 */
+    			BTConnection btc = bt.connect("00:16:53:43:EB:88", NXTConnection.PACKET);
     			LCD.clear();
     			LCD.drawString("connecter", 0, 0);
     			LCD.refresh();

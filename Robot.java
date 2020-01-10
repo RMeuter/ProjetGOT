@@ -12,7 +12,7 @@ import lejos.robotics.navigation.MovePilot;
 /**
  * DESCRIPTION
  * 
- * Déclaration des caractéristiques et méthodes du robot.
+ * DÃ©claration des caractÃ©ristiques et mÃ©thodes du robot.
  */
 
 public class Robot {
@@ -40,7 +40,7 @@ public class Robot {
 		
 		/**
 		 *  Construction de la physique du robot.
-		 * @return le pilote du robot
+		 * @return le pilote du robot.
 		 */
 		public MovePilot getPilot() {
 			return pilot;
@@ -69,7 +69,7 @@ public class Robot {
 		}
 		
 		/**
-		 * Construction des éléments du robot (roues et chassis) et initialisation de la vitesse.
+		 * Construction des Ã©lÃ©ments du robot (roues et chassis) et initialisation de la vitesse.
 		 */
 		private void constructionRobot () {
 			Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 56.).offset(-56);
@@ -93,8 +93,8 @@ public class Robot {
  *  REQUETES		
  */
 		/**
-		 *  Vérifie que la distance entre le robot et un autre objet (un autre robot) est inférieure à 0.1 m.
-		 *  @return true si la distance est inférieure à 10 cm. Retourne false sinon.
+		 *  VÃ©rifie que la distance entre le robot et un autre objet (un autre robot) est infÃ©rieure Ã  0.1 m.
+		 *  @return true si la distance est infÃ©rieure Ã  10 cm. Retourne false sinon.
 		 */
 		public boolean verifyDistance() {
 			senseurUltrason.getDistanceMode().fetchSample(distance,0);

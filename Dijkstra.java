@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * DESCRIPTION 
- * Définition de l'algorithme de Dijkstra, afin de trouver le plus court chemin d'un point A à un point B.
+ * DÃ©finition de l'algorithme de Dijkstra, afin de trouver le plus court chemin d'un point A Ã  un point B.
  */
 	
 public class Dijkstra {
@@ -22,7 +22,7 @@ public class Dijkstra {
 
 /**
  *  CONSTRUCTEURS 	
- * @param typeCarte : booléen pour connaître le camp du robot (sauvageon ou garde de nuit).
+ * @param typeCarte : boolean pour connaÃ®tre le camp du robot (sauvageon ou garde de nuit).
  */
 	public Dijkstra(boolean typeCarte){
 		isSauvageons = typeCarte;
@@ -37,10 +37,10 @@ public class Dijkstra {
 	 * @param position : la position actuelle du robot.
 	 * @param goal : le but du robot.
 	 * @return le chemin sous forme d'une liste de directions
-	 * On définit -1 comme l'infini.
+	 * On dÃ©finit -1 comme l'infini.
 	 *  0 = false, 1 = true.
-	 *  On définit le sud en haut de la carte et le nord en bas de la carte.
-	 * L'est est à droite de la carte et l'ouest à gauche.
+	 *  On dÃ©finit le sud en haut de la carte et le nord en bas de la carte.
+	 * L'est est Ã  droite de la carte et l'ouest Ã  gauche.
 	 */ 
 	public LinkedList <Short> dijkstra(byte position, byte goal){
 		
@@ -95,7 +95,7 @@ public class Dijkstra {
 	}
 	
 	/**
-	 *  Initialisation du tableau des poids, avec tous les poids à -1 (pas faits).
+	 *  Initialisation du tableau des poids, avec tous les poids Ã  -1 (pas faits).
 	 * @return le tableau des poids.
 	 */
 	private short [] initTableauPoids (){
@@ -107,11 +107,11 @@ public class Dijkstra {
 	}
 	
 	/**
-	 *  A partir des coordonnées d'où nous sommes actuellement, on récupère tous les voisins possibles
-	 *  n'ayant pas déjà été explorés.
-	 * @param dejaFait : liste des points qui ont déjà été investigué.
+	 *  A partir des coordonnÃ©es d'oÃ¹ nous sommes actuellement, on rÃ©cupÃ¨re tous les voisins possibles
+	 *  n'ayant pas dÃ©jÃ  Ã©tÃ© explorÃ©s.
+	 * @param dejaFait : liste des points qui ont dÃ©jÃ  Ã©tÃ© investiguÃ©.
 	 * @param plusPetit : point ayant le plus petit poids.
-	 * @return les voisins du plus petit poids actuellement investigué.
+	 * @return les voisins du plus petit poids actuellement investiguÃ©.
 	 */
 	private ArrayList<Byte> lesVoisins(byte[] dejaFait, byte plusPetit){
 		byte cord_x = (byte) (plusPetit % 5);
@@ -134,9 +134,9 @@ public class Dijkstra {
 	
 	
 	/**
-	 * Renvoit des coordonées qui n'ont pas déjà été investiguées. Sinon -1.
-	 * @param dejaFait : liste des points qui ont déjà été investigués.
-	 * @return la première coordonnées qui n'a pas déjà été investiguées.
+	 * Renvoit des coordonÃ©es qui n'ont pas dÃ©jÃ  Ã©tÃ© investiguÃ©es. Sinon -1.
+	 * @param dejaFait : liste des points qui ont dÃ©jÃ  Ã©tÃ© investiguÃ©s.
+	 * @return la premiÃ¨re coordonnÃ©es qui n'a pas dÃ©jÃ  Ã©tÃ© investiguÃ©es.
 	 */
 	private byte premierNonFait(byte[] dejaFait){
 		for (byte cord = 0; cord < dejaFait.length; cord++){
@@ -148,11 +148,11 @@ public class Dijkstra {
 	}
 	
 	/**
-	 *  Retourne la case ayant le plus petit poids parmi les cases non explorées.
+	 *  Retourne la case ayant le plus petit poids parmi les cases non explorÃ©es.
 	 * @param tableauPoids : liste des poids.
-	 * @param dejaFait : liste des points qui ont déjà été investigués.
-	 * @param premierNonFait : première coordonnée trouvée qui n'a pas déjà été investiguée.
-	 * @return la coordonnées du point ayant le plus petit poids.
+	 * @param dejaFait : liste des points qui ont dÃ©jÃ  Ã©tÃ© investiguÃ©s.
+	 * @param premierNonFait : premiÃ¨re coordonnÃ©e trouvÃ©e qui n'a pas dÃ©jÃ  Ã©tÃ© investiguÃ©e.
+	 * @return la coordonnÃ©es du point ayant le plus petit poids.
 	 */
 	private byte poidsMinimum(short[] tableauPoids, byte [] dejaFait, byte premierNonFait){
 		byte coordPetitPoids = premierNonFait;
@@ -171,15 +171,15 @@ public class Dijkstra {
  */
 
 	/**
-	 *  Création de la carte en tenant compte de la présence du robot adverse.
-	 * @param robotPlace : coordonnées du robot adverse.
+	 *  CrÃ©ation de la carte en tenant compte de la prÃ©sence du robot adverse.
+	 * @param robotPlace : coordonnÃ©es du robot adverse.
 	 */
 	protected void creationCarteAvecPresenceRobotAdverse(short robotPlace) {
 		carte.redefinitionCartePourUltrason(robotPlace);
 	}
 	
 	/**
-	 * Re-initialisation de la carte pour création de la carte avec les ultrasons.
+	 * Re-initialisation de la carte pour crÃ©ation de la carte avec les ultrasons.
 	 */
 	protected void ecraseCarteUltrason() {
 		carte = new Carte(isSauvageons);

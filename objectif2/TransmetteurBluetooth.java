@@ -63,7 +63,7 @@ public class TransmetteurBluetooth extends Thread {
      * Création d'un objet TransmetteurBluetooth. 
      * @param Camps:  un boolean définissant le camp.
      * @param btc: un objet BTConnector.
-     * @param ntxconnection :un objet NXTConnection.
+     * @param ntxconnection: un objet NXTConnection.
      */
     public TransmetteurBluetooth(boolean Camps, BTConnector btc, NXTConnection ntxConnection) throws IOException {
     	TransmetteurBluetooth.estSauvageon = Camps;
@@ -80,7 +80,7 @@ public class TransmetteurBluetooth extends Thread {
     
     /**
      * Création d'un objet TransmetteurBluetooth.
-     * @param Camps:  un boolean définissant le camps.
+     * @param Camps:  un boolean définissant le camp.
      * @param socket: un objet Socket.
      */
     public TransmetteurBluetooth(boolean Camps, Socket socket) {
@@ -151,7 +151,7 @@ public class TransmetteurBluetooth extends Thread {
      */
     /**
      * Ferme les canaux d'entrées et de sorties (Input et output).
-     * Vérifie quelle socket doit être fermée par un suite de booléen.
+     * Vérifie quelle socket doit être fermée par une suite de booléen.
      */
     public void fermetureCannaux () {
     	try {
@@ -244,9 +244,8 @@ public class TransmetteurBluetooth extends Thread {
     
     /**
      * Position
-     * Recois des données de position par socket
-     * @return un int qui est la position de 
-     * l'autre périphérique
+     * Reçoit des données de position par socket.
+     * @return un int qui est la position de l'autre robot.
      */
     private static int receptionPosition() throws IOException {
     	return entre.readInt();

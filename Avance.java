@@ -40,7 +40,7 @@ public class Avance implements Behavior{
  */
 	
 	/**
-	 *  L'action qui doit être faîte lors de la prise de contrôle du comportement.
+	 *  L'action qui doit Ãªtre faÃ®te lors de la prise de contrÃ´le du comportement.
 	 * 	Ici, le robot doit avancer pendant 1000 secondes.
 	 */
 	public void action() {
@@ -49,8 +49,8 @@ public class Avance implements Behavior{
 	}
 	
 	/**
-	 *  Le(s) comportement(s) supprimé(s) par le nouveau comportement.
-	 *  Ici, le robot doit arrêter d'être arrêté.
+	 *  Le(s) comportement(s) supprimÃ©(s) par le nouveau comportement.
+	 *  Ici, le robot doit arrÃªter d'Ãªtre arrÃªtÃ©.
 	 */
 	public void suppress() {
 		navRobot.pilot.stop();
