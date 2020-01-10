@@ -81,20 +81,28 @@ public class NavigateurRobot extends Robot {
  */
 	
 	/**
-	 * Fonction qui v√©rifie en premier si la liste chemin n'est pas vide. 
-	 * Si elle ne l'est pas, la fonction fait tourner le robot par tranche de 90 degres. 
-	 * Avant de tourner, le robot avance, si il tourne √† gauche.
-	 * Sinon il recule.
-	 * Apr√®s cela, il tourne de 90 degres, avec plus ou moins son biais.
+	 * Fonction qui verifie en premier si la liste chemin 
+	 * n'est pas vide si elle n'est pas : 
 	 * 
-	 * Cette fonction v√©rifie √©galement si le robot doit s'arr√™ter durant le temps que 
-	 * la couleur de la case lui indique.
-	 * Enfin il v√©rifie s'il est toujours en manoeuvre de r√©definition
-	 * de la carte pour contourner un obstacle.
+		 * cet fonction dÈcoupe les angles de rotation du robot par 90 degres.
+		 * Avant de tourner le robot avance de 3 cm 
+		 * s'il tourne ‡ gauche, sinon il recule de 3 cm
+		 * puis il tourne de 90 degres plus ou moins son biais total 
+		 * divisÈ par le nombre de rotation ‡ 90 degres.
+		 * 
+		 * Cette fonction verifie egalement si le robot 
+		 * doit s'arreter durant le temps que la couleur de la 
+		 * case lui indique si son objectif est ‡ 3.
+		 * Enfin il verifie s'il est toujour en manoeuvre de redefinition
+		 * de la carte pour contourner un obstacle. Si oui, il dÈfinit
+		 * le boolean attenteNouvelleCarte ‡ true.
+		 * 
+	 * Si la liste chemin est vide : 
 	 * 
-	 * Si la liste chemin est vide, le robot s'arr√™te et attend
-	 * qu'un bouton soit press√© pour passer √† l'√©tape suivante.
-	 * Si cette √©tape existe, il redefinira son objectif et sa position.
+		 * le robot s'arret et attend qu'un bouton 
+		 * soit presser pour passer ‡ l'etape suivant 
+		 * s'elle existe, et permettera la redefinition de l'objectif
+		 * de position;
 	 */
 	protected void tourne(){ 
 		if (!chemin.isEmpty()) {
